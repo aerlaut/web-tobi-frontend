@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function AppBar() {
   const [showLogin, setShowLogin] = useState(false)
@@ -6,16 +7,24 @@ export default function AppBar() {
   return (
     <React.Fragment>
       <nav className="p-4 border-gray-400 bg-gray-200 border-b-2 shadow clearfix">
-        <img className="logo"></img>
-        <div className="float-right">
-          <button
-            className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer"
-            onClick={() => setShowLogin(!showLogin)}
-          >
-            Login
-          </button>
-        </div>
-        <h5 className="content-center">Logo</h5>
+        <Link to="/">
+          <img className="logo" /> Logo
+        </Link>
+        <ul className="float-right flex">
+          <li className="mr-4 inline-block">
+            <Link className="py-2 px-4" to="/page/1">
+              Page
+            </Link>
+          </li>
+          <li>
+            <a
+              className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer"
+              onClick={() => setShowLogin(!showLogin)}
+            >
+              Login
+            </a>
+          </li>
+        </ul>
       </nav>
       <div
         className={
