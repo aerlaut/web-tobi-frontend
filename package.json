@@ -35,6 +35,7 @@
   "devDependencies": {
     "autoprefixer": "^9.8.5",
     "postcss-cli": "^7.1.1",
+    "react-router-dom": "^5.2.0",
     "tailwindcss": "^1.6.0"
   }
 }

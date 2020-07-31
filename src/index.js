@@ -5,12 +5,13 @@ import './styles/main.css'
 import App from './App'
 import AppBar from './components/AppBar'
 import * as serviceWorker from './serviceWorker'
+import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.render(
-  <React.StrictMode>
+  <BrowserRouter>
     <AppBar />
     <App />
-  </React.StrictMode>,
+  </BrowserRouter>,
   document.getElementById('root')
 )
 

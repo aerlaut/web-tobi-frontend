@@ -4,17 +4,19 @@ export default function AppBar() {
   const [showLogin, setShowLogin] = useState(false)
 
   return (
-    <nav className="p-4 border-gray-400 bg-gray-200 border-b-2 shadow clearfix">
-      <img className="logo"></img>
-      <div className="float-right">
-        <button
-          className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer"
-          onClick={() => setShowLogin(!showLogin)}
-        >
-          Login
-        </button>
-      </div>
-
+    <React.Fragment>
+      <nav className="p-4 border-gray-400 bg-gray-200 border-b-2 shadow clearfix">
+        <img className="logo"></img>
+        <div className="float-right">
+          <button
+            className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer"
+            onClick={() => setShowLogin(!showLogin)}
+          >
+            Login
+          </button>
+        </div>
+        <h5 className="content-center">Logo</h5>
+      </nav>
       <div
         className={
           showLogin ? 'fixed w-screen h-screen fixed top-0 left-0' : 'hidden'
@@ -48,7 +50,6 @@ export default function AppBar() {
           </form>
         </div>
       </div>
-      <h5 className="text-white content-center">Login</h5>
-    </nav>
+    </React.Fragment>
   )
 }
