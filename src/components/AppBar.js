@@ -4,8 +4,25 @@ import { Link } from 'react-router-dom'
 export default function AppBar() {
   const [showLogin, setShowLogin] = useState(false)
 
+  const handleLogin = (e) => {
+    e.preventDefault()
+
+    let form = document.getElementById('login')
+    let formData = new FormData(form)
+
+    fetch('/login', {
+      method: 'POST',
+      data: formData,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        // Save login information using localstorage
+      })
+      .catch((err) => console.error(err))
+  }
+
   return (
-    <React.Fragment>
+    <>
       <nav className="p-4 border-gray-400 bg-gray-200 border-b-2 shadow clearfix">
         <Link to="/">
           <img className="logo" /> Logo
@@ -37,10 +54,9 @@ export default function AppBar() {
       >
         <div className="w-100 my-8 flex justify-center">
           <form
+            id="login"
             className="py-4 px-8 bg-gray-200 rounded"
-            onClick={(e) => {
-              e.stopPropagation()
-            }}
+            onSubmit="handleLogin"
           >
             <h3 className="font-bold text-xl">LOGIN</h3>
             <input
@@ -59,6 +75,6 @@ export default function AppBar() {
           </form>
         </div>
       </div>
-    </React.Fragment>
+    </>
   )
 }
