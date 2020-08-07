@@ -12,8 +12,8 @@ export default function AppBar() {
         </Link>
         <ul className="float-right flex">
           <li className="mr-4 inline-block">
-            <Link className="py-2 px-4" to="/page/1">
-              Page
+            <Link className="py-2 px-4" to="/register">
+              Register
             </Link>
           </li>
           <li>
