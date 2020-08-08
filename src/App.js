@@ -6,6 +6,9 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import QuestionIndex from './pages/Question/Index'
+import QuestionCreate from './pages/Question/Create'
+import QuestionShow from './pages/Question/Show'
 
 // Components
 import Page from './components/Page'
@@ -26,6 +29,9 @@ export default function App() {
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/page/:id" component={Page} />
           <Route path="/register" component={Register} />
+          <Route path="/question/create" component={QuestionCreate} />
+          <Route path="/question/:id" component={QuestionShow} />
+          <Route path="/question" component={QuestionIndex} />
         </Switch>
       </main>
     </BrowserRouter>

@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { auth, getPageData } from '../helpers'
+import Error from '../components/Error'
 
 export default function () {
   const history = useHistory()
-
-  // Check for auth
-  let auth = function () {
-    console.log('auth')
-    return false
-  }
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     // Fetch dashboard data
-    console.log('use effect ran')
+    getPageData((res) => {
+      if (res !== 'ok') {
+        setError({ type: 'error', message: res.message })
+      } else {
+        // Setting information
+      }
+    })
   })
 
   return (
-    auth() && (
+    auth(history) && (
       <>
+        {error && <Error type={error.type} message={error.message} />}
         <h1 className="text-xl font-bold mb-4">Dashboard</h1>
-        Dashboard
       </>
     )
   )

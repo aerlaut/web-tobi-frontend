@@ -53,23 +53,61 @@ export default function AppBar() {
   return (
     <>
       <nav className="p-4 border-gray-400 bg-gray-200 border-b-2 shadow clearfix">
-        <Link to="/">
+        <Link to="/" className="float-left">
           <img className="logo" /> Logo
         </Link>
+
+        {/* Left links */}
+        <ul className="flex float-left">
+          {localStorage.getItem('username') !== undefined ? (
+            // Logged in
+            <>
+              <li className="mr-4 inline-block">
+                <Link className="py-2 px-4" to="/question">
+                  Soal
+                </Link>
+              </li>
+            </>
+          ) : (
+            // Logged out
+            <>
+              <li className="mr-4 inline-block">
+                <Link className="py-2 px-4" to="/about">
+                  About
+                </Link>
+              </li>
+            </>
+          )}
+
+          <li></li>
+        </ul>
+        {/* Right links */}
         <ul className="float-right flex">
-          <li className="mr-4 inline-block">
-            <Link className="py-2 px-4" to="/register">
-              Register
-            </Link>
-          </li>
-          <li>
-            <a
-              className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer"
-              onClick={() => setShowLogin(!showLogin)}
-            >
-              Login
-            </a>
-          </li>
+          {localStorage.getItem('username') !== undefined ? (
+            // Logged in
+            <>
+              <li className="mr-4 inline-block">
+                {localStorage.getItem('username')}
+              </li>
+            </>
+          ) : (
+            // Logged out
+            <>
+              <li className="mr-4 inline-block">
+                <Link className="py-2 px-4" to="/register">
+                  Register
+                </Link>
+              </li>
+              <li>
+                <a
+                  className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer"
+                  onClick={() => setShowLogin(!showLogin)}
+                >
+                  Login
+                </a>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
       <div
