@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import cx from 'classnames'
 
 export default function () {
   const history = useHistory()
@@ -44,13 +45,21 @@ export default function () {
         return res.json()
       })
       .then((res) => {
-        // Forward to login page
-        history.push('/login')
+        if (res.status != 'ok') {
+          setFormStatus({ type: 'error', message: res.message })
+        } else {
+          // Forward to login page
+          setFormStatus({
+            type: 'success',
+            message: 'Account created, redirecting to login page...',
+          })
+          history.push('/login')
+        }
       })
       .catch((err) => {
         // Show error details
         console.log(err)
-        setFormStatus(err)
+        setFormStatus({ type: 'error', message: 'Connection error' })
       })
   }
 
@@ -113,8 +122,13 @@ export default function () {
         </label>
 
         {formStatus === '' ? null : (
-          <p className="bg-red-800 rounded text-white">
-            {formStatus.statusText}
+          <p
+            className={cx('text-white rounded py-2 px-4', {
+              'bg-red-800': formStatus.type == 'error',
+              'bg-green-600': formStatus.type == 'success',
+            })}
+          >
+            {formStatus.message}
           </p>
         )}
 
