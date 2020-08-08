@@ -124,8 +124,8 @@ export default function () {
         {formStatus === '' ? null : (
           <p
             className={cx('text-white rounded py-2 px-4', {
-              'bg-red-800': formStatus.type == 'error',
-              'bg-green-600': formStatus.type == 'success',
+              'bg-red-800': formStatus.type === 'error',
+              'bg-green-600': formStatus.type === 'success',
             })}
           >
             {formStatus.message}

@@ -13,15 +13,22 @@ let getPageData = function () {
   let url = null
   let handler = null
 
-  if (arguments.length == 1) {
+  if (arguments.length === 1) {
     url = window.location.pathname
     handler = arguments[0]
-  } else if (arguments.length == 2) {
+  } else if (arguments.length === 2) {
     url = arguments[0]
     handler = arguments[1]
   }
 
-  fetch(`${process.env.REACT_APP_API_URL}${url}`) // url includes beginning '/'
+  fetch(`${process.env.REACT_APP_API_URL}${url}`, {
+    // url includes beginning '/'
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  })
     .then((res) => {
       if (!res.ok) {
         throw new Error()

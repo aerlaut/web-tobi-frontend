@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { auth, getPageData } from '../../helpers'
 import Error from '../../components/Error'
+import QuestionText from '../../components/Question/QuestionText'
 
 export default function () {
   const history = useHistory()
@@ -74,7 +75,9 @@ export default function () {
                 className="border rounded p-1 border-black w-2/12"
               >
                 {tiers.map((t) => (
-                  <option value={t.value}>{t.name}</option>
+                  <option key={t.value} value={t.value}>
+                    {t.name}
+                  </option>
                 ))}
               </select>
             </label>
@@ -115,14 +118,24 @@ export default function () {
             </label>
           </div>
         </div>
-        <div>
+        <div className="my-2">
           <strong>Topics</strong>
-          <div class="rounded border" style={{ minHeight: 2 + 'em' }}></div>
+          <div
+            className="rounded border border-black"
+            style={{ minHeight: 2 + 'em' }}
+          ></div>
         </div>
-        <div>
+        <div className="my-2">
           <strong>Subtopics</strong>
-          <div class="rounded border" style={{ minHeight: 2 + 'em' }}></div>
+          <div
+            className="rounded border border-black"
+            style={{ minHeight: 2 + 'em' }}
+          ></div>
         </div>
+
+        {/* Question body */}
+        <strong>Pertanyaan</strong>
+        <QuestionText />
       </>
     )
   )
