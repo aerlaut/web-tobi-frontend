@@ -29,12 +29,21 @@ export default function () {
         return res.json()
       })
       .then((res) => {
-        // Forward to login page
-        history.push('/dashboard')
+        if (res.status != 'ok') {
+          setFormStatus(res.message)
+        } else {
+          // Save token
+          localStorage.setItem('token', res.data.token)
+          localStorage.setItem('username', res.data.user.username)
+
+          // Forward to login page
+          history.push('/dashboard')
+        }
       })
       .catch((err) => {
         // Show error details
-        setFormStatus(err)
+        console.error(err)
+        setFormStatus('Error logging in')
       })
   }
 
@@ -66,7 +75,9 @@ export default function () {
         </label>
 
         {formStatus === '' ? null : (
-          <p className="bg-red-800 rounded text-white">{formStatus}</p>
+          <p className="bg-red-600 rounded py-2 px-4 text-white">
+            {formStatus}
+          </p>
         )}
 
         <button className="mt-4 py-2 px-4 text-white bg-blue-600 rounded font-bold">
