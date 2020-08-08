@@ -1,32 +1,53 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import cx from 'classnames'
 
 export default function AppBar() {
+  const history = useHistory()
+
   const [showLogin, setShowLogin] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [formStatus, setFormStatus] = useState('')
 
   const handleLogin = (e) => {
     e.preventDefault()
 
-    let form = document.getElementById('login')
-    let formData = new FormData(form)
-
-    fetch(`${process.env.REACT_APP_API_URL}/login`, {
+    // Submit form
+    fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-type': 'application/json',
       },
       body: JSON.stringify({
         username: username,
         password: password,
       }),
     })
-      .then((res) => res.json())
       .then((res) => {
-        // Save login information using localstorage
+        if (!res.ok) {
+          throw new Error('Error logging in')
+        }
+        return res.json()
       })
-      .catch((err) => console.error(err))
+      .then((res) => {
+        if (res.status != 'ok') {
+          setFormStatus({ type: 'error', message: res.message })
+        } else {
+          // Save token
+          localStorage.setItem('token', res.data.token)
+          localStorage.setItem('username', res.data.user.username)
+
+          // Forward to login page
+          history.push('/dashboard')
+          showLogin(false)
+        }
+      })
+      .catch((err) => {
+        // Show error details
+        console.error(err)
+        setFormStatus({ type: 'error', message: 'Connnection error' })
+      })
   }
 
   return (
@@ -56,9 +77,6 @@ export default function AppBar() {
           showLogin ? 'fixed w-screen h-screen fixed top-0 left-0' : 'hidden'
         }
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        onClick={(e) => {
-          setShowLogin(!showLogin)
-        }}
       >
         <div className="w-100 my-8 flex justify-center">
           <form
@@ -66,7 +84,31 @@ export default function AppBar() {
             className="py-4 px-8 bg-gray-200 rounded"
             onSubmit={handleLogin}
           >
-            <h3 className="font-bold text-xl">LOGIN</h3>
+            <h3 className="font-bold text-xl clearfix">
+              LOGIN
+              <span
+                className="cursor-pointer float-right leading-6"
+                onClick={(e) => {
+                  setShowLogin(!showLogin)
+                }}
+              >
+                <svg
+                  className="inline-block"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#000000"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </span>
+            </h3>
             <input
               type="text"
               placeholder="username"
@@ -82,9 +124,19 @@ export default function AppBar() {
               className="p-1 rounded shadow-inner my-2 block border-2 border-black"
               onChange={(e) => setPassword(e.target.value)}
             ></input>
-            <button className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer text-center block">
+            <button className="py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer text-center">
               LOGIN
             </button>
+            {formStatus === '' ? null : (
+              <p
+                className={cx('text-white rounded py-2 px-4', {
+                  'bg-red-800': formStatus.type == 'error',
+                  'bg-green-600': formStatus.type == 'success',
+                })}
+              >
+                {formStatus.statusText}
+              </p>
+            )}
           </form>
         </div>
       </div>
