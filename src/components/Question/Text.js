@@ -3,7 +3,9 @@ import { EditorState, ContentState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
-export default function QuestionText(props) {
+export default function (props) {
+  console.log('question text rendered')
+
   const [editorState, setEditorState] = useState(() => {
     if (props.content) {
       return EditorState.createWithContent(
