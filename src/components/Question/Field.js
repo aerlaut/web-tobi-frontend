@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 
 import Text from './Text'
-import ShortAnswer from './ShortAnswer'
+import ShortText from './ShortText'
 
 export default function ({ type = 'text', content = '' }) {
   if (type === 'text') {
@@ -9,7 +9,7 @@ export default function ({ type = 'text', content = '' }) {
   } else if (type === 'answer') {
     switch (content.type) {
       case 'short_text':
-        return <ShortAnswer content={content} />
+        return <ShortText content={content} />
     }
   }
 }

@@ -68,12 +68,12 @@ export default function () {
                 type="text"
                 className="w-2/12 p-1 border border-black shadow-inside rounded"
                 value={author}
-                onChange={(e) =>
+                onChange={(e) => {
                   dispatch({
-                    type: 'setAuthor',
+                    type: 'question/setAuthor',
                     payload: { content: e.target.value },
                   })
-                }
+                }}
               ></input>
             </label>
 
@@ -82,7 +82,7 @@ export default function () {
               <select
                 onChange={(e) =>
                   dispatch({
-                    type: 'setTier',
+                    type: 'question/setTier',
                     payload: { content: e.target.value },
                   })
                 }
@@ -103,7 +103,7 @@ export default function () {
                 value={official}
                 onChange={(e) =>
                   dispatch({
-                    type: 'setOfficial',
+                    type: 'question/setOfficial',
                     payload: { content: e.target.value },
                   })
                 }
@@ -125,7 +125,7 @@ export default function () {
                 value={difficulty}
                 onChange={(e) =>
                   dispatch({
-                    type: 'setDifficulty',
+                    type: 'question/setDifficulty',
                     payload: { content: e.target.value },
                   })
                 }
@@ -140,7 +140,7 @@ export default function () {
                 value={maxScore}
                 onChange={(e) =>
                   dispatch({
-                    type: 'setMaxScore',
+                    type: 'question/setMaxScore',
                     payload: { content: e.target.value },
                   })
                 }
@@ -168,7 +168,7 @@ export default function () {
         {content.map((field, idx) => (
           <>
             <Field type={field.type} key={idx} content={field.content} />
-            <FieldOption />
+            <FieldOption key={idx} idx={idx} />
           </>
         ))}
       </>

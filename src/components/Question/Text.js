@@ -7,7 +7,7 @@ export default function (props) {
   console.log('question text rendered')
 
   const [editorState, setEditorState] = useState(() => {
-    if (props.content) {
+    if (props.content !== '') {
       return EditorState.createWithContent(
         ContentState.createFromText(props.content)
       )
@@ -19,7 +19,7 @@ export default function (props) {
   return (
     <Editor
       editorState={editorState}
-      wrapperClassName="min-h-1/4"
+      wrapperClassName="min-h-1/4 my-2"
       toolbarClassName="border border-gray-800 rounded-t mb-0"
       editorClassName="border border-gray-800 rounded-b px-4 py-2"
       onEditorStateChange={setEditorState}
