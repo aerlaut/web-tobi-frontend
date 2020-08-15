@@ -167,7 +167,12 @@ export default function () {
         <strong>Pertanyaan</strong>
         {content.map((field, idx) => (
           <>
-            <Field type={field.type} key={idx} content={field.content} />
+            <Field
+              type={field.type}
+              key={idx}
+              content={field.content}
+              idx={idx + 1}
+            />
             <FieldOption key={idx} idx={idx} />
           </>
         ))}

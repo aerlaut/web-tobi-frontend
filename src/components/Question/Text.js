@@ -21,7 +21,7 @@ export default function (props) {
       editorState={editorState}
       wrapperClassName="min-h-1/4 my-2"
       toolbarClassName="border border-gray-800 rounded-t mb-0"
-      editorClassName="border border-gray-800 rounded-b px-4 py-2"
+      editorClassName="border border-gray-800 rounded-b px-4"
       onEditorStateChange={setEditorState}
     />
   )
