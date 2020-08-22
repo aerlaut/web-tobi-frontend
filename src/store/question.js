@@ -64,6 +64,10 @@ let slice = createSlice({
 			state.official = action.payload.content
 		},
 
+		setPublish: (state, action) => {
+			state.publish = action.payload.content
+		},
+
 		setDifficulty: (state, action) => {
 			state.difficulty = action.payload.content
 		},

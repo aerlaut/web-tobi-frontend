@@ -16,6 +16,7 @@ export default function () {
 	const tier = useSelector((state) => state.tier)
 	const maxScore = useSelector((state) => state.maxScore)
 	const official = useSelector((state) => state.official)
+	const publish = useSelector((state) => state.publish)
 	const difficulty = useSelector((state) => state.difficulty)
 
 	const contents = useSelector((state) => state.contents)
@@ -54,13 +55,54 @@ export default function () {
 		})
 	})
 
+	function saveQuestion(e) {
+		e.preventDefault()
+
+		// Submit form
+		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify({
+				author: author,
+				tier: tier,
+				maxScore: maxScore,
+				official: official,
+				difficulty: difficulty,
+				contents: contents,
+			}),
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error('Error creating question')
+				}
+				return res.json()
+			})
+			.then((res) => {
+				if (res.status != 'ok') {
+					// Error creating question
+				} else {
+					// Forward to login page
+					history.push('/question')
+				}
+			})
+			.catch((err) => {
+				// Show error details
+				console.error(err)
+			})
+	}
+
 	return (
 		auth(history) && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<h1 className='text-xl font-bold mb-4'>
 					Buat Soal Baru
-					<span class='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'>
+					<span
+						class='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
+						onClick={(e) => saveQuestion(e)}
+					>
 						Save
 					</span>
 				</h1>
@@ -118,6 +160,23 @@ export default function () {
 								<option value={false}>No</option>
 							</select>
 						</label>
+
+						<label className='my-2'>
+							<span className='w-2/12 inline-block'>Published</span>
+							<select
+								value={official}
+								onChange={(e) =>
+									dispatch({
+										type: 'question/setPublish',
+										payload: { content: e.target.value },
+									})
+								}
+								className='border rounded p-1 border-black w-2/12'
+							>
+								<option value={true}>Yes</option>
+								<option value={false}>No</option>
+							</select>
+						</label>
 					</div>
 					<div className='w-1/2 flex flex-col'>
 						<label className='my-2'>
@@ -138,7 +197,7 @@ export default function () {
 						</label>
 
 						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Maximum Score</span>
+							<span className='w-3/12 inline-block'>Maximum Score</span>
 							<input
 								type='text'
 								className='w-1/12 p-1 border border-black shadow-inside rounded'
@@ -150,6 +209,11 @@ export default function () {
 									})
 								}
 							></input>
+						</label>
+
+						<label className='my-2'>
+							<span className='w-3/12 inline-block'>Published date</span>
+							<span></span>
 						</label>
 					</div>
 				</div>

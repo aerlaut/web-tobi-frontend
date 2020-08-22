@@ -37,7 +37,7 @@ export default function ({ content, idx }) {
 			<input
 				type='text'
 				value={content}
-				className='border rounded w-full px-2 py-1'
+				className='border rounded w-full px-2 py-1 my-2'
 				onChange={(e) => {
 					dispatch({
 						type: 'question/updateField',
@@ -51,7 +51,7 @@ export default function ({ content, idx }) {
 			/>
 			<Editor
 				editorState={editorState}
-				wrapperClassName='min-h-1/4 my-2'
+				wrapperClassName='min-h-1/4'
 				toolbarClassName='border border-gray-800 rounded-t mb-0'
 				editorClassName='border border-gray-800 rounded-b px-4'
 				readOnly={true}
