@@ -10,15 +10,12 @@ let slice = createSlice({
     difficulty: '',
     content: [
       {
-        type: 'text',
+        type: 'question_text',
         content: 'This is a question',
       },
       {
-        type: 'answer',
-        content: {
-          type: 'short_text',
-          label: 'Tulis jawaban Anda dibawah ini',
-        },
+        type: 'answer_short_text',
+        content: 'Tulis jawaban Anda dibawah ini',
       },
     ],
   },
@@ -78,6 +75,7 @@ let slice = createSlice({
         content: newContent,
       })
     },
+    // Remove question field
     removeField: (state, action) => {
       const { idx } = action.payload
 
@@ -98,25 +96,25 @@ let slice = createSlice({
 
       return Object.assign(state, { content: newContent })
     },
+    // Update question field
     updateField: (state, action) => {
       const { idx, content, type } = action.payload
 
+
       let field = Object.assign(state.content[idx], {
-        type: type,
-        content: content,
+        type : type,
+        content : content
       })
 
       // Update object at index
-      let newContent = []
-      if (idx == 0) {
-        // If update at start
-        newContent = [field, state.slice(1)]
-      } else if (idx == state.content.length - 1) {
-        // update at end
-        newContent = [...state.slice(0, idx - 1), field]
-      } else {
-        newContent = [...state.slice(0, idx), field, ...state.slice(idx + 1)]
-      }
+      let newContent = [
+        ...state.content.slice(0, idx),
+        field,
+        ...state.content.slice(idx+1)
+      ]
+
+      console.log(newContent)
+
 
       return Object.assign(state, { content: newContent })
     },

@@ -169,11 +169,11 @@ export default function () {
           <>
             <Field
               type={field.type}
-              key={idx}
+              key={`field-${idx}`}
               content={field.content}
-              idx={idx + 1}
+              idx={idx}
             />
-            <FieldOption key={idx} idx={idx} />
+            <FieldOption key={`opt-${idx}`} idx={idx} />
           </>
         ))}
       </>

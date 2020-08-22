@@ -4,12 +4,17 @@ import Text from './Text'
 import ShortText from './ShortText'
 
 export default function ({ type = 'text', content = '', idx }) {
-  if (type === 'text') {
-    return <Text content={content} />
-  } else if (type === 'answer') {
-    switch (content.type) {
-      case 'short_text':
-        return <ShortText content={content} idx={idx} />
-    }
+
+
+  switch(type) {
+
+    case 'question_text' :
+      return <Text content={content} idx={idx}/>
+      break;
+
+    case 'answer_short_text' :
+      return <ShortText content={content} idx={idx} />
+      break;
+
   }
 }

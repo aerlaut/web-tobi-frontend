@@ -83,7 +83,7 @@ export default function AppBar() {
         </ul>
         {/* Right links */}
         <ul className="float-right flex">
-          {localStorage.getItem('username') !== undefined ? (
+          {localStorage.getItem('username') !== null ? (
             // Logged in
             <>
               <li className="mr-4 inline-block">

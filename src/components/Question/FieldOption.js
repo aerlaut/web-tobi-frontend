@@ -16,7 +16,7 @@ export default function FieldOption({ idx }) {
       >
         <div
           className={cx('flex justify-center cursor-pointer', {
-            invisible: invisible,
+            'opacity-25': invisible,
           })}
         >
           <button
