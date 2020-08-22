@@ -1,19 +1,25 @@
 import React from 'react'
-const NewItem = ({ size = 24, color = '#000000', className = null }) => (
+const XCircle = ({
+	size = 24,
+	color = '#000000',
+	fill = '#FFFFFF',
+	className,
+}) => (
 	<svg
 		xmlns='http://www.w3.org/2000/svg'
 		width={size}
 		height={size}
 		viewBox='0 0 24 24'
-		fill='none'
+		fill={fill}
 		stroke={color}
 		strokeWidth='2'
 		strokeLinecap='round'
 		strokeLinejoin='round'
 		className={className != null ? className : ''}
 	>
-		<path d='M20 11.08V8l-6-6H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h6' />
-		<path d='M14 3v5h5M18 21v-6M15 18h6' />
+		<circle cx='12' cy='12' r='10'></circle>
+		<line x1='15' y1='9' x2='9' y2='15'></line>
+		<line x1='9' y1='9' x2='15' y2='15'></line>
 	</svg>
 )
-export default NewItem
+export default XCircle

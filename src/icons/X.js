@@ -1,5 +1,5 @@
 import React from 'react'
-const NewItem = ({ size = 24, color = '#000000', className = null }) => (
+const X = ({ size = 24, color = '#000000', className = null }) => (
 	<svg
 		xmlns='http://www.w3.org/2000/svg'
 		width={size}
@@ -12,8 +12,8 @@ const NewItem = ({ size = 24, color = '#000000', className = null }) => (
 		strokeLinejoin='round'
 		className={className != null ? className : ''}
 	>
-		<path d='M20 11.08V8l-6-6H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h6' />
-		<path d='M14 3v5h5M18 21v-6M15 18h6' />
+		<line x1='18' y1='6' x2='6' y2='18'></line>
+		<line x1='6' y1='6' x2='18' y2='18'></line>
 	</svg>
 )
-export default NewItem
+export default X
