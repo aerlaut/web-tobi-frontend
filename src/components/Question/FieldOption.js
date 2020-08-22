@@ -24,7 +24,7 @@ export default function FieldOption({ idx }) {
             onClick={(e) => {
               dispatch({
                 type: 'question/addField',
-                payload: { type: 'text', idx: idx },
+                payload: { type: 'text_label', idx: idx },
               })
             }}
           >
@@ -35,7 +35,7 @@ export default function FieldOption({ idx }) {
             onClick={(e) => {
               dispatch({
                 type: 'question/addField',
-                payload: { type: 'answer', idx: idx },
+                payload: { type: 'short_text_answer', idx: idx },
               })
             }}
           >

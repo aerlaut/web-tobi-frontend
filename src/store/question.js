@@ -10,12 +10,16 @@ let slice = createSlice({
     difficulty: '',
     content: [
       {
-        type: 'question_text',
+        type: 'text_label',
         content: 'This is a question',
       },
       {
-        type: 'answer_short_text',
+        type: 'short_text_answer',
         content: 'Tulis jawaban Anda dibawah ini',
+      },
+      {
+        type: 'text_answer',
+        content: 'Tulis alasan Anda dibawah ini',
       },
     ],
   },
@@ -39,21 +43,7 @@ let slice = createSlice({
       const { type, idx } = action.payload
 
       // Create new field object
-      let field = {}
-      if (type === 'text') {
-        field = {
-          type: type,
-          content: '',
-        }
-      } else if (type === 'answer') {
-        field = {
-          type: type,
-          content: {
-            type: 'short_text',
-            label: '',
-          },
-        }
-      }
+      let field = {type : type, content : ''}
 
       // Add new field
       let newContent = []

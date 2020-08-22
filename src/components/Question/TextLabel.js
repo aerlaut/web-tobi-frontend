@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 
 export default function ({content, idx}) {
 
-  let type = 'question_text'
+  let type = 'text_label'
   const dispatch = useDispatch()
 
   const [editorState, setEditorState] = useState(() => {

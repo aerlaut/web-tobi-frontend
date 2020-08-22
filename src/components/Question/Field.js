@@ -1,19 +1,24 @@
 import React, { useMemo } from 'react'
 
-import Text from './Text'
-import ShortText from './ShortText'
+import TextLabel from './TextLabel'
+import ShortTextAnswer from './ShortTextAnswer'
+import TextAnswer from './TextAnswer'
 
 export default function ({ type = 'text', content = '', idx }) {
 
 
   switch(type) {
 
-    case 'question_text' :
-      return <Text content={content} idx={idx}/>
+    case 'text_label' :
+      return <TextLabel content={content} idx={idx}/>
       break;
 
-    case 'answer_short_text' :
-      return <ShortText content={content} idx={idx} />
+    case 'text_answer' :
+      return <TextAnswer content={content} idx={idx}/>
+      break;
+
+    case 'short_text_answer' :
+      return <ShortTextAnswer content={content} idx={idx} />
       break;
 
   }

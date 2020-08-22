@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 export default function ({ content, idx}) {
 
-  let type = 'answer_short_text'
+  let type = 'short_text_answer'
   const dispatch = useDispatch()
 
   return (
