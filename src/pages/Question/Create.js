@@ -58,7 +58,12 @@ export default function () {
 		auth(history) && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
-				<h1 className='text-xl font-bold mb-4'>Buat Soal Baru</h1>
+				<h1 className='text-xl font-bold mb-4'>
+					Buat Soal Baru
+					<span class='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'>
+						Save
+					</span>
+				</h1>
 
 				<div className='flex'>
 					<div className='w-1/2 flex flex-col'>
