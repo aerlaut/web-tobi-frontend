@@ -9,10 +9,10 @@ let slice = createSlice({
 		official: true,
 		difficulty: '',
 		contents: [
-			{
-				type: 'text_label',
-				content: 'This is a question',
-			},
+			// {
+			// 	type: 'text_label',
+			// 	content: 'This is a question',
+			// },
 			// {
 			// 	type: 'short_text_answer',
 			// 	content: 'Tulis jawaban Anda dibawah ini',
@@ -21,8 +21,20 @@ let slice = createSlice({
 			// 	type: 'text_answer',
 			// 	content: 'Tulis alasan Anda dibawah ini',
 			// },
+			// {
+			// 	type: 'single_choice_answer',
+			// 	content: {
+			// 		label: 'Pilih salah satu jawaban dibawah ini',
+			// 		options: [
+			// 			{ text: 'Option A', idx: 1, is_correct: false },
+			// 			{ text: 'Option B', idx: 2, is_correct: false },
+			// 			{ text: 'Option C', idx: 3, is_correct: false },
+			// 			{ text: 'Option D', idx: 4, is_correct: false },
+			// 		],
+			// 	},
+			// },
 			{
-				type: 'single_choice_answer',
+				type: 'multiple_choice_answer',
 				content: {
 					label: 'Pilih salah satu jawaban dibawah ini',
 					options: [

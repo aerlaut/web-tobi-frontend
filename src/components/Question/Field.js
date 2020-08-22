@@ -5,6 +5,7 @@ import TextLabel from './TextLabel'
 import ShortTextAnswer from './ShortTextAnswer'
 import TextAnswer from './TextAnswer'
 import SingleChoiceAnswer from './SingleChoiceAnswer'
+import MultipleChoiceAnswer from './MultipleChoiceAnswer'
 
 export default function ({ type = 'text', content = '', idx }) {
 	const dispatch = useDispatch()
@@ -25,6 +26,10 @@ export default function ({ type = 'text', content = '', idx }) {
 
 		case 'single_choice_answer':
 			field = <SingleChoiceAnswer content={content} idx={idx} />
+			break
+
+		case 'multiple_choice_answer':
+			field = <MultipleChoiceAnswer content={content} idx={idx} />
 			break
 	}
 
