@@ -15,10 +15,11 @@ export default function () {
 	const author = useSelector((state) => state.author)
 	const tier = useSelector((state) => state.tier)
 	const maxScore = useSelector((state) => state.maxScore)
-	const official = useSelector((state) => state.official)
-	const publish = useSelector((state) => state.publish)
+	const isOfficial = useSelector((state) => state.isOfficial)
+	const isPublished = useSelector((state) => state.isPublished)
 	const difficulty = useSelector((state) => state.difficulty)
-
+	const updatedAt = useSelector((state) => state.updatedAt)
+	const createdAt = useSelector((state) => state.createdAt)
 	const contents = useSelector((state) => state.contents)
 
 	const tiers = [
@@ -57,7 +58,6 @@ export default function () {
 
 	function saveQuestion(e) {
 		e.preventDefault()
-
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
 			method: 'POST',
@@ -67,10 +67,12 @@ export default function () {
 			body: JSON.stringify({
 				author: author,
 				tier: tier,
+				createdAt: Date.now(),
 				maxScore: maxScore,
-				official: official,
+				isOfficial: isOfficial,
 				difficulty: difficulty,
-				contents: contents,
+				body: contents,
+				isPublished: isPublished,
 			}),
 		})
 			.then((res) => {
@@ -113,7 +115,7 @@ export default function () {
 							<span className='w-2/12 inline-block'>Author</span>
 							<input
 								type='text'
-								className='w-2/12 p-1 border border-black shadow-inside rounded'
+								className='w-6/12 p-1 border border-black shadow-inside rounded'
 								value={author}
 								onChange={(e) => {
 									dispatch({
@@ -147,7 +149,7 @@ export default function () {
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Official?</span>
 							<select
-								value={official}
+								value={isOfficial}
 								onChange={(e) =>
 									dispatch({
 										type: 'question/setOfficial',
@@ -162,12 +164,12 @@ export default function () {
 						</label>
 
 						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Published</span>
+							<span className='w-2/12 inline-block'>Published?</span>
 							<select
-								value={official}
+								value={isOfficial}
 								onChange={(e) =>
 									dispatch({
-										type: 'question/setPublish',
+										type: 'question/setPublished',
 										payload: { content: e.target.value },
 									})
 								}
@@ -212,7 +214,12 @@ export default function () {
 						</label>
 
 						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Published date</span>
+							<span className='w-3/12 inline-block'>Created date</span>
+							<span></span>
+						</label>
+
+						<label className='my-2'>
+							<span className='w-3/12 inline-block'>Last Update</span>
 							<span></span>
 						</label>
 					</div>

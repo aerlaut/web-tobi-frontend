@@ -6,8 +6,9 @@ let slice = createSlice({
 		author: '',
 		tier: '',
 		maxScore: '',
-		official: true,
+		isOfficial: false,
 		difficulty: '',
+		isPublished: false,
 		contents: [
 			// {
 			// 	type: 'text_label',
@@ -61,11 +62,11 @@ let slice = createSlice({
 		},
 
 		setOfficial: (state, action) => {
-			state.official = action.payload.content
+			state.isOfficial = action.payload.content
 		},
 
-		setPublish: (state, action) => {
-			state.publish = action.payload.content
+		setPublished: (state, action) => {
+			state.isPublished = action.payload.content
 		},
 
 		setDifficulty: (state, action) => {
@@ -87,7 +88,11 @@ let slice = createSlice({
 		// Update field
 		updateField: (state, action) => {
 			const { idx, type, content } = action.payload
-			state.contents[idx] = { type: type, content: content }
+			if (type == 'single_choice_answer' || type == 'multiple_choice_answer') {
+				state.contents[idx].content.label = content.label
+			} else {
+				state.contents[idx].content = content
+			}
 		},
 		// Update option in a field
 		updateOption: (state, action) => {

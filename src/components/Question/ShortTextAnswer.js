@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 export default function ({ content, idx }) {
-	let type = 'short_text_answer'
+	const type = 'short_text_answer'
 	const dispatch = useDispatch()
 
 	return (

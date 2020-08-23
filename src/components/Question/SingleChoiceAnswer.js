@@ -67,9 +67,7 @@ export default function ({ content, idx }) {
 						payload: {
 							idx: idx,
 							type: type,
-							content: {
-								label: e.target.value,
-							},
+							content: e.target.value,
 						},
 					})
 				}}
