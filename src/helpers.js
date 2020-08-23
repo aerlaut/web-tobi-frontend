@@ -1,44 +1,45 @@
-let auth = function (history) {
-  // Check for token
-  if (!localStorage.getItem('token')) {
-    localStorage.clear()
-    history.push('/login')
-    return false
-  }
+function auth(history) {
+	// Check for token
+	if (!localStorage.getItem('token')) {
+		localStorage.clear()
+		history.push('/login')
+		return false
+	}
 
-  return true
+	return true
 }
 // Get function to get page data
-let getPageData = function () {
-  let url = null
-  let handler = null
+function fetchPageData(options, handler) {
+	const { auth } = options
 
-  if (arguments.length === 1) {
-    url = window.location.pathname
-    handler = arguments[0]
-  } else if (arguments.length === 2) {
-    url = arguments[0]
-    handler = arguments[1]
-  }
+	// Requires authorization
+	let headers = new Headers()
+	if (auth) {
+		if (localStorage.getItem('token') !== null) {
+			headers.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
+		} else {
+			// Log out
+			localStorage.clear()
+			window.location.href = ''
+		}
+	}
 
-  fetch(`${process.env.REACT_APP_API_URL}${url}`, {
-    // url includes beginning '/'
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({}),
-  })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error()
-      }
-      return res.json()
-    })
-    .then((res) => {
-      handler(res)
-    })
-    .catch((err) => console.error(err))
+	let url = window.location.pathname
+	fetch(`${process.env.REACT_APP_API_URL}${url}`, {
+		// url includes beginning '/'
+		method: 'GET',
+		headers: headers,
+	})
+		.then((res) => {
+			if (!res.ok) {
+				throw new Error()
+			}
+			return res.json()
+		})
+		.then((res) => {
+			handler(res)
+		})
+		.catch((err) => console.error(err))
 }
 
-export { auth, getPageData }
+export { auth, fetchPageData }

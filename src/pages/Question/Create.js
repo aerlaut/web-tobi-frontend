@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { auth, getPageData } from '../../helpers'
+import { auth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Field from '../../components/Question/Field'
 import FieldOption from '../../components/Question/FieldOption'
@@ -47,7 +47,7 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		getPageData((res) => {
+		fetchPageData((res) => {
 			if (res !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
@@ -102,7 +102,7 @@ export default function () {
 				<h1 className='text-xl font-bold mb-4'>
 					Buat Soal Baru
 					<span
-						class='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
+						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
 						onClick={(e) => saveQuestion(e)}
 					>
 						Save
@@ -223,6 +223,20 @@ export default function () {
 							<span></span>
 						</label>
 					</div>
+				</div>
+				<div className='my-2'>
+					<strong>Description</strong>
+					<textarea
+						className='rounded border border-black block w-full px-2 py-1'
+						rows={3}
+						onChange={(e) => {
+							dispatch({
+								type: 'question/setDescription',
+								payload: { content: e.target.value },
+							})
+						}}
+					></textarea>
+					<div></div>
 				</div>
 				<div className='my-2'>
 					<strong>Topics</strong>

@@ -42,7 +42,7 @@ export default function AppBar() {
 
 					// Forward to login page
 					history.push('/dashboard')
-					showLogin(false)
+					setShowLogin(false)
 				}
 			})
 			.catch((err) => {
@@ -54,9 +54,8 @@ export default function AppBar() {
 
 	// Handles log out
 	function handleLogout() {
-		// Delete local storage
-		localStorage.removeItem('username')
-		localStorage.removeItem('token')
+		// Clear local storage
+		localStorage.clear()
 
 		// Return to home screen
 		history.push('')
@@ -100,7 +99,7 @@ export default function AppBar() {
 					{localStorage.getItem('username') !== null ? (
 						// Logged in
 						<>
-							<li class='relative'>
+							<li className='relative'>
 								<span
 									className='inline-block cursor-pointer hover:bg-gray-300 rounded px-2 py-1'
 									onClick={() => setShowUserDropdown(!showUserDropdown)}

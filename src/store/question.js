@@ -9,6 +9,7 @@ let slice = createSlice({
 		isOfficial: false,
 		difficulty: '',
 		isPublished: false,
+		description: '',
 		contents: [
 			// {
 			// 	type: 'text_label',
@@ -71,6 +72,10 @@ let slice = createSlice({
 
 		setDifficulty: (state, action) => {
 			state.difficulty = action.payload.content
+		},
+
+		setDescription: (state, action) => {
+			state.description = action.payload.content
 		},
 
 		addField: (state, action) => {

@@ -25,14 +25,14 @@ export default function App() {
 			<AppBar />
 			<main className='p-4'>
 				<Switch>
-					<Route path='/' exact component={Home} />
+					<Route exact path='/' exact component={Home} />
 					<Route path='/login' component={Login} />
 					<Route path='/dashboard' component={Dashboard} />
 					<Route path='/page/:id' component={Page} />
 					<Route path='/register' component={Register} />
-					<Route path='/question/create' component={QuestionCreate} />
+					<Route exact path='/question' component={QuestionIndex} />
+					<Route exact path='/question/create' component={QuestionCreate} />
 					<Route path='/question/:id' component={QuestionShow} />
-					<Route path='/question' component={QuestionIndex} />
 					<Route path='/test' component={Test} />
 				</Switch>
 			</main>
