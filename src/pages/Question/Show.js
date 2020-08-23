@@ -3,11 +3,14 @@ import { useHistory, useParams } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Field from '../../components/Question/Field'
 import moment from 'moment'
+import { useSelector } from 'react-redux'
 
 export default function () {
 	const history = useHistory()
 	const [error, setError] = useState()
 	const [question, setQuestion] = useState({})
+
+	const role = useSelector((state) => state.auth.role)
 
 	useEffect(() => {
 		// Fetch dashboard data
@@ -28,15 +31,15 @@ export default function () {
 			<>
 				<h1 className='text-xl font-bold mb-4'>
 					Soal ID : {id}
-					{true ? (
-						''
-					) : (
+					{role == 'admin' || role == 'superadmin' ? (
 						<span
-							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer'
+							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer text-base rounded'
 							onClick={() => history.push(`/question/${id}/edit`)}
 						>
 							Edit
 						</span>
+					) : (
+						''
 					)}
 				</h1>
 				<p>

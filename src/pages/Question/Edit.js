@@ -16,7 +16,7 @@ export default function () {
 	const tier = useSelector((state) => state.question.tier)
 	const maxScore = useSelector((state) => state.question.maxScore)
 	const isOfficial = useSelector((state) => state.question.isOfficial)
-	const isPublished = useSelector((state) => state.iquestion.sPublished)
+	const isPublished = useSelector((state) => state.question.isPublished)
 	const difficulty = useSelector((state) => state.question.difficulty)
 	const updatedAt = useSelector((state) => state.question.updatedAt)
 	const createdAt = useSelector((state) => state.question.createdAt)
