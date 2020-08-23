@@ -47,7 +47,8 @@ export default function () {
 						{questions.map((el, idx) => (
 							<div
 								key={`q_${el.questionId}`}
-								className='w-2/12 border border-yellow-800 bg-yellow-200 rounded mr-4 mb-4 p-4'
+								className='w-2/12 border border-yellow-800 bg-yellow-200 rounded mr-4 mb-4 p-4 cursor-pointer'
+								onClick={() => history.push(`/question/${el.questionId}`)}
 							>
 								<h3 className='font-xl font-bold'>{el.questionId}</h3>
 								<h3>{el.description}</h3>

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import XCircle from '../../icons/XCircle'
 import PlusCircle from '../../icons/PlusCircle'
 
-export default function ({ content, idx }) {
+export default function ({ content, idx, mode = 'readOnly' }) {
 	const type = 'single_choice_answer'
 	const dispatch = useDispatch()
 
@@ -57,21 +57,25 @@ export default function ({ content, idx }) {
 
 	return (
 		<>
-			<input
-				type='text'
-				value={content.label}
-				className='border rounded w-full my-2 px-2 py-1 my-2'
-				onChange={(e) => {
-					dispatch({
-						type: 'question/updateField',
-						payload: {
-							idx: idx,
-							type: type,
-							content: e.target.value,
-						},
-					})
-				}}
-			/>
+			{mode == 'readOnly' ? (
+				<p class='my-2'>{content.label}</p>
+			) : (
+				<input
+					type='text'
+					value={content.label}
+					className='border rounded w-full my-2 px-2 py-1 my-2'
+					onChange={(e) => {
+						dispatch({
+							type: 'question/updateField',
+							payload: {
+								idx: idx,
+								type: type,
+								content: e.target.value,
+							},
+						})
+					}}
+				/>
+			)}
 
 			{content.options.map((el, option_idx) => (
 				<div className='flex mb-2' key={`${idx}_${option_idx}`}>

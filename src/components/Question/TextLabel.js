@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
 
-export default function ({ content, idx }) {
+export default function ({ content = '', idx, mode = 'readOnly' }) {
 	let type = 'text_label'
 	const dispatch = useDispatch()
 
@@ -32,6 +32,7 @@ export default function ({ content, idx }) {
 	return (
 		<Editor
 			editorState={editorState}
+			readOnly={mode !== 'edit'}
 			wrapperClassName='min-h-1/4'
 			toolbarClassName='border border-gray-800 rounded-t mb-0'
 			editorClassName='border border-gray-800 rounded-b px-4 bg-white'

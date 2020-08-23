@@ -1,27 +1,31 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
-export default function ({ content, idx }) {
+export default function ({ content = '', idx, mode = 'readOnly' }) {
 	const type = 'short_text_answer'
 	const dispatch = useDispatch()
 
 	return (
 		<>
-			<input
-				type='text'
-				value={content}
-				className='border rounded w-full my-2 px-2 py-1 my-2'
-				onChange={(e) => {
-					dispatch({
-						type: 'question/updateField',
-						payload: {
-							idx: idx,
-							type: type,
-							content: e.target.value,
-						},
-					})
-				}}
-			/>
+			{mode == 'readOnly' ? (
+				<p>{content}</p>
+			) : (
+				<input
+					type='text'
+					value={content}
+					className='border rounded w-full my-2 px-2 py-1 my-2'
+					onChange={(e) => {
+						dispatch({
+							type: 'question/updateField',
+							payload: {
+								idx: idx,
+								type: type,
+								content: e.target.value,
+							},
+						})
+					}}
+				/>
+			)}
 			<input
 				type='text'
 				value=''

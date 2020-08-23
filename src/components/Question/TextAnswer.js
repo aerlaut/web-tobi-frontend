@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
 
-export default function ({ content, idx }) {
+export default function ({ content = '', idx, mode = 'readOnly' }) {
 	let type = 'text_answer'
 	const dispatch = useDispatch()
 
@@ -34,23 +34,28 @@ export default function ({ content, idx }) {
 
 	return (
 		<>
-			<input
-				type='text'
-				value={content}
-				className='border rounded w-full px-2 py-1 my-2'
-				onChange={(e) => {
-					dispatch({
-						type: 'question/updateField',
-						payload: {
-							idx: idx,
-							type: type,
-							content: e.target.value,
-						},
-					})
-				}}
-			/>
+			{mode == 'readOnly' ? (
+				<p>{content}</p>
+			) : (
+				<input
+					type='text'
+					value={content}
+					className='border rounded w-full px-2 py-1 my-2'
+					onChange={(e) => {
+						dispatch({
+							type: 'question/updateField',
+							payload: {
+								idx: idx,
+								type: type,
+								content: e.target.value,
+							},
+						})
+					}}
+				/>
+			)}
 			<Editor
 				editorState={editorState}
+				readOnly={mode !== 'answer'}
 				wrapperClassName='min-h-1/4'
 				toolbarClassName='border border-gray-800 rounded-t mb-0'
 				editorClassName='border border-gray-800 rounded-b px-4'

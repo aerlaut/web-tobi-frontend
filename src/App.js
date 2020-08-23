@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import QuestionIndex from './pages/Question/Index'
 import QuestionCreate from './pages/Question/Create'
 import QuestionShow from './pages/Question/Show'
+import QuestionEdit from './pages/Question/Edit'
 import Test from './pages/Test'
 
 // Components
@@ -32,7 +33,8 @@ export default function App() {
 					<Route path='/register' component={Register} />
 					<Route exact path='/question' component={QuestionIndex} />
 					<Route exact path='/question/create' component={QuestionCreate} />
-					<Route path='/question/:id' component={QuestionShow} />
+					<Route exact path='/question/:id' component={QuestionShow} />
+					<Route path='/question/:id/edit' component={QuestionEdit} />
 					<Route path='/test' component={Test} />
 				</Switch>
 			</main>

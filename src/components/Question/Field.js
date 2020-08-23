@@ -7,7 +7,12 @@ import TextAnswer from './TextAnswer'
 import SingleChoiceAnswer from './SingleChoiceAnswer'
 import MultipleChoiceAnswer from './MultipleChoiceAnswer'
 
-export default function ({ type = 'text', content = null, idx }) {
+export default function ({
+	type = 'text',
+	content = null,
+	idx,
+	mode = 'readOnly',
+}) {
 	const dispatch = useDispatch()
 	const fieldRef = useRef()
 
@@ -68,15 +73,15 @@ export default function ({ type = 'text', content = null, idx }) {
 	let field = null
 	switch (type) {
 		case 'text_label':
-			field = <TextLabel content={content} idx={idx} />
+			field = <TextLabel content={content} idx={idx} mode={mode} />
 			break
 
 		case 'text_answer':
-			field = <TextAnswer content={content} idx={idx} />
+			field = <TextAnswer content={content} idx={idx} mode={mode} />
 			break
 
 		case 'short_text_answer':
-			field = <ShortTextAnswer content={content} idx={idx} />
+			field = <ShortTextAnswer content={content} idx={idx} mode={mode} />
 			break
 
 		case 'single_choice_answer':
@@ -84,6 +89,7 @@ export default function ({ type = 'text', content = null, idx }) {
 				<SingleChoiceAnswer
 					content={content !== null ? content : defaultContent(type)}
 					idx={idx}
+					mode={mode}
 				/>
 			)
 			break
@@ -93,6 +99,7 @@ export default function ({ type = 'text', content = null, idx }) {
 				<MultipleChoiceAnswer
 					content={content !== null ? content : defaultContent(type)}
 					idx={idx}
+					mode={mode}
 				/>
 			)
 			break
@@ -106,35 +113,43 @@ export default function ({ type = 'text', content = null, idx }) {
 				) : (
 					''
 				)}
-				<span
-					className='float-right bg-red-600 text-white px-2 py-1 rounded font-bold cursor-pointer'
-					onClick={(e) => {
-						dispatch({
-							type: 'question/removeField',
-							payload: {
-								idx: idx,
-							},
-						})
-					}}
-				>
-					Delete
-				</span>
-				<span
-					className='float-right px-2 py-1 mr-2 rounded bg-blue-600 text-white px-2 py-1 font-bold cursor-pointer'
-					onClick={(e) => switchField()}
-				>
-					Switch
-				</span>
-				<select
-					className='float-right px-2 py-1 mr-2 rounded border-gray-800 border capitalize'
-					ref={fieldRef}
-				>
-					{labels.map((field, idx) => (
-						<option value={field} key={`option_${idx}`}>
-							{field.split('_').join(' ')}
-						</option>
-					))}
-				</select>
+
+				{/* Disable if not in edit mode */}
+				{mode != 'edit' ? (
+					''
+				) : (
+					<>
+						<span
+							className='float-right bg-red-600 text-white px-2 py-1 rounded font-bold cursor-pointer'
+							onClick={(e) => {
+								dispatch({
+									type: 'question/removeField',
+									payload: {
+										idx: idx,
+									},
+								})
+							}}
+						>
+							Delete
+						</span>
+						<span
+							className='float-right px-2 py-1 mr-2 rounded bg-blue-600 text-white px-2 py-1 font-bold cursor-pointer'
+							onClick={(e) => switchField()}
+						>
+							Switch
+						</span>
+						<select
+							className='float-right px-2 py-1 mr-2 rounded border-gray-800 border capitalize'
+							ref={fieldRef}
+						>
+							{labels.map((field, idx) => (
+								<option value={field} key={`option_${idx}`}>
+									{field.split('_').join(' ')}
+								</option>
+							))}
+						</select>
+					</>
+				)}
 			</div>
 			{field}
 		</div>
