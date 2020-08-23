@@ -3,11 +3,13 @@ import { EditorState, ContentState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
+import { stateToHTML } from 'draft-js-export-html'
 
 export default function ({ content = '', idx, mode = 'readOnly' }) {
 	let type = 'text_label'
 	const dispatch = useDispatch()
 
+	const [contentState, setContentState] = useState('')
 	const [editorState, setEditorState] = useState(() => {
 		if (content !== '') {
 			return EditorState.createWithContent(ContentState.createFromText(content))
@@ -25,18 +27,25 @@ export default function ({ content = '', idx, mode = 'readOnly' }) {
 				content: e.getCurrentContent().getPlainText(),
 			},
 		})
-
-		setEditorState(e)
 	}
 
 	return (
-		<Editor
-			editorState={editorState}
-			readOnly={mode !== 'edit'}
-			wrapperClassName='min-h-1/4 mt-2'
-			toolbarClassName='border border-gray-800 rounded-t mb-0'
-			editorClassName='border border-gray-800 rounded-b px-4 bg-white'
-			onEditorStateChange={(e) => handleEditorChange(e)}
-		/>
+		<>
+			{mode === 'readOnly' ? (
+				<div
+					dangerouslySetInnerHTML={{
+						__html: stateToHTML(editorState.getCurrentContent()),
+					}}
+				></div>
+			) : (
+				<Editor
+					editorState={editorState}
+					wrapperClassName='min-h-1/4 mt-2'
+					toolbarClassName='border border-gray-800 rounded-t mb-0'
+					editorClassName='border border-gray-800 rounded-b px-4 bg-white'
+					onEditorStateChange={(e) => handleEditorChange(e)}
+				/>
+			)}
+		</>
 	)
 }

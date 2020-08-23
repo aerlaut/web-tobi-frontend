@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-updaimport { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Field from '../../components/Question/Field'
 import FieldOption from '../../components/Question/FieldOption'
+import moment from 'moment'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -244,12 +245,22 @@ export default function () {
 
 						<label className='my-2'>
 							<span className='w-3/12 inline-block'>Created</span>
-							<span>{createdAt}</span>
+							<span>
+								{moment
+									.utc(createdAt)
+									.utcOffset('+07:00')
+									.format('YYYY-MM-DD HH:mm:ss [WIB]')}
+							</span>
 						</label>
 
 						<label className='my-2'>
 							<span className='w-3/12 inline-block'>Last Update</span>
-							<span>{updatedAt}</span>
+							<span>
+								{moment
+									.utc(updatedAt)
+									.utcOffset('+07:00')
+									.format('YYYY-MM-DD HH:mm:ss [WIB]')}
+							</span>
 						</label>
 					</div>
 				</div>

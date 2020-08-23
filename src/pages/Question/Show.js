@@ -46,8 +46,11 @@ export default function () {
 					by {question.author}
 					<br />
 					created{' '}
-					{moment.utc(question.createdAt).format('DD MMMM YYYY HH:mm:ss')}
-					{question.isPublished ? `, published ${question.publishDate}` : ''}
+					{moment
+						.utc(question.createdAt)
+						.utcOffset('+07:00')
+						.format('DD MMMM YYYY HH:mm:ss [WIB]')}
+					{question.isPublished ? `, published ${question.publishAt}` : ''}
 				</p>
 				{question.contents === undefined
 					? ''
