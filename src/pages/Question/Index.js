@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { auth, fetchPageData } from '../../helpers'
+import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import NewItem from '../../icons/NewItem'
 
@@ -11,7 +11,7 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		fetchPageData({ auth: true }, (res) => {
+		fetchPageData({ useAuth: true }, (res) => {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
@@ -22,7 +22,7 @@ export default function () {
 	}, [])
 
 	return (
-		auth(history) && (
+		useAuth() && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<div>Search</div>

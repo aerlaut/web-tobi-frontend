@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { auth, fetchPageData } from '../helpers'
+import { useAuth, fetchPageData } from '../helpers'
 import Error from '../components/Error'
 
 export default function () {
@@ -19,7 +19,7 @@ export default function () {
 	}, [])
 
 	return (
-		auth(history) && (
+		useAuth() && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<h1 className='text-xl font-bold mb-4'>Dashboard</h1>

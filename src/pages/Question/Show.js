@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { auth, fetchPageData } from '../../helpers'
+import { useAuth, fetchPageData } from '../../helpers'
 import Field from '../../components/Question/Field'
 import moment from 'moment'
 
@@ -11,7 +11,7 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		fetchPageData({ auth: true }, (res) => {
+		fetchPageData({ useAuth: true }, (res) => {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
@@ -24,9 +24,21 @@ export default function () {
 	let { id } = useParams()
 
 	return (
-		auth(history) && (
+		useAuth() && (
 			<>
-				<h1 className='text-xl font-bold mb-4'>Soal ID : {id}</h1>
+				<h1 className='text-xl font-bold mb-4'>
+					Soal ID : {id}
+					{true ? (
+						''
+					) : (
+						<span
+							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer'
+							onClick={() => history.push(`/question/${id}/edit`)}
+						>
+							Edit
+						</span>
+					)}
+				</h1>
 				<p>
 					by {question.author}
 					<br />

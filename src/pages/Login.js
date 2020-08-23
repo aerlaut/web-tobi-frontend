@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import cx from 'classnames'
+import { useDispatch } from 'react-redux'
 
 export default function () {
 	const history = useHistory()
+	const dispatch = useDispatch()
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
@@ -35,7 +37,17 @@ export default function () {
 				} else {
 					// Save token
 					localStorage.setItem('token', res.data.token)
-					localStorage.setItem('username', res.data.user.username)
+					localStorage.setItem('username', res.data.username)
+					localStorage.setItem('role', res.data.role)
+
+					// Push data to redux
+					dispatch({
+						type: 'auth/logUserIn',
+						payload: {
+							username: res.data.username,
+							role: res.data.role,
+						},
+					})
 
 					// Forward to login page
 					history.push('/dashboard')

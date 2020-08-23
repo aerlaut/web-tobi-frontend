@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { auth, fetchPageData } from '../../helpers'
+import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Field from '../../components/Question/Field'
 import FieldOption from '../../components/Question/FieldOption'
@@ -12,16 +12,17 @@ export default function () {
 	const [error, setError] = useState('')
 	const dispatch = useDispatch()
 
-	const author = useSelector((state) => state.author)
-	const tier = useSelector((state) => state.tier)
-	const maxScore = useSelector((state) => state.maxScore)
-	const isOfficial = useSelector((state) => state.isOfficial)
-	const isPublished = useSelector((state) => state.isPublished)
-	const difficulty = useSelector((state) => state.difficulty)
-	const updatedAt = useSelector((state) => state.updatedAt)
-	const createdAt = useSelector((state) => state.createdAt)
-	const contents = useSelector((state) => state.contents)
-	const description = useSelector((state) => state.description)
+	// Redux state
+	const author = useSelector((state) => state.question.author)
+	const tier = useSelector((state) => state.question.tier)
+	const maxScore = useSelector((state) => state.question.maxScore)
+	const isOfficial = useSelector((state) => state.question.isOfficial)
+	const isPublished = useSelector((state) => state.question.isPublished)
+	const difficulty = useSelector((state) => state.question.difficulty)
+	const updatedAt = useSelector((state) => state.question.updatedAt)
+	const createdAt = useSelector((state) => state.question.createdAt)
+	const contents = useSelector((state) => state.question.contents)
+	const description = useSelector((state) => state.question.description)
 
 	const tiers = [
 		{
@@ -100,7 +101,7 @@ export default function () {
 	}
 
 	return (
-		auth(history) && (
+		useAuth() && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<h1 className='text-xl font-bold mb-4'>

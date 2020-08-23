@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { combineReducer } from 'redux'
+import { combineReducers } from 'redux'
 
 import QuestionSlice from './question'
+import AuthSlice from './auth'
 
-// let reducers = combineReducer({
-//   QuestionSlice.reducer,
-// })
+let reducers = combineReducers({
+	question: QuestionSlice.reducer,
+	auth: AuthSlice.reducer,
+})
 
 let store = configureStore({
-  reducer: QuestionSlice.reducer,
+	reducer: reducers,
 })
 
 export default store

@@ -1,9 +1,6 @@
 import React from 'react'
+import { useAuth } from '../helpers'
 
-export default function ({ match }) {
-  return (
-    <React.Fragment>
-      <div>Home page</div>
-    </React.Fragment>
-  )
+export default function () {
+	return <>{useAuth(false) && <div>Home page</div>}</>
 }

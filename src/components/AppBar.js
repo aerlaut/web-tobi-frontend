@@ -2,13 +2,20 @@ import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import ChevronDown from '../icons/ChevronDown'
 import cx from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function AppBar() {
 	const history = useHistory()
+	const dispatch = useDispatch()
 
+	// Redux states
+	const username = useSelector((state) => state.auth.username)
+	const auth = useSelector((state) => state.auth.isAuth)
+
+	// Local state
 	const [showLogin, setShowLogin] = useState(false)
-	const [username, setUsername] = useState('')
-	const [password, setPassword] = useState('')
+	const [loginUsername, setLoginUsername] = useState('')
+	const [loginPassword, setLoginPassword] = useState('')
 	const [formStatus, setFormStatus] = useState('')
 	const [showUserDropdown, setShowUserDropdown] = useState(false)
 
@@ -22,8 +29,8 @@ export default function AppBar() {
 				'Content-type': 'application/json',
 			},
 			body: JSON.stringify({
-				username: username,
-				password: password,
+				username: loginUsername,
+				password: loginPassword,
 			}),
 		})
 			.then((res) => {
@@ -38,7 +45,17 @@ export default function AppBar() {
 				} else {
 					// Save token
 					localStorage.setItem('token', res.data.token)
-					localStorage.setItem('username', res.data.user.username)
+					localStorage.setItem('username', res.data.username)
+					localStorage.setItem('role', res.data.role)
+
+					// Push data to redux
+					dispatch({
+						type: 'auth/logUserIn',
+						payload: {
+							username: res.data.username,
+							role: res.data.role,
+						},
+					})
 
 					// Forward to login page
 					history.push('/dashboard')
@@ -72,7 +89,7 @@ export default function AppBar() {
 
 				{/* Left links */}
 				<ul className='flex float-left'>
-					{localStorage.getItem('username') !== undefined ? (
+					{auth == true ? (
 						// Logged in
 						<>
 							<li className='mr-4 inline-block'>
@@ -96,15 +113,15 @@ export default function AppBar() {
 				</ul>
 				{/* Right links */}
 				<ul className='float-right flex'>
-					{localStorage.getItem('username') !== null ? (
+					{auth == true ? (
 						// Logged in
 						<>
 							<li className='relative'>
 								<span
-									className='inline-block cursor-pointer hover:bg-gray-300 rounded px-2 py-1'
+									className='inline-block cursor-pointer hover:bg-gray-300 rounded px-2 py-1 -mt-2 -mb-2'
 									onClick={() => setShowUserDropdown(!showUserDropdown)}
 								>
-									{localStorage.getItem('username')}
+									{username}
 									<ChevronDown className='inline-block' />
 								</span>
 
@@ -188,17 +205,17 @@ export default function AppBar() {
 						<input
 							type='text'
 							placeholder='username'
-							value={username}
+							value={loginUsername}
 							className='p-1 rounded shadow-inner my-2 block border-2 border-black'
-							onChange={(e) => setUsername(e.target.value)}
+							onChange={(e) => setLoginUsername(e.target.value)}
 						></input>
 						<input
 							type='password'
 							placeholder='password'
 							name='password'
-							value={password}
+							value={loginPassword}
 							className='p-1 rounded shadow-inner my-2 block border-2 border-black'
-							onChange={(e) => setPassword(e.target.value)}
+							onChange={(e) => setLoginPassword(e.target.value)}
 						></input>
 						<button className='py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded cursor-pointer text-center'>
 							LOGIN

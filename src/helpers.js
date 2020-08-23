@@ -1,13 +1,31 @@
-function auth(history) {
-	// Check for token
-	if (!localStorage.getItem('token')) {
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+
+// Block off
+function useAuth(protectedPage = true) {
+	const history = useHistory()
+	const dispatch = useDispatch()
+
+	// Check for token, upload ser
+	if (localStorage.getItem('token')) {
+		dispatch({
+			type: 'auth/logUserIn',
+			payload: {
+				username: localStorage.getItem('username'),
+				role: localStorage.getItem('role'),
+			},
+		})
+		return true
+	}
+
+	// Is in protected page, redirect
+	if (protectedPage) {
 		localStorage.clear()
 		history.push('/login')
 		return false
 	}
-
-	return true
 }
+
 // Get function to get page data
 function fetchPageData(options, handler) {
 	const { auth } = options
@@ -42,4 +60,4 @@ function fetchPageData(options, handler) {
 		.catch((err) => console.error(err))
 }
 
-export { auth, fetchPageData }
+export { useAuth, fetchPageData }

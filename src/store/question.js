@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-let slice = createSlice({
+export default createSlice({
 	name: 'question',
 	initialState: {
 		author: '',
@@ -111,6 +111,3 @@ let slice = createSlice({
 		},
 	},
 })
-
-// testing
-export default slice
