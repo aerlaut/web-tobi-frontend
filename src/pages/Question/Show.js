@@ -13,7 +13,7 @@ export default function () {
 	useEffect(() => {
 		// Fetch dashboard data
 		console.log('use effect ran')
-	})
+	}, [])
 
 	return (
 		auth(history) && (

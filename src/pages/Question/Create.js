@@ -21,6 +21,7 @@ export default function () {
 	const updatedAt = useSelector((state) => state.updatedAt)
 	const createdAt = useSelector((state) => state.createdAt)
 	const contents = useSelector((state) => state.contents)
+	const description = useSelector((state) => state.description)
 
 	const tiers = [
 		{
@@ -47,25 +48,28 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		fetchPageData((res) => {
-			if (res !== 'ok') {
-				setError({ type: 'error', message: res.message })
-			} else {
-				// Setting information
-			}
-		})
-	})
+		// fetchPageData((res) => {
+		// 	if (res !== 'ok') {
+		// 		setError({ type: 'error', message: res.message })
+		// 	} else {
+		// 		// Setting information
+		// 	}
+		// })
+	}, [])
 
 	function saveQuestion(e) {
 		e.preventDefault()
+
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
 			method: 'POST',
-			headers: {
+			headers: new Headers({
 				'Content-type': 'application/json',
-			},
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}),
 			body: JSON.stringify({
 				author: author,
+				description: description,
 				tier: tier,
 				createdAt: Date.now(),
 				maxScore: maxScore,
@@ -139,7 +143,7 @@ export default function () {
 								className='border rounded p-1 border-black w-2/12'
 							>
 								{tiers.map((t) => (
-									<option key={t.value} value={t.value}>
+									<option key={`tier_${t.value}`} value={t.value}>
 										{t.name}
 									</option>
 								))}
@@ -259,7 +263,7 @@ export default function () {
 					<>
 						<Field
 							type={field.type}
-							key={`field-${idx}`}
+							key={`field_${idx}`}
 							content={field.content}
 							idx={idx}
 						/>

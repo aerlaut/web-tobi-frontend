@@ -16,7 +16,7 @@ export default function () {
 				// Setting information
 			}
 		})
-	})
+	}, [])
 
 	return (
 		auth(history) && (

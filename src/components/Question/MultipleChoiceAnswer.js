@@ -76,7 +76,7 @@ export default function ({ content, idx }) {
 			/>
 
 			{content.options.map((el, option_idx) => (
-				<div className='flex mb-2' key={option_idx}>
+				<div className='flex mb-2' key={`${idx}_${option_idx}`}>
 					<span
 						className='inline-block cursor-pointer align-top'
 						onClick={(e) => deleteOption(option_idx)}

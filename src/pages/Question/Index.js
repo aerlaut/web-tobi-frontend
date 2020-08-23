@@ -19,12 +19,13 @@ export default function () {
 				setQuestions(res.data)
 			}
 		})
-	})
+	}, [])
 
 	return (
 		auth(history) && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
+				<div>Search</div>
 				<div>
 					<h1 className='text-xl font-bold mb-4'>
 						New Questions
@@ -35,14 +36,48 @@ export default function () {
 							>
 								<NewItem
 									color='white'
-									className='mr-4 inline-block align-text-top'
+									className='mr-2 inline-block align-text-top'
+									size={16}
+								/>
+								Create
+							</Link>
+						</span>
+					</h1>
+					<div className='flex flex-wrap'>
+						{questions.map((el, idx) => (
+							<div
+								key={`q_${el.questionId}`}
+								className='w-2/12 border border-yellow-800 bg-yellow-200 rounded mr-4 mb-4 p-4'
+							>
+								<h3 className='font-xl font-bold'>{el.questionId}</h3>
+								<h3>{el.description}</h3>
+								<h3>{el.topics}</h3>
+								<h3>{el.tier}</h3>
+								<h3>{el.difficulty}</h3>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<div>
+					<h1 className='text-xl font-bold mb-4'>
+						New Sets
+						<span className='float-right'>
+							<Link
+								to='/question/create'
+								className='mr-4 px-4 py-2 bg-blue-600 rounded inline-block text-white text-sm'
+							>
+								<NewItem
+									color='white'
+									className='mr-2 inline-block align-text-top'
+									size={16}
 								/>
 								Create
 							</Link>
 						</span>
 					</h1>
 					{questions.map((el) => (
-						<div>
+						<div key={`qs_${el.questionId}`}>
 							<h3>{el.questionId}</h3>
 							<h3>{el.topics}</h3>
 							<h3>{el.subtopics}</h3>
