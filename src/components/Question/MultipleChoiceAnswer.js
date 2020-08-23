@@ -104,9 +104,8 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 							style={{ maxWidth: 'calc(100% - 50px)' }}
 							className='border rounded w-full px-2 py-1'
 							onChange={(e) => updateOptionText(e, option_idx)}
-						>
-							{el.text}
-						</textarea>
+							value={el.text}
+						></textarea>
 					)}
 				</div>
 			))}

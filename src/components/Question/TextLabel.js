@@ -33,7 +33,7 @@ export default function ({ content = '', idx, mode = 'readOnly' }) {
 		<Editor
 			editorState={editorState}
 			readOnly={mode !== 'edit'}
-			wrapperClassName='min-h-1/4'
+			wrapperClassName='min-h-1/4 mt-2'
 			toolbarClassName='border border-gray-800 rounded-t mb-0'
 			editorClassName='border border-gray-800 rounded-b px-4 bg-white'
 			onEditorStateChange={(e) => handleEditorChange(e)}

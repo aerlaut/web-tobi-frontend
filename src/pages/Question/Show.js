@@ -49,9 +49,9 @@ export default function () {
 					{moment.utc(question.createdAt).format('DD MMMM YYYY HH:mm:ss')}
 					{question.isPublished ? `, published ${question.publishDate}` : ''}
 				</p>
-				{question.body === undefined
+				{question.contents === undefined
 					? ''
-					: [...question.body].map((q, idx) => (
+					: [...question.contents].map((q, idx) => (
 							<Field
 								type={q.type}
 								content={q.content}

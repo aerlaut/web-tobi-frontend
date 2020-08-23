@@ -26,12 +26,12 @@ export default function ({
 	]
 
 	// Default field content
-	function defaultContent(type) {
-		let defaultContent = ''
+	function defaultFieldContent(type) {
+		let defaultFieldContent = ''
 		switch (type) {
 			case 'single_choice_answer':
 			case 'multiple_choice_answer':
-				defaultContent = {
+				defaultFieldContent = {
 					label: 'Text label pertanyaan disini',
 					options: [
 						{ text: 'Option A', idx: 1, is_correct: false },
@@ -43,11 +43,11 @@ export default function ({
 				break
 
 			default:
-				defaultContent = 'Text label pertanyaan disini'
+				defaultFieldContent = 'Text label pertanyaan disini'
 				break
 		}
 
-		return defaultContent
+		return defaultFieldContent
 	}
 
 	// Hook for changing field types
@@ -56,18 +56,18 @@ export default function ({
 
 		// Update redux state. Updated state will update the component
 		dispatch({
-			type: 'question/updateField',
+			type: 'question/switchField',
 			payload: {
 				idx: idx,
 				type: chosen,
-				content: defaultContent(chosen),
+				content: defaultFieldContent(chosen),
 			},
 		})
 	}
 
 	// If content == null, use default value
 	if (content === null) {
-		defaultContent(type)
+		defaultFieldContent(type)
 	}
 
 	// field is a placeholder for element
@@ -88,7 +88,7 @@ export default function ({
 		case 'single_choice_answer':
 			field = (
 				<SingleChoiceAnswer
-					content={content !== null ? content : defaultContent(type)}
+					content={content !== null ? content : defaultFieldContent(type)}
 					idx={idx}
 					mode={mode}
 				/>
@@ -98,7 +98,7 @@ export default function ({
 		case 'multiple_choice_answer':
 			field = (
 				<MultipleChoiceAnswer
-					content={content !== null ? content : defaultContent(type)}
+					content={content !== null ? content : defaultFieldContent(type)}
 					idx={idx}
 					mode={mode}
 				/>

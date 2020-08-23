@@ -19,8 +19,6 @@ export default function () {
 	const isOfficial = useSelector((state) => state.question.isOfficial)
 	const isPublished = useSelector((state) => state.question.isPublished)
 	const difficulty = useSelector((state) => state.question.difficulty)
-	const updatedAt = useSelector((state) => state.question.updatedAt)
-	const createdAt = useSelector((state) => state.question.createdAt)
 	const contents = useSelector((state) => state.question.contents)
 	const description = useSelector((state) => state.question.description)
 
@@ -61,6 +59,18 @@ export default function () {
 	function saveQuestion(e) {
 		e.preventDefault()
 
+		let postdata = {
+			author: author,
+			description: description,
+			tier: tier,
+			createdAt: Date.now(),
+			maxScore: maxScore,
+			isOfficial: isOfficial,
+			difficulty: difficulty,
+			contents: contents,
+			isPublished: isPublished,
+		}
+
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
 			method: 'POST',
@@ -68,17 +78,7 @@ export default function () {
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}),
-			body: JSON.stringify({
-				author: author,
-				description: description,
-				tier: tier,
-				createdAt: Date.now(),
-				maxScore: maxScore,
-				isOfficial: isOfficial,
-				difficulty: difficulty,
-				body: contents,
-				isPublished: isPublished,
-			}),
+			body: JSON.stringify(postdata),
 		})
 			.then((res) => {
 				if (!res.ok) {
@@ -171,7 +171,7 @@ export default function () {
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Published?</span>
 							<select
-								value={isOfficial}
+								value={isPublished}
 								onChange={(e) =>
 									dispatch({
 										type: 'question/setPublished',

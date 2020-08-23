@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+updaimport { useHistory, useParams } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Field from '../../components/Question/Field'
@@ -9,17 +9,23 @@ import { useSelector, useDispatch } from 'react-redux'
 
 export default function () {
 	const history = useHistory()
-	const [error, setError] = useState('')
 	const dispatch = useDispatch()
+	const { id } = useParams()
 
+	// Local state
+	const [error, setError] = useState('')
+	const [objectId, setObjectId] = useState('')
+	const [published, setPublished] = useState('')
+	const [createdAt, setCreatedAt] = useState('')
+	const [updatedAt, setUpdatedAt] = useState('')
+
+	// Redux states
 	const author = useSelector((state) => state.question.author)
 	const tier = useSelector((state) => state.question.tier)
 	const maxScore = useSelector((state) => state.question.maxScore)
 	const isOfficial = useSelector((state) => state.question.isOfficial)
 	const isPublished = useSelector((state) => state.question.isPublished)
 	const difficulty = useSelector((state) => state.question.difficulty)
-	const updatedAt = useSelector((state) => state.question.updatedAt)
-	const createdAt = useSelector((state) => state.question.createdAt)
 	const contents = useSelector((state) => state.question.contents)
 	const description = useSelector((state) => state.question.description)
 
@@ -48,36 +54,56 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		// fetchPageData((res) => {
-		// 	if (res !== 'ok') {
-		// 		setError({ type: 'error', message: res.message })
-		// 	} else {
-		// 		// Setting information
-		// 	}
-		// })
+		fetchPageData({ auth: true }, (res) => {
+			if (res.status !== 'ok') {
+				setError({ type: 'error', message: res.message })
+			} else {
+				// Get some status for updating
+
+				setObjectId(res.data._id)
+				setPublished(res.data.isPublished)
+				setCreatedAt(res.data.createdAt)
+				setUpdatedAt(res.data.updatedAt)
+
+				// Push question to redux
+				dispatch({
+					type: 'question/loadQuestion',
+					payload: {
+						question: res.data,
+					},
+				})
+			}
+		})
 	}, [])
 
-	function saveQuestion(e) {
+	function updateQuestion(e) {
 		e.preventDefault()
 
+		let postdata = {
+			_id: objectId,
+			author: author,
+			description: description,
+			tier: tier,
+			maxScore: maxScore,
+			isOfficial: isOfficial,
+			difficulty: difficulty,
+			contents: contents,
+			isPublished: isPublished,
+		}
+
+		console.log(postdata)
+
+		// Question switched to published
+		if (!published && isPublished) postdata.updatedAt = Date.now()
+
 		// Submit form
-		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
+		fetch(`${process.env.REACT_APP_API_URL}/question/${id}/edit`, {
 			method: 'POST',
 			headers: new Headers({
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}),
-			body: JSON.stringify({
-				author: author,
-				description: description,
-				tier: tier,
-				createdAt: Date.now(),
-				maxScore: maxScore,
-				isOfficial: isOfficial,
-				difficulty: difficulty,
-				body: contents,
-				isPublished: isPublished,
-			}),
+			body: JSON.stringify(postdata),
 		})
 			.then((res) => {
 				if (!res.ok) {
@@ -104,12 +130,11 @@ export default function () {
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<h1 className='text-xl font-bold mb-4'>
-					Buat Soal Baru
 					<span
-						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
-						onClick={(e) => saveQuestion(e)}
+						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded text-base'
+						onClick={(e) => updateQuestion(e)}
 					>
-						Save
+						Update
 					</span>
 				</h1>
 
@@ -170,7 +195,7 @@ export default function () {
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Published?</span>
 							<select
-								value={isOfficial}
+								value={isPublished}
 								onChange={(e) =>
 									dispatch({
 										type: 'question/setPublished',
@@ -218,13 +243,13 @@ export default function () {
 						</label>
 
 						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Created date</span>
-							<span></span>
+							<span className='w-3/12 inline-block'>Created</span>
+							<span>{createdAt}</span>
 						</label>
 
 						<label className='my-2'>
 							<span className='w-3/12 inline-block'>Last Update</span>
-							<span></span>
+							<span>{updatedAt}</span>
 						</label>
 					</div>
 				</div>
@@ -233,6 +258,7 @@ export default function () {
 					<textarea
 						className='rounded border border-black block w-full px-2 py-1'
 						rows={3}
+						value={description}
 						onChange={(e) => {
 							dispatch({
 								type: 'question/setDescription',
@@ -266,6 +292,7 @@ export default function () {
 							key={`field_${idx}`}
 							content={field.content}
 							idx={idx}
+							mode='edit'
 						/>
 						<FieldOption key={`opt-${idx}`} idx={idx} />
 					</>
