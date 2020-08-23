@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useDispatch, connect } from 'react-redux'
+import { useDispatch, connect, useSelector } from 'react-redux'
 
 import TextLabel from './TextLabel'
 import ShortTextAnswer from './ShortTextAnswer'
@@ -15,6 +15,7 @@ export default function ({
 }) {
 	const dispatch = useDispatch()
 	const fieldRef = useRef()
+	const role = useSelector((state) => state.auth.role)
 
 	const labels = [
 		'text_label',
@@ -115,9 +116,7 @@ export default function ({
 				)}
 
 				{/* Disable if not in edit mode */}
-				{mode != 'edit' ? (
-					''
-				) : (
+				{mode == 'edit' && (role == 'superadmin' || role == 'admin') ? (
 					<>
 						<span
 							className='float-right bg-red-600 text-white px-2 py-1 rounded font-bold cursor-pointer'
@@ -149,6 +148,8 @@ export default function ({
 							))}
 						</select>
 					</>
+				) : (
+					''
 				)}
 			</div>
 			{field}

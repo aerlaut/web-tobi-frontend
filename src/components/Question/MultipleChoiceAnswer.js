@@ -58,7 +58,7 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 	return (
 		<>
 			{mode == 'readOnly' ? (
-				<p class='my-2'>{content.label}</p>
+				<p className='my-2'>{content.label}</p>
 			) : (
 				<input
 					type='text'

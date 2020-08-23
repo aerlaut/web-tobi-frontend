@@ -11,7 +11,7 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		fetchPageData({ useAuth: true }, (res) => {
+		fetchPageData({ auth: true }, (res) => {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
