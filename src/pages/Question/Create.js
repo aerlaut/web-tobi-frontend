@@ -82,7 +82,7 @@ export default function () {
 				return res.json()
 			})
 			.then((res) => {
-				if (res.status != 'ok') {
+				if (res.status !== 'ok') {
 					// Error creating question
 				} else {
 					// Forward to login page

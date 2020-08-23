@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { EditorState, ContentState, convertToRaw } from 'draft-js'
+import { EditorState, ContentState } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
