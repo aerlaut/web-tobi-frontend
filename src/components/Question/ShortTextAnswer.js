@@ -19,12 +19,26 @@ export default function ({ content = '', idx, mode = 'view' }) {
 	return (
 		<>
 			{mode === 'view' ? (
-				<p className='my-2'>{content.label}</p>
+				<div>
+					<p className='my-2 inline-block'>{content.label}</p>
+					<span className='float-right inline-block'>
+						{mode === 'view' ? (
+							<>
+								Score
+								<span className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'>
+									{content.score}
+								</span>
+							</>
+						) : (
+							''
+						)}
+					</span>
+				</div>
 			) : (
 				<input
 					type='text'
 					value={content.label}
-					className='border rounded w-full my-2 my-2 px-2 py-1 my-2'
+					className='border rounded my-2 w-full px-2 py-1 my-2'
 					onChange={(e) => updateField({ label: e.target.value })}
 				/>
 			)}
@@ -34,28 +48,19 @@ export default function ({ content = '', idx, mode = 'view' }) {
 				disabled={mode != 'exam'}
 				className='border rounded border-black w-full'
 			/>
-			<div className='mt-4 float-right'>
-				{mode === 'exam' ? (
-					''
-				) : mode === 'view' ? (
-					<>
-						Score
-						<span className='border border-gray-800 rounded ml-4 w-12 px-2 py-1'>
-							{content.score}
-						</span>
-					</>
-				) : (
-					<>
-						Score
-						<input
-							type='text'
-							value={content.score}
-							className='border border-gray-800 rounded ml-4 w-12 px-2 py-1'
-							onChange={(e) => updateField({ score: e.target.value })}
-						/>
-					</>
-				)}
-			</div>
+			{mode === 'edit' ? (
+				<div class='float-right mt-2'>
+					Score
+					<input
+						type='text'
+						value={content.score}
+						className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'
+						onChange={(e) => updateField({ score: e.target.value })}
+					/>
+				</div>
+			) : (
+				''
+			)}
 		</>
 	)
 }

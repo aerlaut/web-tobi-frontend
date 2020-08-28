@@ -46,7 +46,21 @@ export default function ({ content = '', idx, mode = 'view' }) {
 	return (
 		<>
 			{mode === 'view' ? (
-				<p className='my-2'>{content.label}</p>
+				<div>
+					<p className='my-2 inline-block'>{content.label}</p>
+					<span className='float-right inline-block'>
+						{mode === 'view' ? (
+							<>
+								Score
+								<span className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'>
+									{content.score}
+								</span>
+							</>
+						) : (
+							''
+						)}
+					</span>
+				</div>
 			) : (
 				<input
 					type='text'
@@ -64,28 +78,19 @@ export default function ({ content = '', idx, mode = 'view' }) {
 				view={true}
 				onEditorStateChange={(e) => handleEditorChange(e)}
 			/>
-			<div className='mt-4 float-right'>
-				{mode === 'exam' ? (
-					''
-				) : mode === 'view' ? (
-					<>
-						Score
-						<span className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'>
-							{content.score}
-						</span>
-					</>
-				) : (
-					<>
-						Score
-						<input
-							type='text'
-							value={content.score}
-							className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'
-							onChange={(e) => updateField({ score: e.target.value })}
-						/>
-					</>
-				)}
-			</div>
+			{mode === 'edit' ? (
+				<div class='float-right mt-2'>
+					Score
+					<input
+						type='text'
+						value={content.score}
+						className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'
+						onChange={(e) => updateField({ score: e.target.value })}
+					/>
+				</div>
+			) : (
+				''
+			)}
 		</>
 	)
 }
