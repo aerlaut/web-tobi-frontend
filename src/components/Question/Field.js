@@ -107,7 +107,7 @@ export default function ({
 	}
 
 	return (
-		<div className='my-2 p-4 bg-gray-100 rounded'>
+		<div className='my-2 p-4 bg-gray-100 rounded clearfix'>
 			<div className='clearfix'>
 				{type.match(/.*_answer/g) ? (
 					<label className='font-bold'>Soal {idx}</label>

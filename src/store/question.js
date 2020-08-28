@@ -61,14 +61,10 @@ export default createSlice({
 		// Update field
 		updateField: (state, action) => {
 			const { idx, type, content } = action.payload
-			if (
-				type === 'single_choice_answer' ||
-				type === 'multiple_choice_answer'
-			) {
-				state.contents[idx].content.label = content.label
-			} else {
-				state.contents[idx].content = content
-			}
+
+			Object.keys(content).forEach((key) => {
+				state.contents[idx].content[key] = content[key]
+			})
 		},
 		// Switch field type to something else
 		switchField: (state, action) => {
