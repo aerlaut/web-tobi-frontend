@@ -61,7 +61,10 @@ export default createSlice({
 		// Update field
 		updateField: (state, action) => {
 			const { idx, type, content } = action.payload
-			if (type == 'single_choice_answer' || type == 'multiple_choice_answer') {
+			if (
+				type === 'single_choice_answer' ||
+				type === 'multiple_choice_answer'
+			) {
 				state.contents[idx].content.label = content.label
 			} else {
 				state.contents[idx].content = content
@@ -75,18 +78,35 @@ export default createSlice({
 		},
 		// Update option in a field
 		addOption: (state, action) => {
-			const { idx, type, option_idx, content } = action.payload
-			state.contents[idx].content.options[option_idx].text = content
+			const { idx, type, content } = action.payload
+			state.contents[idx].content.options.push(content)
+			reindexOptions(state.contents[idx].content.options)
 		},
-		// Update option in a field
+		// Update option label in a field
 		updateOption: (state, action) => {
 			const { idx, type, option_idx, content } = action.payload
-			state.contents[idx].content.options[option_idx].text = content
+
+			// Reset radio values if value is changed
+			if (
+				type === 'single_choice_answer' &&
+				content.hasOwnProperty('is_correct')
+			) {
+				resetRadioValues(state.contents[idx].content.options)
+			}
+
+			// Update values
+			state.contents[idx].content.options[option_idx] = Object.assign(
+				state.contents[idx].content.options[option_idx],
+				content
+			)
+			reindexOptions(state.contents[idx].content.options)
 		},
 		// Remove option in a field
 		deleteOption: (state, action) => {
-			const { idx, type, option_idx, content } = action.payload
+			const { idx, type, option_idx } = action.payload
+
 			state.contents[idx].content.options.splice(option_idx, 1)
+			reindexOptions(state.contents[idx].content.options)
 		},
 		// Load question object into redux
 		loadQuestion: (state, action) => {
@@ -98,3 +118,17 @@ export default createSlice({
 		},
 	},
 })
+
+// Helper function to reindex options
+function reindexOptions(options) {
+	options.forEach((opt, idx) => {
+		opt.idx = idx + 1 // Start from 1
+	})
+}
+
+// Helper function to reset values of radio options when changed
+function resetRadioValues(options) {
+	options.forEach((opt, idx) => {
+		opt.is_correct = false
+	})
+}

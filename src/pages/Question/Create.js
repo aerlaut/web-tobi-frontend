@@ -71,6 +71,9 @@ export default function () {
 			isPublished: isPublished,
 		}
 
+		// Question switched to published
+		if (isPublished) postdata.publishedAt = Date.now()
+
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
 			method: 'POST',

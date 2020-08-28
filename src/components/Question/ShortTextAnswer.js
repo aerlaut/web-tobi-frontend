@@ -1,13 +1,13 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 
-export default function ({ content = '', idx, mode = 'readOnly' }) {
+export default function ({ content = '', idx, mode = 'view' }) {
 	const type = 'short_text_answer'
 	const dispatch = useDispatch()
 
 	return (
 		<>
-			{mode == 'readOnly' ? (
+			{mode === 'view' ? (
 				<p>{content}</p>
 			) : (
 				<input

@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
 
-export default function ({ content = '', idx, mode = 'readOnly' }) {
+export default function ({ content = '', idx, mode = 'view' }) {
 	let type = 'text_answer'
 	const dispatch = useDispatch()
 
@@ -34,7 +34,7 @@ export default function ({ content = '', idx, mode = 'readOnly' }) {
 
 	return (
 		<>
-			{mode == 'readOnly' ? (
+			{mode === 'view' ? (
 				<p>{content}</p>
 			) : (
 				<input
@@ -55,11 +55,11 @@ export default function ({ content = '', idx, mode = 'readOnly' }) {
 			)}
 			<Editor
 				editorState={editorState}
-				readOnly={mode !== 'answer'}
+				view={mode !== 'answer'}
 				wrapperClassName='min-h-1/4'
 				toolbarClassName='border border-gray-800 rounded-t mb-0'
 				editorClassName='border border-gray-800 rounded-b px-4'
-				readOnly={true}
+				view={true}
 				onEditorStateChange={(e) => handleEditorChange(e)}
 			/>
 		</>

@@ -66,7 +66,7 @@ export default function () {
 
 			<form className='flex flex-col' onSubmit={handleSubmit}>
 				<label className='my-2'>
-					<span className='w-1/12 inline-block'>Username</span>
+					<span className='w-1/12 inline-block mr-4'>Username</span>
 					<input
 						type='text'
 						className='w-2/12 p-1 border border-black shadow-inside rounded'
@@ -77,7 +77,7 @@ export default function () {
 				</label>
 
 				<label className='my-2'>
-					<span className='w-1/12 inline-block'>Password</span>
+					<span className='w-1/12 inline-block mr-4'>Password</span>
 					<input
 						type='password'
 						className='w-2/12 p-1 border border-black shadow-inside rounded'

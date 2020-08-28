@@ -31,7 +31,7 @@ export default function () {
 			<>
 				<h1 className='text-xl font-bold mb-4'>
 					Soal ID : {id}
-					{role == 'admin' || role == 'superadmin' ? (
+					{role === 'admin' || role === 'superadmin' ? (
 						<span
 							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer text-base rounded'
 							onClick={() => history.push(`/question/${id}/edit`)}
@@ -42,16 +42,23 @@ export default function () {
 						''
 					)}
 				</h1>
-				<p>
-					by {question.author}
-					<br />
-					created{' '}
+				<div class='clearfix mb-8'>
+					Created{' '}
 					{moment
 						.utc(question.createdAt)
 						.utcOffset('+07:00')
 						.format('DD MMMM YYYY HH:mm:ss [WIB]')}
-					{question.isPublished ? `, published ${question.publishAt}` : ''}
-				</p>
+					<br />
+					by <span class='italic'>{question.author}</span>
+					<br />
+					{question.isPublished
+						? `Published ${moment
+								.utc(question.publishedAt)
+								.utcOffset('+07:00')
+								.format('DD MMMM YYYY HH:mm:ss [WIB]')}`
+						: ''}
+					<br />
+				</div>
 				{question.contents === undefined
 					? ''
 					: [...question.contents].map((q, idx) => (

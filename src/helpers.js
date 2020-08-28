@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 // Block off
@@ -6,24 +6,35 @@ function useAuth(protectedPage = true) {
 	const history = useHistory()
 	const dispatch = useDispatch()
 
-	// Check for token, upload ser
-	if (localStorage.getItem('token')) {
+	const isAuth = useSelector((state) => state.auth.isAuth)
+	const role = useSelector((state) => state.auth.role)
+
+	// If use is not logged in, check for token
+	if (!isAuth && localStorage.getItem('token') !== null) {
+		const tokenRole = localStorage.getItem('role')
+
 		dispatch({
 			type: 'auth/logUserIn',
 			payload: {
 				username: localStorage.getItem('username'),
-				role: localStorage.getItem('role'),
+				role: tokenRole,
 			},
 		})
-		return true
-	}
 
-	// Is in protected page, redirect
-	if (protectedPage) {
-		localStorage.clear()
+		// Is in protected page, redirect
+		if (protectedPage && tokenRole !== 'admin' && tokenRole !== 'superadmin') {
+			history.push('/login')
+			return false
+		}
+
+		return true
+	} else if (protectedPage && role !== 'admin' && role !== 'superadmin') {
+		// Is in protected page, redirect
 		history.push('/login')
 		return false
 	}
+
+	return true
 }
 
 // Get function to get page data

@@ -11,7 +11,7 @@ export default function ({
 	type = 'text',
 	content = null,
 	idx,
-	mode = 'readOnly',
+	mode = 'view', // view, exam, edit
 }) {
 	const dispatch = useDispatch()
 	const fieldRef = useRef()
@@ -65,7 +65,7 @@ export default function ({
 		})
 	}
 
-	// If content == null, use default value
+	// If content === null, use default value
 	if (content === null) {
 		defaultFieldContent(type)
 	}
@@ -116,7 +116,7 @@ export default function ({
 				)}
 
 				{/* Disable if not in edit mode */}
-				{mode == 'edit' && (role == 'superadmin' || role == 'admin') ? (
+				{mode === 'edit' && (role === 'superadmin' || role === 'admin') ? (
 					<>
 						<span
 							className='float-right bg-red-600 text-white px-2 py-1 rounded font-bold cursor-pointer'

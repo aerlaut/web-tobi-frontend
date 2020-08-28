@@ -5,7 +5,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
 import { stateToHTML } from 'draft-js-export-html'
 
-export default function ({ content = '', idx, mode = 'readOnly' }) {
+export default function ({ content = '', idx, mode = 'view' }) {
 	let type = 'text_label'
 	const dispatch = useDispatch()
 
@@ -31,7 +31,7 @@ export default function ({ content = '', idx, mode = 'readOnly' }) {
 
 	return (
 		<>
-			{mode === 'readOnly' ? (
+			{mode === 'view' ? (
 				<div
 					dangerouslySetInnerHTML={{
 						__html: stateToHTML(editorState.getCurrentContent()),

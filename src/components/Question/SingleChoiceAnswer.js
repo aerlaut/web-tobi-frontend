@@ -3,31 +3,19 @@ import { useDispatch } from 'react-redux'
 import XCircle from '../../icons/XCircle'
 import PlusCircle from '../../icons/PlusCircle'
 
-export default function ({ content, idx, mode = 'readOnly' }) {
+export default function ({ content, idx, mode = 'view' }) {
 	const type = 'single_choice_answer'
 	const dispatch = useDispatch()
 
-	// Delete option
-	function deleteOption(e, option_idx) {
-		dispatch({
-			type: 'question/deleteOption',
-			payload: {
-				idx: idx,
-				type: type,
-				option_idx: option_idx,
-			},
-		})
-	}
-
 	// Update options text
-	function updateOptionText(e, option_idx) {
+	function updateOption(option_idx, content) {
 		dispatch({
 			type: 'question/updateOption',
 			payload: {
 				idx: idx,
 				type: type,
 				option_idx: option_idx,
-				content: e.target.value,
+				content: content,
 			},
 		})
 	}
@@ -55,10 +43,22 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 		})
 	}
 
+	// Delete option
+	function deleteOption(option_idx) {
+		dispatch({
+			type: 'question/deleteOption',
+			payload: {
+				idx: idx,
+				type: type,
+				option_idx: option_idx,
+			},
+		})
+	}
+
 	return (
 		<>
-			{mode == 'readOnly' ? (
-				<p class='my-2'>{content.label}</p>
+			{mode === 'view' ? (
+				<p className='my-2'>{content.label}</p>
 			) : (
 				<input
 					type='text'
@@ -70,7 +70,9 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 							payload: {
 								idx: idx,
 								type: type,
-								content: e.target.value,
+								content: {
+									label: e.target.value,
+								},
 							},
 						})
 					}}
@@ -79,38 +81,62 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 
 			{content.options.map((el, option_idx) => (
 				<div className='flex mb-2' key={`${idx}_${option_idx}`}>
-					<span
-						className='inline-block cursor-pointer align-top'
-						onClick={(e) => deleteOption(option_idx)}
-					>
-						<XCircle color='white' fill='red' />
-					</span>
+					{mode != 'edit' ? (
+						''
+					) : (
+						<span
+							className='inline-block cursor-pointer align-top'
+							onClick={() => deleteOption(option_idx)}
+							key={`o_${idx}_${el.idx}`}
+						>
+							<XCircle color='white' fill='red' />
+						</span>
+					)}
 					<input
 						type='radio'
 						value={el.idx}
-						name={`${idx}_${el.idx}`}
+						key={`${idx}_${el.idx}`}
+						name={`r_${idx}`}
 						className='ml-1 mt-1 mr-2'
+						readOnly={mode === 'view'}
+						checked={el.is_correct}
+						onChange={(e) => {
+							if (mode === 'edit') {
+								updateOption(option_idx, { is_correct: true })
+							}
+						}}
 					/>
-					<textarea
-						style={{ maxWidth: 'calc(100% - 50px)' }}
-						className='border rounded w-full px-2 py-1'
-						onChange={(e) => updateOptionText(e, option_idx)}
-						value={el.text}
-					></textarea>
+					{mode != 'edit' ? (
+						<p>{el.text}</p>
+					) : (
+						<textarea
+							key={`t_${idx}_${el.idx}`}
+							style={{ maxWidth: 'calc(100% - 50px)' }}
+							className='border rounded w-full px-2 py-1'
+							onChange={(e) =>
+								updateOption(option_idx, { text: e.target.value })
+							}
+							value={el.text}
+						></textarea>
+					)}
 				</div>
 			))}
 			<div className='flex mb-2'>
-				<span
-					className='inline-block cursor-pointer align-top'
-					onClick={(e) => addOption()}
-				>
-					<PlusCircle
-						color='white'
-						fill='green'
-						className='mr-2 inline-block'
-					/>
-					Add option
-				</span>
+				{mode != 'edit' ? (
+					''
+				) : (
+					<span
+						className='inline-block cursor-pointer align-top'
+						onClick={(e) => addOption()}
+					>
+						<PlusCircle
+							color='white'
+							fill='green'
+							className='mr-2 inline-block'
+						/>
+						Add option
+					</span>
+				)}
 			</div>
 		</>
 	)

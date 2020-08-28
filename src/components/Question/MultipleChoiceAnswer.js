@@ -3,31 +3,19 @@ import { useDispatch } from 'react-redux'
 import XCircle from '../../icons/XCircle'
 import PlusCircle from '../../icons/PlusCircle'
 
-export default function ({ content, idx, mode = 'readOnly' }) {
+export default function ({ content, idx, mode = 'view' }) {
 	const type = 'multiple_choice_answer'
 	const dispatch = useDispatch()
 
-	// Delete option
-	function deleteOption(e, option_idx) {
-		dispatch({
-			type: 'question/deleteOption',
-			payload: {
-				idx: idx,
-				type: type,
-				option_idx: option_idx,
-			},
-		})
-	}
-
 	// Update options text
-	function updateOptionText(e, option_idx) {
+	function updateOption(option_idx, content) {
 		dispatch({
 			type: 'question/updateOption',
 			payload: {
 				idx: idx,
 				type: type,
 				option_idx: option_idx,
-				content: e.target.value,
+				content: content,
 			},
 		})
 	}
@@ -44,20 +32,36 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 		newOptions.push(newOption)
 
 		dispatch({
-			type: 'question/updateField',
+			type: 'question/addOption',
 			payload: {
 				idx: idx,
 				type: type,
 				content: {
-					options: newOptions,
+					text: 'Text option',
+					idx: 1,
+					is_correct: false,
 				},
+			},
+		})
+	}
+
+	// Delete option
+	function deleteOption(option_idx) {
+		console.log(option_idx)
+
+		dispatch({
+			type: 'question/deleteOption',
+			payload: {
+				idx: idx,
+				type: type,
+				option_idx: option_idx,
 			},
 		})
 	}
 
 	return (
 		<>
-			{mode == 'readOnly' ? (
+			{mode === 'view' ? (
 				<p className='my-2'>{content.label}</p>
 			) : (
 				<input
@@ -85,25 +89,39 @@ export default function ({ content, idx, mode = 'readOnly' }) {
 						''
 					) : (
 						<span
+							key={`o_${option_idx}`}
 							className='inline-block cursor-pointer align-top'
-							onClick={(e) => deleteOption(option_idx)}
+							onClick={() => {
+								deleteOption(option_idx)
+							}}
 						>
 							<XCircle color='white' fill='red' />
 						</span>
 					)}
 					<input
 						type='checkbox'
+						key={`c_${option_idx}`}
 						value={el.idx}
 						name={`${idx}_${el.idx}`}
 						className='ml-1 mt-1 mr-2'
+						checked={el.is_correct}
+						readOnly={mode === 'view'}
+						onChange={(e) => {
+							if (mode === 'edit') {
+								updateOption(option_idx, { is_correct: e.target.checked })
+							}
+						}}
 					/>
 					{mode != 'edit' ? (
 						<p>{el.text}</p>
 					) : (
 						<textarea
+							key={`t_${option_idx}`}
 							style={{ maxWidth: 'calc(100% - 50px)' }}
 							className='border rounded w-full px-2 py-1'
-							onChange={(e) => updateOptionText(e, option_idx)}
+							onChange={(e) =>
+								updateOption(option_idx, { text: e.target.value })
+							}
 							value={el.text}
 						></textarea>
 					)}

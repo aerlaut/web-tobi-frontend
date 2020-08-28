@@ -90,12 +90,11 @@ export default function () {
 			difficulty: difficulty,
 			contents: contents,
 			isPublished: isPublished,
+			updatedAt: Date.now(),
 		}
 
-		console.log(postdata)
-
 		// Question switched to published
-		if (!published && isPublished) postdata.updatedAt = Date.now()
+		if (!published && isPublished) postdata.publishedAt = Date.now()
 
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/${id}/edit`, {
@@ -300,12 +299,12 @@ export default function () {
 					<>
 						<Field
 							type={field.type}
-							key={`field_${idx}`}
+							key={`q_${idx}`}
 							content={field.content}
 							idx={idx}
 							mode='edit'
 						/>
-						<FieldOption key={`opt-${idx}`} idx={idx} />
+						<FieldOption key={`opt_${idx}`} idx={idx} />
 					</>
 				))}
 			</>

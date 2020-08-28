@@ -24,9 +24,11 @@ export default function App() {
 	return (
 		<BrowserRouter>
 			<AppBar />
+
 			<main className='p-4'>
 				<Switch>
 					<Route exact path='/' exact component={Home} />
+					<Route path='/about' exact component={Home} />
 					<Route path='/login' component={Login} />
 					<Route path='/dashboard' component={Dashboard} />
 					<Route path='/page/:id' component={Page} />
