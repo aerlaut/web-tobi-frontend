@@ -116,7 +116,7 @@ export default function () {
 					// Error creating question
 				} else {
 					// Forward to login page
-					history.push('/question')
+					history.push(`/question/${id}`)
 				}
 			})
 			.catch((err) => {

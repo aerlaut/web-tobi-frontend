@@ -19,12 +19,12 @@ export default function ({ content = '', idx, mode = 'view' }) {
 	return (
 		<>
 			{mode === 'view' ? (
-				<p>{content.label}</p>
+				<p className='my-2'>{content.label}</p>
 			) : (
 				<input
 					type='text'
 					value={content.label}
-					className='border rounded w-full my-2 px-2 py-1 my-2'
+					className='border rounded w-full my-2 my-2 px-2 py-1 my-2'
 					onChange={(e) => updateField({ label: e.target.value })}
 				/>
 			)}
