@@ -7,6 +7,18 @@ export default function ({ content, idx, mode = 'view' }) {
 	const type = 'multiple_choice_answer'
 	const dispatch = useDispatch()
 
+	// Update field
+	function updateField(content) {
+		dispatch({
+			type: 'question/updateField',
+			payload: {
+				idx: idx,
+				type: type,
+				content: content,
+			},
+		})
+	}
+
 	// Update options text
 	function updateOption(option_idx, content) {
 		dispatch({
@@ -22,15 +34,6 @@ export default function ({ content, idx, mode = 'view' }) {
 
 	// Add new option
 	function addOption() {
-		let newOption = {
-			text: '',
-			idx: content.options.length,
-			is_correct: false,
-		}
-
-		let newOptions = [...content.options]
-		newOptions.push(newOption)
-
 		dispatch({
 			type: 'question/addOption',
 			payload: {
@@ -47,8 +50,6 @@ export default function ({ content, idx, mode = 'view' }) {
 
 	// Delete option
 	function deleteOption(option_idx) {
-		console.log(option_idx)
-
 		dispatch({
 			type: 'question/deleteOption',
 			payload: {
@@ -62,30 +63,33 @@ export default function ({ content, idx, mode = 'view' }) {
 	return (
 		<>
 			{mode === 'view' ? (
-				<p className='my-2'>{content.label}</p>
+				<div>
+					<p className='my-2 inline-block'>{content.label}</p>
+					<span className='float-right inline-block'>
+						{mode === 'view' ? (
+							<>
+								Score
+								<span className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'>
+									{content.score}
+								</span>
+							</>
+						) : (
+							''
+						)}
+					</span>
+				</div>
 			) : (
 				<input
 					type='text'
 					value={content.label}
-					className='border rounded w-full my-2 px-2 py-1 my-2'
-					onChange={(e) => {
-						dispatch({
-							type: 'question/updateField',
-							payload: {
-								idx: idx,
-								type: type,
-								content: {
-									label: e.target.value,
-								},
-							},
-						})
-					}}
+					className='border rounded my-2 w-full px-2 py-1 my-2'
+					onChange={(e) => updateField({ label: e.target.value })}
 				/>
 			)}
 
 			{content.options.map((el, option_idx) => (
 				<div className='flex mb-2' key={`${idx}_${option_idx}`}>
-					{mode != 'edit' ? (
+					{mode !== 'edit' ? (
 						''
 					) : (
 						<span
@@ -112,7 +116,7 @@ export default function ({ content, idx, mode = 'view' }) {
 							}
 						}}
 					/>
-					{mode != 'edit' ? (
+					{mode !== 'edit' ? (
 						<p>{el.text}</p>
 					) : (
 						<textarea
@@ -128,12 +132,12 @@ export default function ({ content, idx, mode = 'view' }) {
 				</div>
 			))}
 			<div className='flex mb-2'>
-				{mode != 'edit' ? (
+				{mode !== 'edit' ? (
 					''
 				) : (
 					<span
 						className='inline-block cursor-pointer align-top'
-						onClick={(e) => addOption()}
+						onClick={() => addOption()}
 					>
 						<PlusCircle
 							color='white'
@@ -144,6 +148,19 @@ export default function ({ content, idx, mode = 'view' }) {
 					</span>
 				)}
 			</div>
+			{mode === 'edit' ? (
+				<div class='float-right mt-2'>
+					Score
+					<input
+						type='text'
+						value={content.score}
+						className='border border-gray-800 rounded ml-4 mb-4 w-12 px-2 py-1'
+						onChange={(e) => updateField({ score: e.target.value })}
+					/>
+				</div>
+			) : (
+				''
+			)}
 		</>
 	)
 }
