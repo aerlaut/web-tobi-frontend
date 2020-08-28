@@ -41,6 +41,24 @@ export default createSlice({
 			state.description = action.payload.content
 		},
 
+		// Reset all fields
+		reset: (state, action) => {
+			const inits = {
+				author: '',
+				tier: '',
+				maxScore: '',
+				isOfficial: false,
+				difficulty: '',
+				isPublished: false,
+				description: '',
+				contents: [],
+			}
+
+			for (const [key, value] of Object.entries(inits)) {
+				state[key] = value
+			}
+		},
+
 		addField: (state, action) => {
 			const { type, idx } = action.payload
 

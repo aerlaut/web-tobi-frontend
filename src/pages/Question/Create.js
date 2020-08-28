@@ -12,7 +12,7 @@ export default function () {
 	const [error, setError] = useState('')
 	const dispatch = useDispatch()
 
-	// Redux state
+	// Redux states
 	const author = useSelector((state) => state.question.author)
 	const tier = useSelector((state) => state.question.tier)
 	const maxScore = useSelector((state) => state.question.maxScore)
@@ -54,6 +54,10 @@ export default function () {
 		// 		// Setting information
 		// 	}
 		// })
+		// Reset all redux states
+		dispatch({
+			type: 'question/reset',
+		})
 	}, [])
 
 	function saveQuestion(e) {

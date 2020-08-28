@@ -10,7 +10,7 @@ export default function FieldOption({ idx }) {
 	return (
 		<>
 			<div
-				className='my-2'
+				className='-mt-4 mb-4'
 				onMouseOver={() => setInvisible(false)}
 				onMouseOut={() => setInvisible(true)}
 			>
