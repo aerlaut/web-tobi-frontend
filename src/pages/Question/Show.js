@@ -42,7 +42,7 @@ export default function () {
 						''
 					)}
 				</h1>
-				<div class='clearfix mb-8'>
+				<div class='clearfix mb-4'>
 					Created{' '}
 					{moment
 						.utc(question.createdAt)
@@ -59,17 +59,26 @@ export default function () {
 						: ''}
 					<br />
 				</div>
-				{question.contents === undefined
-					? ''
-					: [...question.contents].map((q, idx) => (
-							<Field
-								type={q.type}
-								content={q.content}
-								key={`q_${idx}`}
-								show={true}
-								idx={idx + 1}
-							/>
-					  ))}
+
+				<section className='my-4'>
+					<h2 className='mb-4 font-bold'>Deskripsi</h2>
+					<p>{question.description}</p>
+				</section>
+
+				<section className='my-4'>
+					<h2 className='mb-4 font-bold'>Soal</h2>
+					{question.contents === undefined
+						? ''
+						: [...question.contents].map((q, idx) => (
+								<Field
+									type={q.type}
+									content={q.content}
+									key={`q_${idx}`}
+									show={true}
+									idx={idx + 1}
+								/>
+						  ))}
+				</section>
 			</>
 		)
 	)

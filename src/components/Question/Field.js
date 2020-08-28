@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useDispatch, connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import TextLabel from './TextLabel'
 import ShortTextAnswer from './ShortTextAnswer'

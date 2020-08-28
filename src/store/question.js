@@ -10,12 +10,7 @@ export default createSlice({
 		difficulty: '',
 		isPublished: false,
 		description: '',
-		contents: [
-			{
-				type: 'text_label',
-				content: 'This is a question',
-			},
-		],
+		contents: [],
 	},
 	reducers: {
 		setAuthor: (state, action) => {
@@ -61,6 +56,8 @@ export default createSlice({
 		// Update field
 		updateField: (state, action) => {
 			const { idx, type, content } = action.payload
+
+			console.log(action.payload)
 
 			Object.keys(content).forEach((key) => {
 				state.contents[idx].content[key] = content[key]
