@@ -49,6 +49,7 @@ export default function AppBar() {
 					localStorage.setItem('token', res.data.token)
 					localStorage.setItem('username', res.data.username)
 					localStorage.setItem('role', res.data.role)
+					localStorage.setItem('uid', res.data.id)
 
 					// Push data to redux
 					dispatch({
@@ -73,7 +74,10 @@ export default function AppBar() {
 
 	// Handles log out
 	function handleLogout() {
-		// Clear local storage
+		// Clear data
+		dispatch({
+			type: 'auth/logUserOut',
+		})
 		localStorage.clear()
 
 		// Return to home screen

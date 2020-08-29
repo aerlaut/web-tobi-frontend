@@ -1,34 +1,62 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import { useSelector, useDispatch } from 'react-redux'
 
 export default function () {
-	const history = useHistory()
 	const [display, setDisplay] = useState({})
+	const history = useHistory()
 	const dispatch = useDispatch()
+	const match = useRouteMatch('/user/profile')
 
 	const role = useSelector((state) => state.auth.role)
+	const id = useSelector((state) => state.auth.id)
 
 	useEffect(() => {
-		// Fetch dashboard data
-		fetchPageData({ auth: true }, (res) => {
-			if (res.status !== 'ok') {
-				dispatch({
-					type: 'error/show',
-					payload: {
-						type: 'danger',
-						message: res.message,
-					},
+		// if user/id
+		if (!match) {
+			// Fetch dashboard data
+			fetchPageData({ auth: true }, (res) => {
+				if (res.status !== 'ok') {
+					dispatch({
+						type: 'error/show',
+						payload: {
+							type: 'danger',
+							message: res.message,
+						},
+					})
+				} else {
+					// Setting information
+					setDisplay(res.data)
+				}
+			})
+		} else {
+			// Fetch dashboard data
+			fetch(`${process.env.REACT_APP_API_URL}/user/profile`, {
+				method: 'POST',
+				headers: new Headers({
+					'Content-type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				}),
+				body: JSON.stringify({ id: localStorage.getItem('uid') }),
+			})
+				.then((res) => res.json())
+				.then((res) => {
+					if (res.status !== 'ok') {
+						dispatch({
+							type: 'error/show',
+							payload: {
+								type: 'danger',
+								message: res.message,
+							},
+						})
+					} else {
+						// Setting information
+						setDisplay(res.data)
+					}
 				})
-			} else {
-				// Setting information
-				setDisplay(res.data)
-			}
-		})
-	}, [])
-
-	let { id } = useParams()
+		}
+	}, [match])
 
 	return (
 		useAuth() && (
@@ -51,7 +79,7 @@ export default function () {
 				</div>
 
 				<div className='mb-4'>
-					<p class='font-bold'>{display.fullame}</p>
+					<p className='font-bold'>{display.fullame}</p>
 					<p>{display.grade}</p>
 					<p>{display.school}</p>
 				</div>
@@ -68,7 +96,7 @@ export default function () {
 						{display.address}, <br />
 						{display.city}, {display.province}
 						<br />
-						<span class='capitalize'>{display.country}</span>
+						<span className='capitalize'>{display.country}</span>
 					</p>
 				</div>
 

@@ -47,6 +47,7 @@ export default function App() {
 					<Route path='/question/:id/edit' component={QuestionEdit} />
 					<Route exact path='/user' component={UserIndex} />
 					<Route exact path='/user/create' component={UserCreate} />
+					<Route exact path='/user/profile' component={UserShow} />
 					<Route exact path='/user/:id' component={UserShow} />
 					<Route path='/user/:id/edit' component={UserEdit} />
 					{/* <Route path='/test' component={Test} /> */}

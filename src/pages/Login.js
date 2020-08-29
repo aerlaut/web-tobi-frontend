@@ -39,6 +39,7 @@ export default function () {
 					localStorage.setItem('token', res.data.token)
 					localStorage.setItem('username', res.data.username)
 					localStorage.setItem('role', res.data.role)
+					localStorage.setItem('uid', res.data.id)
 
 					// Push data to redux
 					dispatch({
