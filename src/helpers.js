@@ -18,17 +18,14 @@ function useAuth(protectedPage = true) {
 			payload: {
 				username: localStorage.getItem('username'),
 				role: tokenRole,
+				id: localStorage.getItem('username'),
 			},
 		})
 
-		// Is in protected page, redirect
-		if (protectedPage && tokenRole !== 'admin' && tokenRole !== 'superadmin') {
-			history.push('/login')
-			return false
-		}
-
 		return true
-	} else if (protectedPage && role !== 'admin' && role !== 'superadmin') {
+	}
+
+	if (protectedPage && !isAuth) {
 		// Is in protected page, redirect
 		history.push('/login')
 		return false

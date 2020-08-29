@@ -42,14 +42,14 @@ export default function () {
 						''
 					)}
 				</h1>
-				<div class='clearfix mb-4'>
+				<div className='clearfix mb-4'>
 					Created{' '}
 					{moment
 						.utc(question.createdAt)
 						.utcOffset('+07:00')
 						.format('DD MMMM YYYY HH:mm:ss [WIB]')}
 					<br />
-					by <span class='italic'>{question.author}</span>
+					by <span className='italic'>{question.author}</span>
 					<br />
 					{question.isPublished
 						? `Published ${moment
@@ -74,7 +74,7 @@ export default function () {
 									type={q.type}
 									content={q.content}
 									key={`q_${idx}`}
-									show={true}
+									mode='view'
 									idx={idx + 1}
 								/>
 						  ))}

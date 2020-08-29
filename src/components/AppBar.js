@@ -1,12 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import ChevronDown from '../icons/ChevronDown'
 import cx from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 
+function useOutsideClicksObserver(ref, setter) {
+	useEffect(() => {
+		function handleOutsideClicks(e) {
+			if (ref.current && !ref.current.contains(e.target)) {
+				setter(false)
+			}
+		}
+
+		document.addEventListener('mousedown', handleOutsideClicks)
+		return () => {
+			document.removeEventListener('mousedown', handleOutsideClicks)
+		}
+	}, [ref])
+}
+
 export default function AppBar() {
 	const history = useHistory()
 	const dispatch = useDispatch()
+	const dropdownRef = useRef()
 
 	// Redux states
 	const username = useSelector((state) => state.auth.username)
@@ -19,6 +35,7 @@ export default function AppBar() {
 	const [loginPassword, setLoginPassword] = useState('')
 	const [formStatus, setFormStatus] = useState('')
 	const [showUserDropdown, setShowUserDropdown] = useState(false)
+	useOutsideClicksObserver(dropdownRef, setShowUserDropdown)
 
 	// Functions
 	function handleLogin(e) {
@@ -86,6 +103,8 @@ export default function AppBar() {
 		setShowUserDropdown(false)
 	}
 
+	// Handles outside clicks when dropdown is opened
+
 	return (
 		<>
 			<nav className='p-4 border-gray-400 bg-gray-200 border-b-2 shadow clearfix'>
@@ -135,6 +154,7 @@ export default function AppBar() {
 									<ul
 										className='bg-white rounded right-0 absolute border border-black w-32'
 										style={{ top: '2em' }}
+										ref={dropdownRef}
 									>
 										<Link to='/user/profile'>
 											<li className='px-4 py-2'>Profile</li>

@@ -24,7 +24,11 @@ export default function FieldOption({ idx }) {
 						onClick={(e) => {
 							dispatch({
 								type: 'question/addField',
-								payload: { type: 'short_text_answer', idx: idx },
+								payload: {
+									type: 'short_text_answer',
+									content: { label: 'Text pertanyaan' },
+									idx: idx,
+								},
 							})
 						}}
 					>

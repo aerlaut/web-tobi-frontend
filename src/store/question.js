@@ -51,7 +51,14 @@ export default createSlice({
 				difficulty: '',
 				isPublished: false,
 				description: '',
-				contents: [],
+				contents: [
+					{
+						type: 'text_label',
+						content: {
+							label: '',
+						},
+					},
+				],
 			}
 
 			for (const [key, value] of Object.entries(inits)) {
@@ -60,10 +67,10 @@ export default createSlice({
 		},
 
 		addField: (state, action) => {
-			const { type, idx } = action.payload
+			const { type, content, idx } = action.payload
 
 			// Create new field object
-			let field = { type: type, content: '' }
+			let field = { type: type, content: content }
 			state.contents.splice(idx + 1, 0, field)
 		},
 		// Remove field

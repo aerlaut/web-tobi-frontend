@@ -275,6 +275,7 @@ export default function () {
 							key={`field_${idx}`}
 							content={field.content}
 							idx={idx}
+							mode='edit'
 						/>
 						<FieldOption key={`opt-${idx}`} idx={idx} />
 					</>

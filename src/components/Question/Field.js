@@ -32,18 +32,22 @@ export default function ({
 			case 'single_choice_answer':
 			case 'multiple_choice_answer':
 				defaultFieldContent = {
-					label: 'Text label pertanyaan disini',
+					label: 'Text pertanyaan disini',
 					options: [
 						{ text: 'Option A', idx: 1, is_correct: false },
 						{ text: 'Option B', idx: 2, is_correct: false },
 						{ text: 'Option C', idx: 3, is_correct: false },
 						{ text: 'Option D', idx: 4, is_correct: false },
 					],
+					score: 0,
 				}
 				break
 
 			default:
-				defaultFieldContent = 'Text label pertanyaan disini'
+				defaultFieldContent = {
+					label: 'Text pertanyaan disini',
+					score: 0,
+				}
 				break
 		}
 
