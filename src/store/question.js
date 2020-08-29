@@ -82,8 +82,6 @@ export default createSlice({
 		updateField: (state, action) => {
 			const { idx, type, content } = action.payload
 
-			console.log(action.payload)
-
 			Object.keys(content).forEach((key) => {
 				state.contents[idx].content[key] = content[key]
 			})

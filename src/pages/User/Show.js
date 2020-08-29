@@ -10,11 +10,17 @@ export default function () {
 	const match = useRouteMatch('/user/profile')
 
 	const role = useSelector((state) => state.auth.role)
-	const id = useSelector((state) => state.auth.id)
+	let { id } = useParams()
 
 	useEffect(() => {
 		// if user/id
 		if (!match) {
+			// Push to /user/profile if not admin
+			if (!(role == 'superadmin' || role == 'admin')) {
+				history.push('/user/profile')
+				return
+			}
+
 			// Fetch dashboard data
 			fetchPageData({ auth: true }, (res) => {
 				if (res.status !== 'ok') {
@@ -31,6 +37,9 @@ export default function () {
 				}
 			})
 		} else {
+			// Change to auth id
+			id = localStorage.getItem('uid')
+
 			// Fetch dashboard data
 			fetch(`${process.env.REACT_APP_API_URL}/user/profile`, {
 				method: 'POST',

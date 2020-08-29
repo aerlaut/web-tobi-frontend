@@ -9,21 +9,21 @@ import { useSelector, useDispatch } from 'react-redux'
 export default function () {
 	const history = useHistory()
 	const dispatch = useDispatch()
-	const { id } = useParams()
+
+	let { id } = useParams()
+
+	// Redux states
+	const user = useSelector((state) => state.user)
+	const auth = useSelector((state) => state.auth)
 
 	// Local state
 	const [error, setError] = useState('')
 	const [password, setPassword] = useState('')
 	const [confirmPassword, setConfirmPassword] = useState('')
 
-	// Redux states
-	const user = useSelector((state) => state.user)
-
 	useEffect(() => {
 		// Fetch dashboard data
 		fetchPageData({ auth: true }, (res) => {
-			console.log(res)
-
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
@@ -64,8 +64,6 @@ export default function () {
 			role: user.role,
 			emailVerified: user.emailVerified,
 		}
-
-		console.log(postdata)
 
 		// Check if password is set
 		if (password !== '') {

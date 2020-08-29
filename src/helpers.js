@@ -2,15 +2,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 // Block off
-function useAuth(protectedPage = true) {
+function useAuth(protectedPage = true, permissions = {}) {
 	const history = useHistory()
 	const dispatch = useDispatch()
 
-	const isAuth = useSelector((state) => state.auth.isAuth)
-	const role = useSelector((state) => state.auth.role)
+	const defaultPermissions = {
+		superadmin: true,
+		admin: true,
+		user: true,
+	}
 
-	// If use is not logged in, check for token
-	if (!isAuth && localStorage.getItem('token') !== null) {
+	// Default option settings
+	permissions = Object.assign(defaultPermissions, permissions)
+
+	const auth = useSelector((state) => state.auth)
+
+	// If use is not logged in, check for token then login
+	if (!auth.isAuth && localStorage.getItem('token') !== null) {
 		const tokenRole = localStorage.getItem('role')
 
 		dispatch({
@@ -18,20 +26,29 @@ function useAuth(protectedPage = true) {
 			payload: {
 				username: localStorage.getItem('username'),
 				role: tokenRole,
-				id: localStorage.getItem('username'),
+				id: localStorage.getItem('uid'),
 			},
 		})
-
-		return true
 	}
 
-	if (protectedPage && !isAuth) {
+	// If at protected page, but not auth
+	if (protectedPage && !auth.isAuth) {
 		// Is in protected page, redirect
-		history.push('/login')
+		history.push('/')
 		return false
 	}
 
-	return true
+	// If at protected page, and is auth, check permission
+	if (protectedPage && auth.isAuth && permissions[auth.role]) {
+		return true
+	}
+
+	if (!protectedPage) {
+		return true
+	}
+
+	history.push('/')
+	return false
 }
 
 // Get function to get page data
