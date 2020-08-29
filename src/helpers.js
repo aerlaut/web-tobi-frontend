@@ -71,4 +71,16 @@ function fetchPageData(options, handler) {
 		.catch((err) => console.error(err))
 }
 
-export { useAuth, fetchPageData }
+// Dispatch errors
+function useError(type = 'warning', message = '', code = '500') {
+	useDispatch({
+		type: 'error/show',
+		payload: {
+			type: type,
+			message: message,
+			code: code,
+		},
+	})
+}
+
+export { useAuth, fetchPageData, useError }

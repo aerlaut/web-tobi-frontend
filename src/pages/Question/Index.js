@@ -25,24 +25,23 @@ export default function () {
 		useAuth() && (
 			<>
 				{error && <Error type={error.type} message={error.message} />}
-				<div>Search</div>
-				<div>
-					<h1 className='text-xl font-bold mb-4'>
-						New Questions
-						<span className='float-right'>
-							<Link
-								to='/question/create'
-								className='mr-4 px-4 py-2 bg-blue-600 rounded inline-block text-white text-sm'
-							>
-								<NewItem
-									color='white'
-									className='mr-2 inline-block align-text-top'
-									size={16}
-								/>
-								Create
-							</Link>
-						</span>
-					</h1>
+
+				<div className='clearfix'>
+					<h1 className='text-xl font-bold mb-4 inline-block'>New Questions</h1>
+					<span className='float-right inline-block'>
+						<Link
+							to='/question/create'
+							className='mr-4 px-4 py-2 bg-blue-600 rounded inline-block text-white text-sm'
+						>
+							<NewItem
+								color='white'
+								className='mr-2 inline-block align-text-top'
+								size={16}
+							/>
+							Create
+						</Link>
+					</span>
+					<div className='mb-4'>Search</div>
 					<div className='flex flex-wrap'>
 						{questions.map((el, idx) => (
 							<div
