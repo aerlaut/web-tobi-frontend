@@ -68,6 +68,7 @@ export default function () {
 			description: description,
 			tier: tier,
 			createdAt: Date.now(),
+			updatedAt: Date.now(),
 			maxScore: maxScore,
 			isOfficial: isOfficial,
 			difficulty: difficulty,

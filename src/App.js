@@ -6,11 +6,19 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import QuestionIndex from './pages/Question/Index'
-import QuestionCreate from './pages/Question/Create'
-import QuestionShow from './pages/Question/Show'
-import QuestionEdit from './pages/Question/Edit'
-import Test from './pages/Test'
+import {
+	QuestionIndex,
+	QuestionCreate,
+	QuestionShow,
+	QuestionEdit,
+} from './pages/Question/components'
+
+import {
+	UserIndex,
+	UserCreate,
+	UserShow,
+	UserEdit,
+} from './pages/User/components'
 
 // Components
 import Page from './components/Page'
@@ -37,7 +45,11 @@ export default function App() {
 					<Route exact path='/question/create' component={QuestionCreate} />
 					<Route exact path='/question/:id' component={QuestionShow} />
 					<Route path='/question/:id/edit' component={QuestionEdit} />
-					<Route path='/test' component={Test} />
+					<Route exact path='/user' component={UserIndex} />
+					<Route exact path='/user/create' component={UserCreate} />
+					<Route exact path='/user/:id' component={UserShow} />
+					<Route path='/user/:id/edit' component={UserEdit} />
+					{/* <Route path='/test' component={Test} /> */}
 				</Switch>
 			</main>
 		</BrowserRouter>

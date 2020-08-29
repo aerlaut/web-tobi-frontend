@@ -11,6 +11,7 @@ export default function AppBar() {
 	// Redux states
 	const username = useSelector((state) => state.auth.username)
 	const auth = useSelector((state) => state.auth.isAuth)
+	const role = useSelector((state) => state.auth.role)
 
 	// Local state
 	const [showLogin, setShowLogin] = useState(false)
@@ -19,6 +20,7 @@ export default function AppBar() {
 	const [formStatus, setFormStatus] = useState('')
 	const [showUserDropdown, setShowUserDropdown] = useState(false)
 
+	// Functions
 	function handleLogin(e) {
 		e.preventDefault()
 
@@ -133,6 +135,15 @@ export default function AppBar() {
 										<Link to='/user/profile'>
 											<li className='px-4 py-2'>Profile</li>
 										</Link>
+										{role === 'superadmin' ? (
+											<Link to='/user'>
+												<li className='border-t border-gray-800 px-4 py-2 cursor-pointer'>
+													Users
+												</li>
+											</Link>
+										) : (
+											''
+										)}
 										<li
 											className='border-t border-gray-800 px-4 py-2 cursor-pointer'
 											onClick={() => handleLogout()}
