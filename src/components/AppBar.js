@@ -74,6 +74,7 @@ export default function AppBar() {
 						payload: {
 							username: res.data.username,
 							role: res.data.role,
+							id: res.data.id,
 						},
 					})
 

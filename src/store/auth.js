@@ -9,16 +9,18 @@ export default createSlice({
 	},
 	reducers: {
 		logUserIn: (state, action) => {
-			const { username, role } = action.payload
+			const { username, role, id } = action.payload
 
 			state.isAuth = true
 			state.username = username
 			state.role = role
+			state.id = id
 		},
 		logUserOut: (state) => {
 			state.isAuth = false
 			state.username = null
 			state.role = null
+			state.id = null
 		},
 	},
 })

@@ -47,6 +47,7 @@ export default function () {
 						payload: {
 							username: res.data.username,
 							role: res.data.role,
+							id: res.data.id,
 						},
 					})
 

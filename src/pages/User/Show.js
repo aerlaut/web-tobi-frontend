@@ -66,7 +66,7 @@ export default function () {
 						{display.username}
 					</h1>
 
-					{role === 'admin' || role === 'superadmin' ? (
+					{role === 'admin' || role === 'superadmin' || match ? (
 						<span
 							className='bg-blue-600 px-2 py-1 text-white float-right cursor-pointer rounded inline-block'
 							onClick={() => history.push(`/user/${id}/edit`)}
