@@ -53,6 +53,7 @@ function fetchPageData(options, handler) {
 		}
 	}
 
+	// Fetching...
 	let url = window.location.pathname
 	fetch(`${process.env.REACT_APP_API_URL}${url}`, {
 		// url includes beginning '/'
@@ -71,16 +72,4 @@ function fetchPageData(options, handler) {
 		.catch((err) => console.error(err))
 }
 
-// Dispatch errors
-function useError(type = 'warning', message = '', code = '500') {
-	useDispatch({
-		type: 'error/show',
-		payload: {
-			type: type,
-			message: message,
-			code: code,
-		},
-	})
-}
-
-export { useAuth, fetchPageData, useError }
+export { useAuth, fetchPageData }

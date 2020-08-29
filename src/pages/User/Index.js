@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { useAuth, fetchPageData, useError } from '../../helpers'
+import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import NewItem from '../../icons/NewItem'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 export default function () {
 	const history = useHistory()
 	const [displays, setDisplays] = useState('')
+	const dispatch = useDispatch()
 
 	// Redux states
 	const error = useSelector((state) => state.error)
@@ -16,7 +17,13 @@ export default function () {
 		// Fetch dashboard data
 		fetchPageData({ auth: true }, (res) => {
 			if (res.status !== 'ok') {
-				useError('danger', res.message)
+				dispatch({
+					type: 'error/show',
+					payload: {
+						type: 'danger',
+						message: res.message,
+					},
+				})
 			} else {
 				// Setting information
 				setDisplays(res.data)
@@ -32,7 +39,7 @@ export default function () {
 					<h1 className='text-xl font-bold mb-4 inline-block'>Users</h1>
 					<span className='float-right inline-block'>
 						<Link
-							to='/question/create'
+							to='/user/create'
 							className='mr-4 px-4 py-2 bg-blue-600 rounded inline-block text-white text-sm'
 						>
 							<NewItem

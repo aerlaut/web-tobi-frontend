@@ -14,34 +14,22 @@ export default function () {
 	// Local state
 	const [error, setError] = useState('')
 	const [password, setPassword] = useState('')
+	const [confirmPassword, setConfirmPassword] = useState('')
 
 	// Redux states
-	const objectId = useSelector((state) => state.user._Id)
-	const username = useSelector((state) => state.user.username)
-	const fullName = useSelector((state) => state.user.fullName)
-	const address = useSelector((state) => state.user.address)
-	const city = useSelector((state) => state.user.city)
-	const province = useSelector((state) => state.user.province)
-	const country = useSelector((state) => state.user.country)
-	const school = useSelector((state) => state.user.school)
-	const mobileNo = useSelector((state) => state.user.mobileNo)
-	const email = useSelector((state) => state.user.email)
-	const role = useSelector((state) => state.user.role)
-	const roles = useSelector((state) => state.user.roles)
-	const isVerified = useSelector((state) => state.user.isVerified)
-	const emailVerified = useSelector((state) => state.user.emailVerified)
+	const user = useSelector((state) => state.user)
 
 	useEffect(() => {
 		// Fetch dashboard data
 		fetchPageData({ auth: true }, (res) => {
+			console.log(res)
+
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
-				// Get some status for updating
-
 				// Push question to redux
 				dispatch({
-					type: 'question/load',
+					type: 'user/load',
 					payload: {
 						data: res.data,
 					},
@@ -50,26 +38,54 @@ export default function () {
 		})
 	}, [])
 
+	function update(payload) {
+		dispatch({
+			type: 'user/update',
+			payload: payload,
+		})
+	}
+
 	function save(e) {
 		e.preventDefault()
 
 		let postdata = {
-			_id: objectId,
+			_id: user._id,
 			updatedAt: Date.now(),
-			username: username,
-			fullName: fullName,
-			address: address,
-			city: city,
-			province: province,
-			country: country,
-			school: school,
-			mobileNo: mobileNo,
-			email: email,
-			role: role,
+			username: user.username,
+			fullname: user.fullname,
+			address: user.address,
+			city: user.city,
+			province: user.province,
+			country: user.country,
+			school: user.school,
+			grade: user.grade,
+			mobileNo: user.mobileNo,
+			email: user.email,
+			role: user.role,
+			emailVerified: user.emailVerified,
+		}
+
+		console.log(postdata)
+
+		// Check if password is set
+		if (password !== '') {
+			if (password === confirmPassword) {
+				postdata.password = password
+			} else {
+				dispatch({
+					type: 'error/show',
+					payload: {
+						type: 'danger',
+						message:
+							'The passwords you entered does not match. Please re-enter the password.',
+					},
+				})
+				return
+			}
 		}
 
 		// Submit form
-		fetch(`${process.env.REACT_APP_API_URL}/question/${id}/edit`, {
+		fetch(`${process.env.REACT_APP_API_URL}/user/${id}/edit`, {
 			method: 'POST',
 			headers: new Headers({
 				'Content-type': 'application/json',
@@ -116,14 +132,12 @@ export default function () {
 							<span className='w-2/12 inline-block'>Username</span>
 							<input
 								type='text'
-								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={username}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setAuthor',
-										payload: { content: e.target.value },
-									})
-								}}
+								className='w-6/12 p-1 border border-black shadow-inside rounded bg-gray-200 cursor-not-allowed'
+								value={user.username}
+								readOnly={true}
+								onChange={(e) =>
+									update({ attr: 'username', content: e.target.value })
+								}
 							></input>
 						</label>
 
@@ -132,27 +146,21 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={fullName}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setFullName',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.fullname}
+								onChange={(e) =>
+									update({ attr: 'fullname', content: e.target.value })
+								}
 							></input>
 						</label>
 
 						<div className='my-2'>
-							<strong>Address</strong>
+							<span className='w-2/12 inline-block align-top'>Address</span>
 							<textarea
-								className='rounded border border-black block w-full px-2 py-1'
+								className='rounded border border-black block w-6/12 px-2 py-1 inline-block'
 								rows={3}
-								value={address}
+								value={user.address}
 								onChange={(e) => {
-									dispatch({
-										type: 'question/setAddress',
-										payload: { content: e.target.value },
-									})
+									update({ attr: 'address', content: e.target.value })
 								}}
 							></textarea>
 							<div></div>
@@ -163,13 +171,10 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={city}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setFullName',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.city}
+								onChange={(e) =>
+									update({ attr: 'city', content: e.target.value })
+								}
 							></input>
 						</label>
 
@@ -178,13 +183,10 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={province}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setFullName',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.province}
+								onChange={(e) =>
+									update({ attr: 'province', content: e.target.value })
+								}
 							></input>
 						</label>
 
@@ -193,13 +195,10 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={country}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setFullName',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.country}
+								onChange={(e) =>
+									update({ attr: 'country', content: e.target.value })
+								}
 							></input>
 						</label>
 
@@ -208,29 +207,34 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={school}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setFullName',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.school}
+								onChange={(e) =>
+									update({ attr: 'school', content: e.target.value })
+								}
 							></input>
 						</label>
-					</div>
-					<div className='w-1/2 flex flex-col'>
+
+						<label className='my-2'>
+							<span className='w-2/12 inline-block'>Grade</span>
+							<input
+								type='text'
+								className='w-6/12 p-1 border border-black shadow-inside rounded'
+								value={user.grade}
+								onChange={(e) =>
+									update({ attr: 'grade', content: e.target.value })
+								}
+							></input>
+						</label>
+
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Mobile No.</span>
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={mobileNo}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setMobileNo',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.mobileNo}
+								onChange={(e) =>
+									update({ attr: 'mobileNo', content: e.target.value })
+								}
 							></input>
 						</label>
 
@@ -239,13 +243,10 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={email}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setEmail',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={user.email}
+								onChange={(e) =>
+									update({ attr: 'email', content: e.target.value })
+								}
 							></input>
 						</label>
 
@@ -253,20 +254,55 @@ export default function () {
 							<span className='w-2/12 inline-block'>Role</span>
 							<select
 								onChange={(e) =>
-									dispatch({
-										type: 'question/setRole',
-										payload: { content: e.target.value },
-									})
+									update({ attr: 'role', content: e.target.value })
 								}
-								value={role}
-								className='border rounded p-1 border-black w-2/12'
+								value={user.role}
+								className='border rounded p-1 border-black w-6/12'
 							>
-								{roles.map((t) => (
+								{user.roles.map((t) => (
 									<option key={`role_${t.value}`} value={t.value}>
 										{t.name}
 									</option>
 								))}
 							</select>
+						</label>
+
+						<label>
+							<span className='w-2/12 inline-block'>Email Verified</span>
+							<select
+								onChange={(e) =>
+									update({ attr: 'emailVerified', content: e.target.value })
+								}
+								value={user.emailVerified}
+								className='border rounded p-1 border-black w-6/12'
+							>
+								<option value={false}>Not Verified</option>
+								<option value={true}>Verified</option>
+							</select>
+						</label>
+
+						<p className='mt-4 mb-2'>
+							Kosongkan password jika tidak ingin diubah
+						</p>
+
+						<label className='my-2'>
+							<span className='w-2/12 inline-block'>Password</span>
+							<input
+								type='password'
+								className='w-6/12 p-1 border border-black shadow-inside rounded'
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+							/>
+						</label>
+
+						<label className='my-2'>
+							<span className='w-2/12 inline-block'>Confirm Password</span>
+							<input
+								type='password'
+								className='w-6/12 p-1 border border-black shadow-inside rounded'
+								value={confirmPassword}
+								onChange={(e) => setConfirmPassword(e.target.value)}
+							/>
 						</label>
 					</div>
 				</div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
@@ -10,8 +10,6 @@ import { useSelector, useDispatch } from 'react-redux'
 export default function () {
 	const history = useHistory()
 	const dispatch = useDispatch()
-	const refPassword = useRef('')
-	const refConfirmPassword = useRef('')
 
 	// Local state
 	const [password, setPassword] = useState('')
@@ -19,18 +17,7 @@ export default function () {
 
 	// Redux states
 	const error = useSelector((state) => state.error)
-
-	const username = useSelector((state) => state.user.username)
-	const fullName = useSelector((state) => state.user.fullName)
-	const address = useSelector((state) => state.user.address)
-	const city = useSelector((state) => state.user.city)
-	const province = useSelector((state) => state.user.province)
-	const country = useSelector((state) => state.user.country)
-	const school = useSelector((state) => state.user.school)
-	const mobileNo = useSelector((state) => state.user.mobileNo)
-	const email = useSelector((state) => state.user.email)
-	const role = useSelector((state) => state.user.role)
-	const roles = useSelector((state) => state.user.roles)
+	const user = useSelector((state) => state.user)
 
 	useEffect(() => {
 		// Fetch dashboard data
@@ -62,30 +49,28 @@ export default function () {
 			dispatch({
 				type: 'error/show',
 				payload: {
-					message:
-						'The passwords you have entered is not the same. Please re-enter your password',
 					type: 'danger',
+					message:
+						'The passwords you entered does not match. Please re-enter the password.',
 				},
 			})
-
 			return
 		}
 
 		let postdata = {
-			username: username,
-			fullName: fullName,
-			address: address,
-			city: city,
-			province: province,
-			country: country,
-			school: school,
-			mobileNo: mobileNo,
-			email: email,
-			role: role,
+			username: user.username,
+			fullname: user.fullname,
+			address: user.address,
+			city: user.city,
+			province: user.province,
+			country: user.country,
+			school: user.school,
+			grade: user.grade,
+			mobileNo: user.mobileNo,
+			email: user.email,
+			role: user.role,
 			password: password,
 		}
-
-		console.log(postdata)
 
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/user/create`, {
@@ -137,7 +122,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={username}
+								value={user.username}
 								onChange={(e) =>
 									update({ attr: 'username', content: e.target.value })
 								}
@@ -149,9 +134,9 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={fullName}
+								value={user.fullname}
 								onChange={(e) =>
-									update({ attr: 'fullName', content: e.target.value })
+									update({ attr: 'fullname', content: e.target.value })
 								}
 							></input>
 						</label>
@@ -164,7 +149,7 @@ export default function () {
 								onChange={(e) =>
 									update({ attr: 'address', content: e.target.value })
 								}
-								value={address}
+								value={user.address}
 							></textarea>
 						</div>
 
@@ -173,7 +158,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={city}
+								value={user.city}
 								onChange={(e) =>
 									update({ attr: 'city', content: e.target.value })
 								}
@@ -185,7 +170,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={province}
+								value={user.province}
 								onChange={(e) =>
 									update({ attr: 'province', content: e.target.value })
 								}
@@ -197,7 +182,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={country}
+								value={user.country}
 								onChange={(e) =>
 									update({ attr: 'country', content: e.target.value })
 								}
@@ -209,9 +194,21 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={school}
+								value={user.school}
 								onChange={(e) =>
 									update({ attr: 'school', content: e.target.value })
+								}
+							></input>
+						</label>
+
+						<label className='my-2'>
+							<span className='w-2/12 inline-block'>Grade</span>
+							<input
+								type='text'
+								className='w-6/12 p-1 border border-black shadow-inside rounded'
+								value={user.grade}
+								onChange={(e) =>
+									update({ attr: 'grade', content: e.target.value })
 								}
 							></input>
 						</label>
@@ -221,7 +218,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={mobileNo}
+								value={user.mobileNo}
 								onChange={(e) =>
 									update({ attr: 'mobileNo', content: e.target.value })
 								}
@@ -233,7 +230,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={email}
+								value={user.email}
 								onChange={(e) =>
 									update({ attr: 'email', content: e.target.value })
 								}
@@ -246,10 +243,10 @@ export default function () {
 								onChange={(e) =>
 									update({ attr: 'role', content: e.target.value })
 								}
-								value={role}
+								value={user.role}
 								className='border rounded p-1 border-black w-6/12'
 							>
-								{roles.map((r) => (
+								{user.roles.map((r) => (
 									<option key={`role_${r.value}`} value={r.value}>
 										{r.name}
 									</option>
@@ -263,7 +260,6 @@ export default function () {
 								type='password'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
 								value={password}
-								ref={refPassword}
 								onChange={(e) => setPassword(e.target.value)}
 							/>
 						</label>
@@ -274,7 +270,6 @@ export default function () {
 								type='password'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
 								value={confirmPassword}
-								ref={refConfirmPassword}
 								onChange={(e) => setConfirmPassword(e.target.value)}
 							/>
 						</label>

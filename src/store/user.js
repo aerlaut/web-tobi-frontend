@@ -4,13 +4,14 @@ export default createSlice({
 	name: 'user',
 	initialState: {
 		username: '',
-		fullName: '',
+		fullname: '',
 		createdAt: '',
 		updatedAt: '',
 		address: '',
 		city: '',
 		province: '',
 		country: '',
+		grade: '',
 		school: '',
 		mobileNo: '',
 		email: '',
@@ -33,13 +34,14 @@ export default createSlice({
 		reset: (state, action) => {
 			const inits = {
 				username: '',
-				fullName: '',
+				fullname: '',
 				createdAt: '',
 				updatedAt: '',
 				address: '',
 				city: '',
 				province: '',
 				country: '',
+				grade: '',
 				school: '',
 				mobileNo: '',
 				email: '',
@@ -61,10 +63,10 @@ export default createSlice({
 
 		// Load question object into redux
 		load: (state, action) => {
-			const { question } = action.payload
+			const { data } = action.payload
 
-			Object.keys(question).forEach((key, idx) => {
-				state[key] = question[key]
+			Object.keys(data).forEach((key, idx) => {
+				state[key] = data[key]
 			})
 		},
 	},

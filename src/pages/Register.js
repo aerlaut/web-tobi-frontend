@@ -5,7 +5,7 @@ import cx from 'classnames'
 export default function () {
 	const history = useHistory()
 
-	const [fullName, setFullName] = useState('')
+	const [fullname, setFullname] = useState('')
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
@@ -30,7 +30,7 @@ export default function () {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				fullname: fullName,
+				fullname: fullname,
 				username: username,
 				email: email,
 				password: password,
@@ -71,8 +71,8 @@ export default function () {
 					<input
 						type='text'
 						className='w-2/12 p-1 border border-black shadow-inside rounded'
-						value={fullName}
-						onChange={(e) => setFullName(e.target.value)}
+						value={fullname}
+						onChange={(e) => setFullname(e.target.value)}
 						name='fullname'
 					></input>
 				</label>
