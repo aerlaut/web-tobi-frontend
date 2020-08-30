@@ -1,19 +1,15 @@
 import React, { useState } from 'react'
-import {
-	EditorState,
-	ContentState,
-	convertToRaw,
-	convertFromRaw,
-} from 'draft-js'
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
 import { stateToHTML } from 'draft-js-export-html'
+import cx from 'classnames'
 
 export default function ({ content = '', idx, mode = 'view' }) {
 	let type = 'text_label'
 	const dispatch = useDispatch()
-	const [tempImages, setTempImages] = useState([])
+	const tempImages = {}
 
 	const [editorState, setEditorState] = useState(() => {
 		if (content.label !== '') {
@@ -25,7 +21,7 @@ export default function ({ content = '', idx, mode = 'view' }) {
 		}
 	})
 
-	function updateField(e) {
+	function updateField() {
 		dispatch({
 			type: 'question/updateField',
 			payload: {
@@ -39,6 +35,7 @@ export default function ({ content = '', idx, mode = 'view' }) {
 	}
 
 	function handleUploadImage(file) {
+		//  Handle by file upload
 		return new Promise((resolve, reject) => {
 			const formData = new FormData()
 			formData.append('ownerType', 'Question')
@@ -60,29 +57,24 @@ export default function ({ content = '', idx, mode = 'view' }) {
 
 	return (
 		<>
-			{mode === 'view' ? (
-				<div
-					dangerouslySetInnerHTML={{
-						__html: stateToHTML(editorState.getCurrentContent()),
-					}}
-				></div>
-			) : (
-				<Editor
-					editorState={editorState}
-					wrapperClassName='min-h-1/4 mt-2'
-					toolbarHidden={mode === 'view'}
-					toolbar={{
-						image: {
-							uploadCallback: handleUploadImage,
-							previewImage: true,
-						},
-					}}
-					toolbarClassName='border border-gray-800 rounded-t mb-0'
-					editorClassName='border border-gray-800 rounded-b px-4 bg-white'
-					onEditorStateChange={(e) => setEditorState(e)}
-					onBlur={() => updateField()}
-				/>
-			)}
+			<Editor
+				editorState={editorState}
+				readOnly={mode === 'view'}
+				toolbarHidden={mode === 'view'}
+				wrapperClassName='min-h-1/4 mt-2'
+				toolbar={{
+					image: {
+						uploadCallback: handleUploadImage,
+						previewImage: true,
+					},
+				}}
+				toolbarClassName='border border-gray-800 rounded-t mb-0'
+				editorClassName={cx({
+					'border border-gray-800 rounded-b px-4 bg-white': mode !== 'view',
+				})}
+				onEditorStateChange={(e) => setEditorState(e)}
+				onBlur={() => updateField()}
+			/>
 		</>
 	)
 }

@@ -56,7 +56,7 @@ export default function () {
 			})
 			.catch((err) => {
 				// Show error details
-				console.log(err)
+				console.error(err)
 				setFormStatus({ type: 'error', message: 'Connection error' })
 			})
 	}

@@ -49,7 +49,7 @@ export default function ({ content = '', idx, mode = 'view' }) {
 				className='border rounded border-black w-full'
 			/>
 			{mode === 'edit' ? (
-				<div class='float-right mt-2'>
+				<div className='float-right mt-2'>
 					Score
 					<input
 						type='text'

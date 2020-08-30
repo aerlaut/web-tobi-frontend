@@ -43,6 +43,12 @@ export default function ({
 				}
 				break
 
+			case 'text_label':
+				defaultFieldContent = {
+					label: '',
+				}
+				break
+
 			default:
 				defaultFieldContent = {
 					label: 'Text pertanyaan disini',

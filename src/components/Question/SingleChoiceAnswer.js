@@ -147,7 +147,7 @@ export default function ({ content, idx, mode = 'view' }) {
 				)}
 			</div>
 			{mode === 'edit' ? (
-				<div class='float-right mt-2'>
+				<div className='float-right mt-2'>
 					Score
 					<input
 						type='text'
