@@ -50,7 +50,6 @@ export default function App() {
 					<Route exact path='/user/profile' component={UserShow} />
 					<Route exact path='/user/:id' component={UserShow} />
 					<Route path='/user/:id/edit' component={UserEdit} />
-					{/* <Route path='/test' component={Test} /> */}
 				</Switch>
 			</main>
 		</BrowserRouter>
