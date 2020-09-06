@@ -6,6 +6,8 @@ import ShortTextAnswer from './ShortTextAnswer'
 import TextAnswer from './TextAnswer'
 import SingleChoiceAnswer from './SingleChoiceAnswer'
 import MultipleChoiceAnswer from './MultipleChoiceAnswer'
+import ChevronUp from '../../icons/ChevronUp'
+import ChevronDown from '../../icons/ChevronDown'
 
 export default function ({
 	type = 'text',
@@ -160,6 +162,34 @@ export default function ({
 								</option>
 							))}
 						</select>
+
+						{/* Button move up */}
+						<button
+							onClick={(e) => {
+								dispatch({
+									type: 'question/moveFieldDown',
+									payload: {
+										idx: idx,
+									},
+								})
+							}}
+						>
+							<ChevronDown />
+						</button>
+
+						{/* Button move down */}
+						<button
+							onClick={(e) => {
+								dispatch({
+									type: 'question/moveFieldUp',
+									payload: {
+										idx: idx,
+									},
+								})
+							}}
+						>
+							<ChevronUp />
+						</button>
 					</>
 				) : (
 					''

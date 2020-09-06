@@ -87,6 +87,24 @@ export default createSlice({
 				state.contents[idx].content[key] = content[key]
 			})
 		},
+		// Move field up
+		moveFieldUp: (state, action) => {
+			const { idx } = action.payload
+
+			if (idx > 0) {
+				let item = state.contents.splice(idx, 1)
+				state.contents.splice(idx - 1, 0, ...item)
+			}
+		},
+		// Move field down
+		moveFieldDown: (state, action) => {
+			const { idx } = action.payload
+
+			if (idx <= state.contents.length - 1) {
+				let item = state.contents.splice(idx, 1)
+				state.contents.splice(idx + 1, 0, ...item)
+			}
+		},
 		// Switch field type to something else
 		switchField: (state, action) => {
 			const { idx, type, content } = action.payload
