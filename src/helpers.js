@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { useEffect } from 'react'
 
 // Block off
 function useAuth(protectedPage = true, permissions = {}) {
@@ -17,7 +18,12 @@ function useAuth(protectedPage = true, permissions = {}) {
 
 	const auth = useSelector((state) => state.auth)
 
-	// If use is not logged in, check for token then login
+	// Function-wide variable
+	let isAuth = auth.isAuth
+	let role = auth.role
+
+	// If use is not logged in, check for token then login.
+	// Sets value for local variable in startup run
 	if (!auth.isAuth && localStorage.getItem('token') !== null) {
 		const tokenRole = localStorage.getItem('role')
 
@@ -29,23 +35,32 @@ function useAuth(protectedPage = true, permissions = {}) {
 				id: localStorage.getItem('uid'),
 			},
 		})
+
+		isAuth = true
+		role = tokenRole
+	}
+
+	// If not protected page, can see
+	if (!protectedPage) {
+		console.log('not protected page')
+		return true
 	}
 
 	// If at protected page, but not auth
-	if (protectedPage && !auth.isAuth) {
+	if (protectedPage && !isAuth) {
 		// Is in protected page, redirect
+		console.log('protected page but not auth')
 		history.push('/')
 		return false
 	}
 
 	// If at protected page, and is auth, check permission
-	if (protectedPage && auth.isAuth && permissions[auth.role]) {
+	if (protectedPage && isAuth && permissions[role]) {
+		console.log('protected page, auth and have permission')
 		return true
 	}
 
-	if (!protectedPage) {
-		return true
-	}
+	console.log('out of bounds')
 
 	history.push('/')
 	return false
