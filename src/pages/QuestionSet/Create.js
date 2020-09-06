@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
-import Field from '../../components/Question/Field'
-import FieldOption from '../../components/Question/FieldOption'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -13,14 +11,7 @@ export default function () {
 	const dispatch = useDispatch()
 
 	// Redux states
-	const author = useSelector((state) => state.question.author)
-	const tier = useSelector((state) => state.question.tier)
-	const maxScore = useSelector((state) => state.question.maxScore)
-	const isOfficial = useSelector((state) => state.question.isOfficial)
-	const isPublished = useSelector((state) => state.question.isPublished)
-	const difficulty = useSelector((state) => state.question.difficulty)
-	const contents = useSelector((state) => state.question.contents)
-	const description = useSelector((state) => state.question.description)
+	const questionSet = useSelector((state) => state.questionSet)
 
 	const tiers = [
 		{
@@ -56,28 +47,35 @@ export default function () {
 		// })
 		// Reset all redux states
 		dispatch({
-			type: 'question/reset',
+			type: 'questionSet/reset',
 		})
 	}, [])
+
+	function updateMeta(content) {
+		dispatch({
+			type: 'questionSet/updateMeta',
+			payload: {
+				content: content,
+			},
+		})
+	}
 
 	function saveQuestion(e) {
 		e.preventDefault()
 
 		let postdata = {
-			author: author,
-			description: description,
-			tier: tier,
-			createdAt: Date.now(),
-			updatedAt: Date.now(),
-			maxScore: maxScore,
-			isOfficial: isOfficial,
-			difficulty: difficulty,
-			contents: contents,
-			isPublished: isPublished,
+			author: questionSet.author,
+			description: questionSet.description,
+			maxScore: questionSet.maxScore,
+			isOfficial: questionSet.isOfficial,
+			canRandomOrder: questionSet.canRandomOrder,
+			difficulty: questionSet.difficulty,
+			contents: questionSet.contents,
+			isPublished: questionSet.isPublished,
 		}
 
 		// Question switched to published
-		if (isPublished) postdata.publishedAt = Date.now()
+		if (questionSet.isPublished) postdata.publishedAt = Date.now()
 
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
@@ -113,7 +111,7 @@ export default function () {
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<h1 className='text-xl font-bold mb-4'>
-					Buat Soal Baru
+					Buat Set Soal Baru
 					<span
 						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
 						onClick={(e) => saveQuestion(e)}
@@ -129,46 +127,28 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={author}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setAuthor',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={questionSet.author}
+								onChange={(e) => updateMeta({ author: e.target.value })}
 							></input>
-						</label>
-
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Tier</span>
-							<select
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setTier',
-										payload: { content: e.target.value },
-									})
-								}
-								value={tier}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								{tiers.map((t) => (
-									<option key={`tier_${t.value}`} value={t.value}>
-										{t.name}
-									</option>
-								))}
-							</select>
 						</label>
 
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Official?</span>
 							<select
-								value={isOfficial}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setOfficial',
-										payload: { content: e.target.value },
-									})
-								}
+								value={questionSet.isOfficial}
+								onChange={(e) => updateMeta({ isOfficial: e.target.value })}
+								className='border rounded p-1 border-black w-2/12'
+							>
+								<option value={true}>Yes</option>
+								<option value={false}>No</option>
+							</select>
+						</label>
+
+						<label className='my-2'>
+							<span className='w-2/12 inline-block'>Can random?</span>
+							<select
+								value={questionSet.canRandomOrder}
+								onChange={(e) => updateMeta({ canRandomOrder: e.target.value })}
 								className='border rounded p-1 border-black w-2/12'
 							>
 								<option value={true}>Yes</option>
@@ -179,13 +159,8 @@ export default function () {
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Published?</span>
 							<select
-								value={isPublished}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setPublished',
-										payload: { content: e.target.value },
-									})
-								}
+								value={questionSet.isPublished}
+								onChange={(e) => updateMeta({ isPublished: e.target.value })}
 								className='border rounded p-1 border-black w-2/12'
 							>
 								<option value={true}>Yes</option>
@@ -195,19 +170,12 @@ export default function () {
 					</div>
 					<div className='w-1/2 flex flex-col'>
 						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Difficulty</span>
+							<span className='w-3/12 inline-block'>Difficulty</span>
 							<input
-								type='range'
-								className='w-2/12 p-1 border border-black shadow-inside rounded'
-								min='1'
-								max='5'
-								value={difficulty}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setDifficulty',
-										payload: { content: e.target.value },
-									})
-								}
+								type='text'
+								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
+								value={questionSet.difficulty}
+								readOnly={true}
 							></input>
 						</label>
 
@@ -216,7 +184,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
-								value={maxScore}
+								value={questionSet.maxScore}
 								readOnly={true}
 							></input>
 						</label>
@@ -237,12 +205,7 @@ export default function () {
 					<textarea
 						className='rounded border border-black block w-full px-2 py-1'
 						rows={3}
-						onChange={(e) => {
-							dispatch({
-								type: 'question/setDescription',
-								payload: { content: e.target.value },
-							})
-						}}
+						onChange={(e) => updateMeta({ description: e.target.value })}
 					></textarea>
 					<div></div>
 				</div>
@@ -260,21 +223,6 @@ export default function () {
 						style={{ minHeight: 2 + 'em' }}
 					></div>
 				</div>
-
-				{/* Question body */}
-				<strong>Pertanyaan</strong>
-				{contents.map((field, idx) => (
-					<>
-						<Field
-							type={field.type}
-							key={`field_${idx}`}
-							content={field.content}
-							idx={idx}
-							mode='edit'
-						/>
-						<FieldOption key={`opt-${idx}`} idx={idx} />
-					</>
-				))}
 			</>
 		)
 	)

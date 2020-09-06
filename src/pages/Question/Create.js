@@ -13,14 +13,7 @@ export default function () {
 	const dispatch = useDispatch()
 
 	// Redux states
-	const author = useSelector((state) => state.question.author)
-	const tier = useSelector((state) => state.question.tier)
-	const maxScore = useSelector((state) => state.question.maxScore)
-	const isOfficial = useSelector((state) => state.question.isOfficial)
-	const isPublished = useSelector((state) => state.question.isPublished)
-	const difficulty = useSelector((state) => state.question.difficulty)
-	const contents = useSelector((state) => state.question.contents)
-	const description = useSelector((state) => state.question.description)
+	const question = useSelector((state) => state.question)
 
 	const tiers = [
 		{
@@ -64,20 +57,18 @@ export default function () {
 		e.preventDefault()
 
 		let postdata = {
-			author: author,
-			description: description,
-			tier: tier,
-			createdAt: Date.now(),
-			updatedAt: Date.now(),
-			maxScore: maxScore,
-			isOfficial: isOfficial,
-			difficulty: difficulty,
-			contents: contents,
-			isPublished: isPublished,
+			author: question.author,
+			description: question.description,
+			tier: question.tier,
+			maxScore: question.maxScore,
+			isOfficial: question.isOfficial,
+			difficulty: question.difficulty,
+			contents: question.contents,
+			isPublished: question.isPublished,
 		}
 
 		// Question switched to published
-		if (isPublished) postdata.publishedAt = Date.now()
+		if (question.isPublished) postdata.publishedAt = Date.now()
 
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
@@ -108,6 +99,15 @@ export default function () {
 			})
 	}
 
+	function updateMeta(content) {
+		dispatch({
+			type: 'question/updateMeta',
+			payload: {
+				content: content,
+			},
+		})
+	}
+
 	return (
 		useAuth() && (
 			<>
@@ -129,26 +129,16 @@ export default function () {
 							<input
 								type='text'
 								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={author}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setAuthor',
-										payload: { content: e.target.value },
-									})
-								}}
+								value={question.author}
+								onChange={(e) => updateMeta({ author: e.target.value })}
 							></input>
 						</label>
 
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Tier</span>
 							<select
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setTier',
-										payload: { content: e.target.value },
-									})
-								}
-								value={tier}
+								onChange={(e) => updateMeta({ tier: e.target.value })}
+								value={question.tier}
 								className='border rounded p-1 border-black w-2/12'
 							>
 								{tiers.map((t) => (
@@ -162,13 +152,8 @@ export default function () {
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Official?</span>
 							<select
-								value={isOfficial}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setOfficial',
-										payload: { content: e.target.value },
-									})
-								}
+								value={question.isOfficial}
+								onChange={(e) => updateMeta({ isOfficial: e.target.value })}
 								className='border rounded p-1 border-black w-2/12'
 							>
 								<option value={true}>Yes</option>
@@ -179,13 +164,8 @@ export default function () {
 						<label className='my-2'>
 							<span className='w-2/12 inline-block'>Published?</span>
 							<select
-								value={isPublished}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setPublished',
-										payload: { content: e.target.value },
-									})
-								}
+								value={question.isPublished}
+								onChange={(e) => updateMeta({ isPublished: e.target.value })}
 								className='border rounded p-1 border-black w-2/12'
 							>
 								<option value={true}>Yes</option>
@@ -201,13 +181,8 @@ export default function () {
 								className='w-2/12 p-1 border border-black shadow-inside rounded'
 								min='1'
 								max='5'
-								value={difficulty}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setDifficulty',
-										payload: { content: e.target.value },
-									})
-								}
+								value={question.difficulty}
+								onChange={(e) => updateMeta({ difficulty: e.target.value })}
 							></input>
 						</label>
 
@@ -216,7 +191,7 @@ export default function () {
 							<input
 								type='text'
 								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
-								value={maxScore}
+								value={question.maxScore}
 								readOnly={true}
 							></input>
 						</label>
@@ -237,12 +212,7 @@ export default function () {
 					<textarea
 						className='rounded border border-black block w-full px-2 py-1'
 						rows={3}
-						onChange={(e) => {
-							dispatch({
-								type: 'question/setDescription',
-								payload: { content: e.target.value },
-							})
-						}}
+						onChange={(e) => updateMeta({ description: e.target.value })}
 					></textarea>
 					<div></div>
 				</div>
@@ -263,7 +233,7 @@ export default function () {
 
 				{/* Question body */}
 				<strong>Pertanyaan</strong>
-				{contents.map((field, idx) => (
+				{question.contents.map((field, idx) => (
 					<>
 						<Field
 							type={field.type}

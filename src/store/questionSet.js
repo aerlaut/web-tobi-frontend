@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export default createSlice({
-	name: 'question',
+	name: 'questionSet',
 	initialState: {
 		author: '',
 		tier: '',
@@ -10,6 +10,7 @@ export default createSlice({
 		difficulty: '',
 		isPublished: false,
 		description: '',
+		canRandomOrder: false,
 		contents: [],
 	},
 	reducers: {
@@ -23,22 +24,14 @@ export default createSlice({
 				difficulty: '',
 				isPublished: false,
 				description: '',
-				contents: [
-					{
-						type: 'text_label',
-						question_no: '',
-						content: {
-							label: '',
-						},
-					},
-				],
+				canRandomOrder: false,
+				contents: [],
 			}
 
 			for (const [key, value] of Object.entries(inits)) {
 				state[key] = value
 			}
 		},
-
 		updateMeta: (state, action) => {
 			const { content } = action.payload
 

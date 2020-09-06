@@ -5,12 +5,14 @@ import ErrorSlice from './error'
 import AuthSlice from './auth'
 import UserSlice from './user'
 import QuestionSlice from './question'
+import QuestionSetSlice from './questionSet'
 
 let reducers = combineReducers({
 	error: ErrorSlice.reducer,
 	auth: AuthSlice.reducer,
 	user: UserSlice.reducer,
 	question: QuestionSlice.reducer,
+	questionSet: QuestionSetSlice.reducer,
 })
 
 let store = configureStore({
