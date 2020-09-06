@@ -42,21 +42,18 @@ function useAuth(protectedPage = true, permissions = {}) {
 
 	// If not protected page, can see
 	if (!protectedPage) {
-		console.log('not protected page')
 		return true
 	}
 
 	// If at protected page, but not auth
 	if (protectedPage && !isAuth) {
 		// Is in protected page, redirect
-		console.log('protected page but not auth')
 		history.push('/')
 		return false
 	}
 
 	// If at protected page, and is auth, check permission
 	if (protectedPage && isAuth && permissions[role]) {
-		console.log('protected page, auth and have permission')
 		return true
 	}
 

@@ -6,23 +6,13 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import {
-	QuestionIndex,
-	QuestionCreate,
-	QuestionShow,
-	QuestionEdit,
-} from './pages/Question/components'
-
-import {
-	UserIndex,
-	UserCreate,
-	UserShow,
-	UserEdit,
-} from './pages/User/components'
 
 // Components
 import Page from './components/Page'
 import AppBar from './components/AppBar'
+import QuestionRoutes from './routes/QuestionRoutes'
+import QuestionSetRoutes from './routes/QuestionSetRoutes'
+import UserRoutes from './routes/UserRoutes'
 
 // Global imports
 import './index.css'
@@ -41,15 +31,10 @@ export default function App() {
 					<Route path='/dashboard' component={Dashboard} />
 					<Route path='/page/:id' component={Page} />
 					<Route path='/register' component={Register} />
-					<Route exact path='/question' component={QuestionIndex} />
-					<Route exact path='/question/create' component={QuestionCreate} />
-					<Route exact path='/question/:id' component={QuestionShow} />
-					<Route path='/question/:id/edit' component={QuestionEdit} />
-					<Route exact path='/user' component={UserIndex} />
-					<Route exact path='/user/create' component={UserCreate} />
-					<Route exact path='/user/profile' component={UserShow} />
-					<Route exact path='/user/:id' component={UserShow} />
-					<Route path='/user/:id/edit' component={UserEdit} />
+
+					<QuestionRoutes />
+					<QuestionSetRoutes />
+					<UserRoutes />
 				</Switch>
 			</main>
 		</BrowserRouter>
