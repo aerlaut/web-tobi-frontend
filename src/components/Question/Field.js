@@ -21,7 +21,7 @@ export default function ({
 
 	const labels = [
 		'text_label',
-		'text_answer',
+		'long_text_answer',
 		'short_text_answer',
 		'single_choice_answer',
 		'multiple_choice_answer',
@@ -91,7 +91,7 @@ export default function ({
 			field = <TextLabel content={content} idx={idx} mode={mode} />
 			break
 
-		case 'text_answer':
+		case 'long_text_answer':
 			field = <TextAnswer content={content} idx={idx} mode={mode} />
 			break
 
