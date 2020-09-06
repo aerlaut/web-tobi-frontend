@@ -215,14 +215,9 @@ export default function () {
 							<span className='w-3/12 inline-block'>Maximum Score</span>
 							<input
 								type='text'
-								className='w-1/12 p-1 border border-black shadow-inside rounded'
+								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
 								value={maxScore}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setMaxScore',
-										payload: { content: e.target.value },
-									})
-								}
+								readOnly={true}
 							></input>
 						</label>
 

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { queryByTestId } from '@testing-library/react'
 
 export default createSlice({
 	name: 'question',
@@ -86,6 +87,18 @@ export default createSlice({
 			Object.keys(content).forEach((key) => {
 				state.contents[idx].content[key] = content[key]
 			})
+
+			// If score is updated, update max score
+			if (content.hasOwnProperty('score')) {
+				let sum = 0
+				state.contents.forEach((item) => {
+					if (item.content.hasOwnProperty('score')) {
+						sum += parseFloat(item.content.score)
+					}
+				})
+
+				state.maxScore = sum
+			}
 		},
 		// Move field up
 		moveFieldUp: (state, action) => {
