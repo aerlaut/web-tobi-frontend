@@ -294,6 +294,70 @@ export default function () {
 				{/* Search Questions */}
 				<section class='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
 					<h2 className='my-2 font-bold'>Search Questions</h2>
+					<div className='py-2'>
+						<label className='my-2'>
+							<span className='w-1/12 inline-block'>Description</span>
+							<input
+								type='text'
+								className='w-11/12 p-1 border border-black shadow-inside rounded cursor-default'
+							></input>
+						</label>
+					</div>
+
+					<div className='py-2'>
+						<div className='w-4/12 inline-block'>
+							<label className='my-2'>
+								<span className='w-3/12 inline-block'>Difficulty (1-5)</span>
+								<input
+									type='text'
+									className='w-10 p-1 border border-black shadow-inside rounded cursor-default mr-2'
+								/>
+								-
+								<input
+									type='text'
+									className='w-10 p-1 border border-black shadow-inside rounded cursor-default ml-2'
+								/>
+							</label>
+						</div>
+
+						<div className='w-4/12 inline-block'>
+							<label>
+								<span className='w-3/12 inline-block text-right pr-4'>
+									Topics
+								</span>
+								<input
+									type='text'
+									className='w-9/12 p-1 border border-black shadow-inside rounded cursor-default'
+								/>
+							</label>
+						</div>
+					</div>
+
+					<div className='py-2'>
+						<label className='my-2'>
+							<span className='w-1/12 inline-block'>Tiers</span>
+							<input
+								type='text'
+								className='w-3/12 p-1 border border-black shadow-inside rounded cursor-default'
+							/>
+							<span className='w-1/12 inline-block text-right pr-4'>
+								Subtopics
+							</span>
+							<input
+								type='text'
+								className='w-3/12 p-1 border border-black shadow-inside rounded cursor-default'
+							/>
+						</label>
+					</div>
+
+					<div className='clearfix'>
+						<button
+							type='button'
+							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
+						>
+							Search
+						</button>
+					</div>
 				</section>
 			</>
 		)
