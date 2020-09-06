@@ -126,8 +126,8 @@ export default function () {
 					</span>
 				</h1>
 
-				<section class='bg-gray-100 rounded px-4 py-2'>
-					<h1 className='my-2 font-bold'>QuestionSet Meta</h1>
+				<section class='bg-gray-100 rounded px-4 py-2 shadow'>
+					<h2 className='my-2 font-bold'>QuestionSet Meta</h2>
 					{showMeta ? (
 						<>
 							<div className='flex'>
@@ -259,13 +259,42 @@ export default function () {
 					</button>
 				</section>
 
-				<div className='my-2'>
-					<strong>Subtopics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
-				</div>
+				{/* Question Numbers */}
+				<section class='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+					<h2 className='my-2 font-bold'>Questions</h2>
+					<div className='flex justify-start'>
+						<div className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'>
+							<span
+								className='absolute text-white font-bold'
+								style={{
+									top: '50%',
+									left: '50%',
+									transform: 'translate(-50%, -50%)',
+								}}
+							>
+								100
+							</span>
+						</div>
+
+						<div className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'>
+							<span
+								className='absolute text-white font-bold'
+								style={{
+									top: '50%',
+									left: '50%',
+									transform: 'translate(-50%, -50%)',
+								}}
+							>
+								1
+							</span>
+						</div>
+					</div>
+				</section>
+
+				{/* Search Questions */}
+				<section class='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+					<h2 className='my-2 font-bold'>Search Questions</h2>
+				</section>
 			</>
 		)
 	)
