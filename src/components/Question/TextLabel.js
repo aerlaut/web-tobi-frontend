@@ -63,6 +63,12 @@ export default function ({ content = '', idx, mode = 'view' }) {
 				toolbarHidden={mode === 'view'}
 				wrapperClassName='min-h-1/4 mt-2'
 				toolbar={{
+					embedded: {
+						defaultSize: {
+							height: 315,
+							width: 560,
+						},
+					},
 					image: {
 						uploadCallback: handleUploadImage,
 						previewImage: true,

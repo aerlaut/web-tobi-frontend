@@ -54,6 +54,7 @@ export default createSlice({
 				contents: [
 					{
 						type: 'text_label',
+						question_no: '',
 						content: {
 							label: '',
 						},

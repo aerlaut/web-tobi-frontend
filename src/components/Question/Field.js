@@ -32,7 +32,8 @@ export default function ({
 			case 'single_choice_answer':
 			case 'multiple_choice_answer':
 				defaultFieldContent = {
-					label: 'Text pertanyaan disini',
+					label: 'Soal no.',
+					question: 'Text pertanyaan disini',
 					options: [
 						{ text: 'Option A', idx: 1, is_correct: false },
 						{ text: 'Option B', idx: 2, is_correct: false },
@@ -51,7 +52,8 @@ export default function ({
 
 			default:
 				defaultFieldContent = {
-					label: 'Text pertanyaan disini',
+					label: 'Soal no.',
+					question: 'Text pertanyaan disini',
 					score: 0,
 				}
 				break
@@ -119,13 +121,14 @@ export default function ({
 	return (
 		<div className='mb-8 p-4 bg-gray-100 rounded clearfix'>
 			<div className='clearfix'>
-				{type.match(/.*_answer/g) ? (
-					<label className='font-bold'>Soal {idx}</label>
+				{/* Show label if not in edit mode */}
+				{type.match(/.*_answer/g) && mode !== 'edit' ? (
+					<label className='font-bold'>{content.label}</label>
 				) : (
 					''
 				)}
 
-				{/* Disable if not in edit mode */}
+				{/* Disable switch if not in edit mode */}
 				{mode === 'edit' && (role === 'superadmin' || role === 'admin') ? (
 					<>
 						<span

@@ -64,7 +64,7 @@ export default function ({ content, idx, mode = 'view' }) {
 		<>
 			{mode === 'view' ? (
 				<div>
-					<p className='my-2 inline-block'>{content.label}</p>
+					<p className='my-2 inline-block'>{content.question}</p>
 					<span className='float-right inline-block'>
 						{mode === 'view' ? (
 							<>
@@ -79,12 +79,23 @@ export default function ({ content, idx, mode = 'view' }) {
 					</span>
 				</div>
 			) : (
-				<input
-					type='text'
-					value={content.label}
-					className='border rounded my-2 w-full px-2 py-1 my-2'
-					onChange={(e) => updateField({ label: e.target.value })}
-				/>
+				<>
+					<input
+						type='text'
+						value={content.label}
+						placeholder='Soal no.'
+						className='border rounded my-2 w-full px-2 py-1 my-2'
+						onChange={(e) => updateField({ label: e.target.value })}
+					/>
+
+					<input
+						type='text'
+						value={content.question}
+						placeholder='Text pernyataan disini'
+						className='border rounded my-2 w-full px-2 py-1 my-2'
+						onChange={(e) => updateField({ question: e.target.value })}
+					/>
+				</>
 			)}
 
 			{content.options.map((el, option_idx) => (
