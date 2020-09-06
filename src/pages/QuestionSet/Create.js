@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
+
+import ChevronDown from '../../icons/ChevronDown'
+import ChevronUp from '../../icons/ChevronUp'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -12,6 +15,9 @@ export default function () {
 
 	// Redux states
 	const questionSet = useSelector((state) => state.questionSet)
+
+	// Local states & variables
+	const [showMeta, setShowMeta] = useState(true)
 
 	const tiers = [
 		{
@@ -120,102 +126,139 @@ export default function () {
 					</span>
 				</h1>
 
-				<div className='flex'>
-					<div className='w-1/2 flex flex-col'>
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Author</span>
-							<input
-								type='text'
-								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={questionSet.author}
-								onChange={(e) => updateMeta({ author: e.target.value })}
-							></input>
-						</label>
+				<section class='bg-gray-100 rounded px-4 py-2'>
+					<h1 className='my-2 font-bold'>QuestionSet Meta</h1>
+					{showMeta ? (
+						<>
+							<div className='flex'>
+								<div className='w-1/2 flex flex-col'>
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Author</span>
+										<input
+											type='text'
+											className='w-6/12 p-1 border border-black shadow-inside rounded'
+											value={questionSet.author}
+											onChange={(e) => updateMeta({ author: e.target.value })}
+										></input>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Official?</span>
-							<select
-								value={questionSet.isOfficial}
-								onChange={(e) => updateMeta({ isOfficial: e.target.value })}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								<option value={true}>Yes</option>
-								<option value={false}>No</option>
-							</select>
-						</label>
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Official?</span>
+										<select
+											value={questionSet.isOfficial}
+											onChange={(e) =>
+												updateMeta({ isOfficial: e.target.value })
+											}
+											className='border rounded p-1 border-black w-2/12'
+										>
+											<option value={true}>Yes</option>
+											<option value={false}>No</option>
+										</select>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Can random?</span>
-							<select
-								value={questionSet.canRandomOrder}
-								onChange={(e) => updateMeta({ canRandomOrder: e.target.value })}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								<option value={true}>Yes</option>
-								<option value={false}>No</option>
-							</select>
-						</label>
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Can random?</span>
+										<select
+											value={questionSet.canRandomOrder}
+											onChange={(e) =>
+												updateMeta({ canRandomOrder: e.target.value })
+											}
+											className='border rounded p-1 border-black w-2/12'
+										>
+											<option value={true}>Yes</option>
+											<option value={false}>No</option>
+										</select>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Published?</span>
-							<select
-								value={questionSet.isPublished}
-								onChange={(e) => updateMeta({ isPublished: e.target.value })}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								<option value={true}>Yes</option>
-								<option value={false}>No</option>
-							</select>
-						</label>
-					</div>
-					<div className='w-1/2 flex flex-col'>
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Difficulty</span>
-							<input
-								type='text'
-								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
-								value={questionSet.difficulty}
-								readOnly={true}
-							></input>
-						</label>
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Published?</span>
+										<select
+											value={questionSet.isPublished}
+											onChange={(e) =>
+												updateMeta({ isPublished: e.target.value })
+											}
+											className='border rounded p-1 border-black w-2/12'
+										>
+											<option value={true}>Yes</option>
+											<option value={false}>No</option>
+										</select>
+									</label>
+								</div>
+								<div className='w-1/2 flex flex-col'>
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Difficulty</span>
+										<input
+											type='text'
+											className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
+											value={questionSet.difficulty}
+											readOnly={true}
+										></input>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Maximum Score</span>
-							<input
-								type='text'
-								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
-								value={questionSet.maxScore}
-								readOnly={true}
-							></input>
-						</label>
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Maximum Score</span>
+										<input
+											type='text'
+											className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
+											value={questionSet.maxScore}
+											readOnly={true}
+										></input>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Created date</span>
-							<span></span>
-						</label>
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Created date</span>
+										<span></span>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Last Update</span>
-							<span></span>
-						</label>
-					</div>
-				</div>
-				<div className='my-2'>
-					<strong>Description</strong>
-					<textarea
-						className='rounded border border-black block w-full px-2 py-1'
-						rows={3}
-						onChange={(e) => updateMeta({ description: e.target.value })}
-					></textarea>
-					<div></div>
-				</div>
-				<div className='my-2'>
-					<strong>Topics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
-				</div>
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Last Update</span>
+										<span></span>
+									</label>
+								</div>
+							</div>
+							<div className='my-2'>
+								<strong>Description</strong>
+								<textarea
+									className='rounded border border-black block w-full px-2 py-1'
+									rows={3}
+									onChange={(e) => updateMeta({ description: e.target.value })}
+								></textarea>
+								<div></div>
+							</div>
+							<div className='my-2'>
+								<strong>Topics</strong>
+								<div
+									className='rounded border border-black'
+									style={{ minHeight: 2 + 'em' }}
+								></div>
+							</div>
+							<div className='my-2'>
+								<strong>Subtopics</strong>
+								<div
+									className='rounded border border-black'
+									style={{ minHeight: 2 + 'em' }}
+								></div>
+							</div>
+						</>
+					) : (
+						<hr className='border-black my-2' />
+					)}
+					<button
+						className='mx-auto block px-2 py-1 border rounded bg-white border-black'
+						onClick={(e) => setShowMeta(!showMeta)}
+					>
+						{showMeta ? (
+							<>
+								Hide <ChevronUp className='inline-block align-bottom' />
+							</>
+						) : (
+							<>
+								Show <ChevronDown className='inline-block align-bottom' />
+							</>
+						)}
+					</button>
+				</section>
+
 				<div className='my-2'>
 					<strong>Subtopics</strong>
 					<div
