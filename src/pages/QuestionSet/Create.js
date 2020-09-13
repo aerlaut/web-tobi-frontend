@@ -18,6 +18,9 @@ export default function () {
 
 	// Local states & variables
 	const [showMeta, setShowMeta] = useState(true)
+	const [minDifficulty, setMinDifficulty] = useState(1)
+	const [maxDifficulty, setMaxDifficulty] = useState(5)
+	const [questionDescription, setQuestionDescription] = useState('')
 
 	const tiers = [
 		{
@@ -112,6 +115,33 @@ export default function () {
 			})
 	}
 
+	function fetchQuestions() {
+		let postdata = {
+			questionDescription: questionDescription,
+			minDifficulty: minDifficulty,
+			maxDifficulty: maxDifficulty,
+		}
+
+		fetch(`${process.env.REACT_APP_API_URL}/question/find`, {
+			method: 'POST',
+			headers: new Headers({
+				'Content-type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}),
+			body: JSON.stringify(postdata),
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error('Error creating question')
+				}
+				return res.json()
+			})
+			.then((res) => {
+				// Load questions
+			})
+			.catch((err) => console.error(err))
+	}
+
 	return (
 		useAuth() && (
 			<>
@@ -127,7 +157,7 @@ export default function () {
 				</h1>
 
 				<section class='bg-gray-100 rounded px-4 py-2 shadow'>
-					<h2 className='my-2 font-bold'>QuestionSet Meta</h2>
+					<h2 className='my-2 font-bold'>Question Set Details</h2>
 					{showMeta ? (
 						<>
 							<div className='flex'>
@@ -300,6 +330,8 @@ export default function () {
 							<input
 								type='text'
 								className='w-11/12 p-1 border border-black shadow-inside rounded cursor-default'
+								value={questionDescription}
+								onChange={(e) => setQuestionDescription(e.target.value)}
 							></input>
 						</label>
 					</div>
@@ -311,11 +343,15 @@ export default function () {
 								<input
 									type='text'
 									className='w-10 p-1 border border-black shadow-inside rounded cursor-default mr-2'
+									value={minDifficulty}
+									onChange={(e) => setMinDifficulty(e.target.value)}
 								/>
 								-
 								<input
 									type='text'
 									className='w-10 p-1 border border-black shadow-inside rounded cursor-default ml-2'
+									value={maxDifficulty}
+									onChange={(e) => setMaxDifficulty(e.target.value)}
 								/>
 							</label>
 						</div>
@@ -354,6 +390,9 @@ export default function () {
 						<button
 							type='button'
 							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
+							onClick={() => {
+								fetchQuestions()
+							}}
 						>
 							Search
 						</button>
