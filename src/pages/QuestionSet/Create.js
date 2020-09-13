@@ -383,6 +383,7 @@ export default function () {
 								setTags={setTiers}
 								suggestions={tiersOptions}
 								minInputLength={0}
+								width={'w-3/12'}
 							/>
 
 							<span className='w-1/12 inline-block text-right pr-4'>

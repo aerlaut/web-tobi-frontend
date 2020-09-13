@@ -4,6 +4,7 @@ import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Field from '../../components/Question/Field'
 import FieldOption from '../../components/Question/FieldOption'
+import TagInput from '../../components/TagInput'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -104,6 +105,44 @@ export default function () {
 			type: 'question/updateMeta',
 			payload: {
 				content: content,
+			},
+		})
+	}
+
+	let topics = [
+		{ name: 'Biselmol', value: 'biselmol' },
+		{ name: 'Anfiswan', value: 'anfiswan' },
+		{ name: 'Anfistum', value: 'anfistum' },
+		{ name: 'Genevo', value: 'genevo' },
+		{ name: 'Biosistematika', value: 'biosis' },
+	]
+
+	function setQuestionTopics(newTopics) {
+		dispatch({
+			type: 'question/updateMeta',
+			payload: {
+				content: {
+					topics: newTopics,
+				},
+			},
+		})
+	}
+
+	let subtopics = [
+		{ name: 'Biselmol', value: 'biselmol' },
+		{ name: 'Anfiswan', value: 'anfiswan' },
+		{ name: 'Anfistum', value: 'anfistum' },
+		{ name: 'Genevo', value: 'genevo' },
+		{ name: 'Biosistematika', value: 'biosis' },
+	]
+
+	function setQuestionSubtopics(newSubtopics) {
+		dispatch({
+			type: 'question/updateMeta',
+			payload: {
+				content: {
+					subtopics: newSubtopics,
+				},
 			},
 		})
 	}
@@ -216,19 +255,25 @@ export default function () {
 					></textarea>
 					<div></div>
 				</div>
+
 				<div className='my-2'>
 					<strong>Topics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
+					<TagInput
+						tags={question.topics}
+						setTags={setQuestionTopics}
+						suggestions={topics}
+						width={'w-full'}
+					/>
 				</div>
+
 				<div className='my-2'>
 					<strong>Subtopics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
+					<TagInput
+						tags={question.subtopics}
+						setTags={setQuestionSubtopics}
+						suggestions={subtopics}
+						width={'w-full'}
+					/>
 				</div>
 
 				{/* Question body */}

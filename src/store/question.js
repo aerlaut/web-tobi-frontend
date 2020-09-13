@@ -8,6 +8,8 @@ export default createSlice({
 		maxScore: '',
 		isOfficial: false,
 		difficulty: '',
+		topics: [],
+		subtopics: [],
 		isPublished: false,
 		description: '',
 		contents: [],
@@ -21,6 +23,8 @@ export default createSlice({
 				maxScore: '',
 				isOfficial: false,
 				difficulty: '',
+				topics: [],
+				subtopics: [],
 				isPublished: false,
 				description: '',
 				contents: [

@@ -3,7 +3,13 @@ import ReactTags from 'react-tag-autocomplete'
 import { Style } from 'react-style-tag'
 import matchSorter from 'match-sorter'
 
-export default function ({ tags, setTags, suggestions, minInputLength = 2 }) {
+export default function ({
+	tags,
+	setTags,
+	suggestions,
+	minInputLength = 2,
+	width = 'w-full',
+}) {
 	return (
 		<>
 			<ReactTags
@@ -29,7 +35,8 @@ export default function ({ tags, setTags, suggestions, minInputLength = 2 }) {
 				}}
 				classNames={{
 					root:
-						'relative p-1 border rounded border-black bg-white w-3/12 inline-block align-top',
+						'relative p-1 border rounded border-black bg-white inline-block align-top   ' +
+						width,
 					selected: 'p-1 inline',
 					selectedTag:
 						'border rounded border-gray-600 p-1 inline-block bg-white mr-1 mb-1 selected-tag',
