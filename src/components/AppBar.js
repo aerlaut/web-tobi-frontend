@@ -161,11 +161,18 @@ export default function AppBar() {
 											<li className='px-4 py-2'>Profile</li>
 										</Link>
 										{role === 'superadmin' ? (
-											<Link to='/user'>
-												<li className='border-t border-gray-800 px-4 py-2 cursor-pointer'>
-													Users
-												</li>
-											</Link>
+											<>
+												<Link to='/user'>
+													<li className='border-t border-gray-800 px-4 py-2 cursor-pointer'>
+														Users
+													</li>
+												</Link>
+												<Link to='/topics'>
+													<li className='border-t border-gray-800 px-4 py-2 cursor-pointer'>
+														Topics
+													</li>
+												</Link>
+											</>
 										) : (
 											''
 										)}

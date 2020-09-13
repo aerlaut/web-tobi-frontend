@@ -9,6 +9,7 @@ export default function ({
 	suggestions,
 	minInputLength = 2,
 	width = 'w-full',
+	allowNew = false,
 }) {
 	return (
 		<>
@@ -49,6 +50,7 @@ export default function ({
 				}}
 				autoresize={false}
 				minQueryLength={minInputLength}
+				allowNew={allowNew}
 			/>
 			<Style>{`
               .selected-tag:after {
