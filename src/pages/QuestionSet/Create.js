@@ -8,6 +8,7 @@ import matchSorter from 'match-sorter'
 
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
+import TagInput from '../../components/TagInput'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -376,43 +377,12 @@ export default function () {
 					<div className='py-2'>
 						<label className='my-2'>
 							<span className='w-1/12 inline-block'>Tiers</span>
-							<ReactTags
+
+							<TagInput
 								tags={tiers}
+								setTags={setTiers}
 								suggestions={tiersOptions}
-								suggestionsTransform={(query, suggestions) => {
-									const added = tiers.map((tag) => tag.name)
-
-									const suggested = suggestions.filter((tag) => {
-										return added.indexOf(tag.name) == -1
-									})
-
-									return matchSorter(suggested, query, { keys: ['name'] })
-								}}
-								suggestions={tiersOptions}
-								onDelete={(i) => {
-									const tags = tiers.slice(0)
-									tags.splice(i, 1)
-									setTiers(tags)
-								}}
-								onAddition={(tag) => {
-									const tags = [].concat(tiers, tag)
-									setTiers(tags)
-								}}
-								classNames={{
-									root:
-										'relative p-1 border rounded border-black bg-white w-3/12 inline-block align-top',
-									selected: 'p-1 inline',
-									selectedTag:
-										'border rounded border-gray-600 p-1 inline-block bg-white mr-1 mb-1 selected-tag',
-									search: 'inline-block px-1 max-w-full',
-									searchWrapper: 'react-tags__search-wrapper max-w-full',
-									searchInput: 'p-1 border rounded border-gray-600',
-									suggestions:
-										'p-1 absolute mt-1 bg-white border-black border rounded max-w-fulld',
-									suggestionActive: 'bg-blue-400',
-								}}
-								autoresize={false}
-								minQueryLength={0}
+								minInputLength={0}
 							/>
 
 							<span className='w-1/12 inline-block text-right pr-4'>
@@ -437,13 +407,6 @@ export default function () {
 						</button>
 					</div>
 				</section>
-				<Style>{`
-              .selected-tag:after {
-                content: '\u2715';
-                color: #AAA;
-                margin-left: 8px;
-              }
-          `}</Style>
 			</>
 		)
 	)
