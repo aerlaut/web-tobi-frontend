@@ -54,9 +54,7 @@ export default function () {
 		})
 	}, [])
 
-	function saveQuestion(e) {
-		e.preventDefault()
-
+	function saveQuestion() {
 		let postdata = {
 			author: question.author,
 			description: question.description,
@@ -66,6 +64,8 @@ export default function () {
 			difficulty: question.difficulty,
 			contents: question.contents,
 			isPublished: question.isPublished,
+			topics: question.topics,
+			subtopics: question.subtopics,
 		}
 
 		// Question switched to published
@@ -110,11 +110,11 @@ export default function () {
 	}
 
 	let topics = [
-		{ name: 'Biselmol', value: 'biselmol' },
-		{ name: 'Anfiswan', value: 'anfiswan' },
-		{ name: 'Anfistum', value: 'anfistum' },
-		{ name: 'Genevo', value: 'genevo' },
-		{ name: 'Biosistematika', value: 'biosis' },
+		{ id: 1, name: 'Biselmol' },
+		{ id: 2, name: 'Anfiswan' },
+		{ id: 3, name: 'Anfistum' },
+		{ id: 4, name: 'Genevo' },
+		{ id: 5, name: 'Biosistematika' },
 	]
 
 	function setQuestionTopics(newTopics) {
@@ -129,11 +129,13 @@ export default function () {
 	}
 
 	let subtopics = [
-		{ name: 'Biselmol', value: 'biselmol' },
-		{ name: 'Anfiswan', value: 'anfiswan' },
-		{ name: 'Anfistum', value: 'anfistum' },
-		{ name: 'Genevo', value: 'genevo' },
-		{ name: 'Biosistematika', value: 'biosis' },
+		{ id: 1, name: 'Biologi Sel' },
+		{ id: 2, name: 'Biologi Molekuler' },
+		{ id: 3, name: 'PCR' },
+		{ id: 4, name: 'Saraf' },
+		{ id: 5, name: 'Reproduksi' },
+		{ id: 6, name: 'Crossing over' },
+		{ id: 7, name: 'Pohon filogeni' },
 	]
 
 	function setQuestionSubtopics(newSubtopics) {
@@ -155,7 +157,7 @@ export default function () {
 					Buat Soal Baru
 					<span
 						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
-						onClick={(e) => saveQuestion(e)}
+						onClick={() => saveQuestion()}
 					>
 						Save
 					</span>

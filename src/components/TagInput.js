@@ -41,10 +41,10 @@ export default function ({
 					selectedTag:
 						'border rounded border-gray-600 p-1 inline-block bg-white mr-1 mb-1 selected-tag',
 					search: 'inline-block px-1 max-w-full',
-					searchWrapper: 'react-tags__search-wrapper max-w-full',
+					searchWrapper: 'max-w-full',
 					searchInput: 'p-1 border rounded border-gray-600',
 					suggestions:
-						'p-1 absolute mt-1 bg-white border-black border rounded max-w-fulld',
+						'p-1 absolute mt-1 bg-white border-black border rounded max-w-full z-10',
 					suggestionActive: 'bg-blue-200',
 				}}
 				autoresize={false}
