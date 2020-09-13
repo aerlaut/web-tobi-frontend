@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
+import ReactTags from 'react-tag-autocomplete'
+import { Style } from 'react-style-tag'
+import matchSorter from 'match-sorter'
 
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
@@ -21,8 +24,9 @@ export default function () {
 	const [minDifficulty, setMinDifficulty] = useState(1)
 	const [maxDifficulty, setMaxDifficulty] = useState(5)
 	const [questionDescription, setQuestionDescription] = useState('')
+	const [tiers, setTiers] = useState([])
 
-	const tiers = [
+	const tiersOptions = [
 		{
 			value: 'osk',
 			name: 'OSK',
@@ -156,7 +160,7 @@ export default function () {
 					</span>
 				</h1>
 
-				<section class='bg-gray-100 rounded px-4 py-2 shadow'>
+				<section classNames='bg-gray-100 rounded px-4 py-2 shadow'>
 					<h2 className='my-2 font-bold'>Question Set Details</h2>
 					{showMeta ? (
 						<>
@@ -372,10 +376,45 @@ export default function () {
 					<div className='py-2'>
 						<label className='my-2'>
 							<span className='w-1/12 inline-block'>Tiers</span>
-							<input
-								type='text'
-								className='w-3/12 p-1 border border-black shadow-inside rounded cursor-default'
+							<ReactTags
+								tags={tiers}
+								suggestions={tiersOptions}
+								suggestionsTransform={(query, suggestions) => {
+									const added = tiers.map((tag) => tag.name)
+
+									const suggested = suggestions.filter((tag) => {
+										return added.indexOf(tag.name) == -1
+									})
+
+									return matchSorter(suggested, query, { keys: ['name'] })
+								}}
+								suggestions={tiersOptions}
+								onDelete={(i) => {
+									const tags = tiers.slice(0)
+									tags.splice(i, 1)
+									setTiers(tags)
+								}}
+								onAddition={(tag) => {
+									const tags = [].concat(tiers, tag)
+									setTiers(tags)
+								}}
+								classNames={{
+									root:
+										'relative p-1 border rounded border-black bg-white w-3/12 inline-block align-top',
+									selected: 'p-1 inline',
+									selectedTag:
+										'border rounded border-gray-600 p-1 inline-block bg-white mr-1 mb-1 selected-tag',
+									search: 'inline-block px-1 max-w-full',
+									searchWrapper: 'react-tags__search-wrapper max-w-full',
+									searchInput: 'p-1 border rounded border-gray-600',
+									suggestions:
+										'p-1 absolute mt-1 bg-white border-black border rounded max-w-fulld',
+									suggestionActive: 'bg-blue-400',
+								}}
+								autoresize={false}
+								minQueryLength={0}
 							/>
+
 							<span className='w-1/12 inline-block text-right pr-4'>
 								Subtopics
 							</span>
@@ -398,6 +437,13 @@ export default function () {
 						</button>
 					</div>
 				</section>
+				<Style>{`
+              .selected-tag:after {
+                content: '\u2715';
+                color: #AAA;
+                margin-left: 8px;
+              }
+          `}</Style>
 			</>
 		)
 	)

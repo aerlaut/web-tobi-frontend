@@ -39,11 +39,14 @@
     "classnames": "^2.2.6",
     "draft-js": "^0.11.6",
     "draft-js-export-html": "^1.4.1",
+    "match-sorter": "^4.2.0",
     "moment": "^2.27.0",
     "postcss-cli": "^7.1.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
+    "react-style-tag": "^2.0.1",
+    "react-tag-autocomplete": "^6.1.0",
     "redux": "^4.0.5",
     "tailwindcss": "^1.6.0"
   }
