@@ -6,7 +6,7 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import Topics from './pages/Topics'
+import Topic from './pages/Topic'
 
 // Components
 import Page from './components/Page'
@@ -53,7 +53,7 @@ export default function App() {
 					<Route path='/dashboard' component={Dashboard} />
 					<Route path='/page/:id' component={Page} />
 					<Route path='/register' component={Register} />
-					<Route path='/topics' component={Topics} />
+					<Route path='/topic' component={Topic} />
 
 					{/* Question */}
 					<Route exact path='/question' component={QuestionIndex} />

@@ -138,7 +138,7 @@ export default function AppBar() {
 					<li></li>
 				</ul>
 				{/* Right links */}
-				<ul className='float-right flex'>
+				<ul className='float-right flex z-50'>
 					{auth == true ? (
 						// Logged in
 						<>
@@ -167,7 +167,7 @@ export default function AppBar() {
 														Users
 													</li>
 												</Link>
-												<Link to='/topics'>
+												<Link to='/topic'>
 													<li className='border-t border-gray-800 px-4 py-2 cursor-pointer'>
 														Topics
 													</li>

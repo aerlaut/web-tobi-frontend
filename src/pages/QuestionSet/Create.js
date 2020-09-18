@@ -74,7 +74,7 @@ export default function () {
 		})
 	}
 
-	function saveQuestion(e) {
+	function save(e) {
 		e.preventDefault()
 
 		let postdata = {
@@ -155,13 +155,13 @@ export default function () {
 					Buat Set Soal Baru
 					<span
 						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
-						onClick={(e) => saveQuestion(e)}
+						onClick={(e) => save(e)}
 					>
 						Save
 					</span>
 				</h1>
 
-				<section classNames='bg-gray-100 rounded px-4 py-2 shadow'>
+				<section className='bg-gray-100 rounded px-4 py-2 shadow'>
 					<h2 className='my-2 font-bold'>Question Set Details</h2>
 					{showMeta ? (
 						<>
@@ -295,7 +295,7 @@ export default function () {
 				</section>
 
 				{/* Question Numbers */}
-				<section class='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
 					<h2 className='my-2 font-bold'>Questions</h2>
 					<div className='flex justify-start'>
 						<div className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'>
@@ -327,7 +327,7 @@ export default function () {
 				</section>
 
 				{/* Search Questions */}
-				<section class='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
 					<h2 className='my-2 font-bold'>Search Questions</h2>
 					<div className='py-2'>
 						<label className='my-2'>
