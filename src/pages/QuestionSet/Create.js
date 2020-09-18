@@ -2,15 +2,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
-import ReactTags from 'react-tag-autocomplete'
-import { Style } from 'react-style-tag'
-import matchSorter from 'match-sorter'
 
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
 import TagInput from '../../components/TagInput'
 
 import { useSelector, useDispatch } from 'react-redux'
+import QuestionCard from '../../components/Question/Card'
 
 export default function () {
 	const history = useHistory()
@@ -30,6 +28,7 @@ export default function () {
 	const [subtopics, setSubtopics] = useState([])
 	const [topicOptions, setTopicOptions] = useState([])
 	const [subtopicOptions, setSubtopicOptions] = useState([])
+	const [searchResult, setSearchResult] = useState([])
 
 	const tierOptions = [
 		{
@@ -63,8 +62,6 @@ export default function () {
 				// Setting information
 				let initTopics = []
 				let initSubtopics = []
-
-				console.log(res.data)
 
 				res.data.topics.forEach((t) => {
 					if (t.type == 'topic') {
@@ -140,19 +137,22 @@ export default function () {
 	}
 
 	function fetchQuestions() {
-		let postdata = {
+		let postData = {
 			questionDescription: questionDescription,
 			minDifficulty: minDifficulty,
 			maxDifficulty: maxDifficulty,
+			tiers: tiers,
+			topics: topics,
+			subtopics: subtopics,
 		}
 
-		fetch(`${process.env.REACT_APP_API_URL}/question/find`, {
+		fetch(`${process.env.REACT_APP_API_URL}/question/search`, {
 			method: 'POST',
 			headers: new Headers({
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}),
-			body: JSON.stringify(postdata),
+			body: JSON.stringify(postData),
 		})
 			.then((res) => {
 				if (!res.ok) {
@@ -162,6 +162,7 @@ export default function () {
 			})
 			.then((res) => {
 				// Load questions
+				setSearchResult(res.data)
 			})
 			.catch((err) => console.error(err))
 	}
@@ -279,20 +280,6 @@ export default function () {
 								></textarea>
 								<div></div>
 							</div>
-							<div className='my-2'>
-								<strong>Topics</strong>
-								<div
-									className='rounded border border-black'
-									style={{ minHeight: 2 + 'em' }}
-								></div>
-							</div>
-							<div className='my-2'>
-								<strong>Subtopics</strong>
-								<div
-									className='rounded border border-black'
-									style={{ minHeight: 2 + 'em' }}
-								></div>
-							</div>
 						</>
 					) : (
 						<hr className='border-black my-2' />
@@ -359,6 +346,28 @@ export default function () {
 					</div>
 
 					<div className='py-2'>
+						<span className='w-1/12 inline-block'>Topics</span>
+						<TagInput
+							tags={topics}
+							setTags={setTopics}
+							suggestions={topicOptions}
+							minInputLength={1}
+							width={'w-11/12'}
+						/>
+					</div>
+
+					<div className='py-2'>
+						<span className='w-1/12 inline-block'>Subtopics</span>
+						<TagInput
+							tags={subtopics}
+							setTags={setSubtopics}
+							suggestions={subtopicOptions}
+							minInputLength={1}
+							width={'w-11/12'}
+						/>
+					</div>
+
+					<div className='py-2'>
 						<span className='w-1/12 inline-block'>Difficulty (1-5)</span>
 						<input
 							type='text'
@@ -376,33 +385,11 @@ export default function () {
 					</div>
 
 					<div className='py-2'>
-						<span className='w-1/12 inline-block'>Topics</span>
-						<TagInput
-							tags={topics}
-							setTags={setTopics}
-							suggestions={topicOptions}
-							minInputLength={1}
-							width={'w-11/12'}
-						/>
-					</div>
-
-					<div className='py-2'>
 						<span className='w-1/12 inline-block'>Tiers</span>
 						<TagInput
 							tags={tiers}
-							setTags={topics}
+							setTags={setTiers}
 							suggestions={tierOptions}
-							minInputLength={1}
-							width={'w-11/12'}
-						/>
-					</div>
-
-					<div className='py-2'>
-						<span className='w-1/12 inline-block'>Subtopics</span>
-						<TagInput
-							tags={subtopics}
-							setTags={setSubtopics}
-							suggestions={subtopicOptions}
 							minInputLength={1}
 							width={'w-11/12'}
 						/>
@@ -419,6 +406,13 @@ export default function () {
 							Search
 						</button>
 					</div>
+				</section>
+
+				{/* Search result */}
+				<section className='py-4 flex flex-wrap'>
+					{searchResult.map((q) => (
+						<QuestionCard question={q} key={`q_${q.id}`} />
+					))}
 				</section>
 			</>
 		)
