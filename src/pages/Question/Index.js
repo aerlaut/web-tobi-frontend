@@ -54,31 +54,39 @@ export default function () {
 						{questions.map((el, idx) => (
 							<div
 								key={`q_${el.id}`}
-								className='w-2/12 border border-gray-800 bg-gray-100 rounded mr-4 mb-4 p-4 cursor-pointer shadow'
+								className='w-2/12 border border-gray-800 bg-gray-100 rounded mr-4 mb-4 p-4 cursor-pointer shadow flex flex-col justify-end'
 								onClick={() => history.push(`/question/${el.id}`)}
 							>
-								<h3 className='font-xl font-bold mb-2'>
-									<span>#{el.id}</span>
-									<span className='px-1 py-1 text-sm rounded bg-yellow-500 ml-2'>
-										{el.tier}
-									</span>
-									<span className='float-right'>{el.difficulty}</span>
-								</h3>
-								<p className='mt-2 mb-4'>{el.description}</p>
+								<div className='flex-1'>
+									<h3 className='font-xl font-bold mb-2'>
+										<span>#{el.id}</span>
+										<span className='px-1 py-1 text-sm rounded bg-yellow-500 ml-2'>
+											{el.tier}
+										</span>
+										<span className='float-right'>{el.difficulty}</span>
+									</h3>
+									<p className='mt-2 mb-4'>{el.description}</p>
+								</div>
 								<div>
 									<span>
-										{el.topics.map((el, idx) => (
-											<span className='px-1 py-1 text-sm rounded bg-yellow-300 mr-2'>
-												{el.name}
+										{el.topics.map((t, idx) => (
+											<span
+												key={`q_${el.id}_t_${idx}`}
+												className='px-1 py-1 text-sm rounded bg-yellow-300 mr-2'
+											>
+												{t.name}
 											</span>
 										))}
 									</span>
 								</div>
 								<div className='mt-2'>
 									<span>
-										{el.subtopics.map((el, idx) => (
-											<span className='px-1 py-1 text-sm rounded bg-yellow-500 mr-2'>
-												{el.name}
+										{el.subtopics.map((t, idx) => (
+											<span
+												key={`q_${el.id}_st_${idx}`}
+												className='px-1 py-1 text-sm rounded bg-yellow-500 mr-2'
+											>
+												{t.name}
 											</span>
 										))}
 									</span>

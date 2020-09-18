@@ -60,6 +60,30 @@ export default function () {
 					<br />
 				</div>
 
+				<section>
+					<div class='py-2'>
+						Difficulty: <span>{question.difficulty}</span>
+					</div>
+					<div class='py-2'>
+						Topics :
+						{question.topics &&
+							question.topics.map((el, idx) => (
+								<span className='px-1 py-1 text-sm rounded bg-yellow-300 ml-2'>
+									{el.name}
+								</span>
+							))}
+					</div>
+					<div class='py-2'>
+						Subtopics :
+						{question.subtopics &&
+							question.subtopics.map((el, idx) => (
+								<span className='px-1 py-1 text-sm rounded bg-yellow-300 ml-2'>
+									{el.name}
+								</span>
+							))}
+					</div>
+				</section>
+
 				<section className='my-4'>
 					<h2 className='mb-4 font-bold'>Deskripsi</h2>
 					<p>{question.description}</p>
