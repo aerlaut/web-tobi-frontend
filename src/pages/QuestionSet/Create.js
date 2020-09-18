@@ -26,8 +26,12 @@ export default function () {
 	const [maxDifficulty, setMaxDifficulty] = useState(5)
 	const [questionDescription, setQuestionDescription] = useState('')
 	const [tiers, setTiers] = useState([])
+	const [topics, setTopics] = useState([])
+	const [subtopics, setSubtopics] = useState([])
+	const [topicOptions, setTopicOptions] = useState([])
+	const [subtopicOptions, setSubtopicOptions] = useState([])
 
-	const tiersOptions = [
+	const tierOptions = [
 		{
 			value: 'osk',
 			name: 'OSK',
@@ -52,16 +56,28 @@ export default function () {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		// fetchPageData((res) => {
-		// 	if (res !== 'ok') {
-		// 		setError({ type: 'error', message: res.message })
-		// 	} else {
-		// 		// Setting information
-		// 	}
-		// })
-		// Reset all redux states
-		dispatch({
-			type: 'questionSet/reset',
+		fetchPageData({ auth: true }, (res) => {
+			if (res.status !== 'ok') {
+				setError({ type: 'error', message: res.message })
+			} else {
+				// Setting information
+
+				let initTopics = []
+				let initSubtopics = []
+
+				console.log(res.data)
+
+				res.data.topics.forEach((topic) => {
+					if (topic.type == 'topic') {
+						initTopics.push({ id: topic._id, name: topic.name })
+					} else if (topic.type == 'subtopic') {
+						initSubtopics.push({ id: topic._id, name: topic.name })
+					}
+				})
+
+				setTopicOptions(initTopics)
+				setSubtopicOptions(initSubtopics)
+			}
 		})
 	}, [])
 
@@ -110,7 +126,7 @@ export default function () {
 				if (res.status !== 'ok') {
 					// Error creating question
 				} else {
-					// Forward to login page
+					// Forward to login pageg
 					history.push('/question')
 				}
 			})
@@ -330,70 +346,63 @@ export default function () {
 				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
 					<h2 className='my-2 font-bold'>Search Questions</h2>
 					<div className='py-2'>
-						<label className='my-2'>
-							<span className='w-1/12 inline-block'>Description</span>
-							<input
-								type='text'
-								className='w-11/12 p-1 border border-black shadow-inside rounded cursor-default'
-								value={questionDescription}
-								onChange={(e) => setQuestionDescription(e.target.value)}
-							></input>
-						</label>
+						<span className='w-1/12 inline-block'>Description</span>
+						<input
+							type='text'
+							className='w-11/12 p-1 border border-black shadow-inside rounded cursor-default'
+							value={questionDescription}
+							onChange={(e) => setQuestionDescription(e.target.value)}
+						></input>
 					</div>
 
 					<div className='py-2'>
-						<div className='w-4/12 inline-block'>
-							<label className='my-2'>
-								<span className='w-3/12 inline-block'>Difficulty (1-5)</span>
-								<input
-									type='text'
-									className='w-10 p-1 border border-black shadow-inside rounded cursor-default mr-2'
-									value={minDifficulty}
-									onChange={(e) => setMinDifficulty(e.target.value)}
-								/>
-								-
-								<input
-									type='text'
-									className='w-10 p-1 border border-black shadow-inside rounded cursor-default ml-2'
-									value={maxDifficulty}
-									onChange={(e) => setMaxDifficulty(e.target.value)}
-								/>
-							</label>
-						</div>
-
-						<div className='w-4/12 inline-block'>
-							<label>
-								<span className='w-3/12 inline-block text-right pr-4'>
-									Topics
-								</span>
-								<input
-									type='text'
-									className='w-9/12 p-1 border border-black shadow-inside rounded cursor-default'
-								/>
-							</label>
-						</div>
+						<span className='w-1/12 inline-block'>Difficulty (1-5)</span>
+						<input
+							type='text'
+							className='w-10 p-1 border border-black shadow-inside rounded cursor-default mr-2'
+							value={minDifficulty}
+							onChange={(e) => setMinDifficulty(e.target.value)}
+						/>
+						-
+						<input
+							type='text'
+							className='w-10 p-1 border border-black shadow-inside rounded cursor-default ml-2'
+							value={maxDifficulty}
+							onChange={(e) => setMaxDifficulty(e.target.value)}
+						/>
 					</div>
 
 					<div className='py-2'>
-						<label className='my-2'>
-							<span className='w-1/12 inline-block'>Tiers</span>
+						<span className='w-1/12 inline-block'>Topics</span>
+						<TagInput
+							tags={topics}
+							setTags={setTopics}
+							suggestions={topicOptions}
+							minInputLength={0}
+							width={'w-11/12'}
+						/>
+					</div>
 
-							<TagInput
-								tags={tiers}
-								setTags={setTiers}
-								suggestions={tiersOptions}
-								minInputLength={0}
-								width={'w-3/12'}
-							/>
+					<div className='py-2'>
+						<span className='w-1/12 inline-block'>Tiers</span>
+						<TagInput
+							tags={tiers}
+							setTags={topics}
+							suggestions={tierOptions}
+							minInputLength={0}
+							width={'w-11/12'}
+						/>
+					</div>
 
-							<span className='w-1/12 inline-block text-right pr-4'>
-								Subtopics
-							</span>
-							<input
-								type='text'
-								className='w-3/12 p-1 border border-black shadow-inside rounded cursor-default'
-							/>
-						</label>
+					<div className='py-2' a>
+						<span className='w-1/12 inline-block'>Subtopics</span>
+						<TagInput
+							tags={subtopics}
+							setTags={setSubtopics}
+							suggestions={subtopicOptions}
+							minInputLength={0}
+							width={'w-11/12'}
+						/>
 					</div>
 
 					<div className='clearfix'>
