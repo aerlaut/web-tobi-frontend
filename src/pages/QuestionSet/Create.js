@@ -61,7 +61,6 @@ export default function () {
 				setError({ type: 'error', message: res.message })
 			} else {
 				// Setting information
-
 				let initTopics = []
 				let initSubtopics = []
 

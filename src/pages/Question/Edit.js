@@ -4,6 +4,7 @@ import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Field from '../../components/Question/Field'
 import FieldOption from '../../components/Question/FieldOption'
+import TagInput from '../../components/TagInput'
 import moment from 'moment'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -19,6 +20,8 @@ export default function () {
 	const [published, setPublished] = useState('')
 	const [createdAt, setCreatedAt] = useState('')
 	const [updatedAt, setUpdatedAt] = useState('')
+	const [topicOptions, setTopicOptions] = useState([])
+	const [subtopicOptions, setSubtopicOptions] = useState([])
 
 	// Redux states
 	const question = useSelector((state) => state.question)
@@ -52,18 +55,36 @@ export default function () {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
-				// Get some status for updating
+				// Set topics and subtopics
+				let initTopics = []
+				let initSubtopics = []
 
-				setObjectId(res.data._id)
-				setPublished(res.data.isPublished)
-				setCreatedAt(res.data.createdAt)
-				setUpdatedAt(res.data.updatedAt)
+				res.data.topics.forEach((t) => {
+					if (t.type == 'topic') {
+						initTopics.push({ id: t._id, name: t.name, type: t.type })
+					} else if (t.type == 'subtopic') {
+						initSubtopics.push({
+							id: t._id,
+							name: t.name,
+							type: t.type,
+						})
+					}
+				})
+
+				setTopicOptions(initTopics)
+				setSubtopicOptions(initSubtopics)
+
+				// Get some status for updating
+				setObjectId(res.data.question._id)
+				setPublished(res.data.question.isPublished)
+				setCreatedAt(res.data.question.createdAt)
+				setUpdatedAt(res.data.question.updatedAt)
 
 				// Push question to redux
 				dispatch({
 					type: 'question/loadQuestion',
 					payload: {
-						question: res.data,
+						question: res.data.question,
 					},
 				})
 			}
@@ -83,6 +104,8 @@ export default function () {
 			difficulty: question.difficulty,
 			isPublished: question.isPublished,
 			contents: question.contents,
+			topics: question.topics,
+			subtopics: question.subtopics,
 		}
 
 		// Question switched to published
@@ -122,6 +145,28 @@ export default function () {
 			type: 'question/updateMeta',
 			payload: {
 				content: content,
+			},
+		})
+	}
+
+	function setQuestionTopics(newTopics) {
+		dispatch({
+			type: 'question/updateMeta',
+			payload: {
+				content: {
+					topics: newTopics,
+				},
+			},
+		})
+	}
+
+	function setQuestionSubtopics(newSubtopics) {
+		dispatch({
+			type: 'question/updateMeta',
+			payload: {
+				content: {
+					subtopics: newSubtopics,
+				},
 			},
 		})
 	}
@@ -243,19 +288,27 @@ export default function () {
 					></textarea>
 					<div></div>
 				</div>
+
 				<div className='my-2'>
 					<strong>Topics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
+					<TagInput
+						tags={question.topics}
+						setTags={setQuestionTopics}
+						suggestions={topicOptions}
+						width={'w-full'}
+						minInputLength={1}
+					/>
 				</div>
+
 				<div className='my-2'>
 					<strong>Subtopics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
+					<TagInput
+						tags={question.subtopics}
+						setTags={setQuestionSubtopics}
+						suggestions={subtopicOptions}
+						width={'w-full'}
+						minInputLength={1}
+					/>
 				</div>
 
 				{/* Question body */}

@@ -51,8 +51,6 @@ export default function () {
 				let initTopics = []
 				let initSubtopics = []
 
-				console.log(res.data)
-
 				res.data.topics.forEach((t) => {
 					if (t.type == 'topic') {
 						initTopics.push({ id: t._id, name: t.name, type: t.type })
@@ -126,14 +124,6 @@ export default function () {
 		})
 	}
 
-	let topics = [
-		{ id: 1, name: 'Biselmol' },
-		{ id: 2, name: 'Anfiswan' },
-		{ id: 3, name: 'Anfistum' },
-		{ id: 4, name: 'Genevo' },
-		{ id: 5, name: 'Biosistematika' },
-	]
-
 	function setQuestionTopics(newTopics) {
 		dispatch({
 			type: 'question/updateMeta',
@@ -144,16 +134,6 @@ export default function () {
 			},
 		})
 	}
-
-	let subtopics = [
-		{ id: 1, name: 'Biologi Sel' },
-		{ id: 2, name: 'Biologi Molekuler' },
-		{ id: 3, name: 'PCR' },
-		{ id: 4, name: 'Saraf' },
-		{ id: 5, name: 'Reproduksi' },
-		{ id: 6, name: 'Crossing over' },
-		{ id: 7, name: 'Pohon filogeni' },
-	]
 
 	function setQuestionSubtopics(newSubtopics) {
 		dispatch({
