@@ -17,6 +17,8 @@ export default function () {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
+				console.log(res.data)
+
 				// Setting information
 				setQuestions(res.data)
 			}
@@ -55,11 +57,32 @@ export default function () {
 								className='w-2/12 border border-gray-800 bg-gray-100 rounded mr-4 mb-4 p-4 cursor-pointer shadow'
 								onClick={() => history.push(`/question/${el.id}`)}
 							>
-								<h3 className='font-xl font-bold'>{el.id}</h3>
-								<h3>{el.description}</h3>
-								<h3>{el.topics}</h3>
-								<h3>{el.tier}</h3>
-								<h3>{el.difficulty}</h3>
+								<h3 className='font-xl font-bold mb-2'>
+									<span>#{el.id}</span>
+									<span className='px-1 py-1 text-sm rounded bg-yellow-500 ml-2'>
+										{el.tier}
+									</span>
+									<span className='float-right'>{el.difficulty}</span>
+								</h3>
+								<p className='mt-2 mb-4'>{el.description}</p>
+								<div>
+									<span>
+										{el.topics.map((el, idx) => (
+											<span className='px-1 py-1 text-sm rounded bg-yellow-300 mr-2'>
+												{el.name}
+											</span>
+										))}
+									</span>
+								</div>
+								<div className='mt-2'>
+									<span>
+										{el.subtopics.map((el, idx) => (
+											<span className='px-1 py-1 text-sm rounded bg-yellow-500 mr-2'>
+												{el.name}
+											</span>
+										))}
+									</span>
+								</div>
 							</div>
 						))}
 					</div>
@@ -85,13 +108,7 @@ export default function () {
 						''
 					)}
 
-					{questions.map((el) => (
-						<div key={`qs_${el.id}`}>
-							<h3>{el.id}</h3>
-							<h3>{el.topics}</h3>
-							<h3>{el.subtopics}</h3>
-						</div>
-					))}
+					{/* Show question set here */}
 				</div>
 			</>
 		)

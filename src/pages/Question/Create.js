@@ -12,6 +12,8 @@ export default function () {
 	const history = useHistory()
 	const [error, setError] = useState('')
 	const dispatch = useDispatch()
+	const [topicOptions, setTopicOptions] = useState([])
+	const [subtopicOptions, setSubtopicOptions] = useState([])
 
 	// Redux states
 	const question = useSelector((state) => state.question)
@@ -40,14 +42,29 @@ export default function () {
 	]
 
 	useEffect(() => {
-		// Fetch dashboard data
-		// fetchPageData((res) => {
-		// 	if (res !== 'ok') {
-		// 		setError({ type: 'error', message: res.message })
-		// 	} else {
-		// 		// Setting information
-		// 	}
-		// })
+		fetchPageData({ auth: true }, (res) => {
+			if (res.status !== 'ok') {
+				setError({ type: 'error', message: res.message })
+			} else {
+				// Setting information
+
+				let initTopics = []
+				let initSubtopics = []
+
+				console.log(res.data)
+
+				res.data.topics.forEach((t) => {
+					if (t.type == 'topic') {
+						initTopics.push({ id: t._id, name: t.name, type: t.type })
+					} else if (t.type == 'subtopic') {
+						initSubtopics.push({ id: t._id, name: t.name, type: t.type })
+					}
+				})
+
+				setTopicOptions(initTopics)
+				setSubtopicOptions(initSubtopics)
+			}
+		})
 		// Reset all redux states
 		dispatch({
 			type: 'question/reset',
@@ -263,8 +280,9 @@ export default function () {
 					<TagInput
 						tags={question.topics}
 						setTags={setQuestionTopics}
-						suggestions={topics}
+						suggestions={topicOptions}
 						width={'w-full'}
+						minInputLength={1}
 					/>
 				</div>
 
@@ -273,8 +291,9 @@ export default function () {
 					<TagInput
 						tags={question.subtopics}
 						setTags={setQuestionSubtopics}
-						suggestions={subtopics}
+						suggestions={subtopicOptions}
 						width={'w-full'}
+						minInputLength={1}
 					/>
 				</div>
 

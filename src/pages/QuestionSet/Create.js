@@ -67,11 +67,15 @@ export default function () {
 
 				console.log(res.data)
 
-				res.data.topics.forEach((topic) => {
-					if (topic.type == 'topic') {
-						initTopics.push({ id: topic._id, name: topic.name })
-					} else if (topic.type == 'subtopic') {
-						initSubtopics.push({ id: topic._id, name: topic.name })
+				res.data.topics.forEach((t) => {
+					if (t.type == 'topic') {
+						initTopics.push({ id: t._id, name: t.name, type: t.type })
+					} else if (t.type == 'subtopic') {
+						initSubtopics.push({
+							id: t._id,
+							name: t.name,
+							type: t.type,
+						})
 					}
 				})
 
@@ -378,7 +382,7 @@ export default function () {
 							tags={topics}
 							setTags={setTopics}
 							suggestions={topicOptions}
-							minInputLength={0}
+							minInputLength={1}
 							width={'w-11/12'}
 						/>
 					</div>
@@ -389,18 +393,18 @@ export default function () {
 							tags={tiers}
 							setTags={topics}
 							suggestions={tierOptions}
-							minInputLength={0}
+							minInputLength={1}
 							width={'w-11/12'}
 						/>
 					</div>
 
-					<div className='py-2' a>
+					<div className='py-2'>
 						<span className='w-1/12 inline-block'>Subtopics</span>
 						<TagInput
 							tags={subtopics}
 							setTags={setSubtopics}
 							suggestions={subtopicOptions}
-							minInputLength={0}
+							minInputLength={1}
 							width={'w-11/12'}
 						/>
 					</div>
