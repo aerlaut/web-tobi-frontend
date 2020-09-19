@@ -23,7 +23,6 @@ export default function () {
 	// Local states & variables
 	const [showMeta, setShowMeta] = useState(true)
 	const [showSearch, setShowSearch] = useState(true)
-	const [showQuestionViewer, setQuestionViewer] = useState(false)
 	const [viewedQuestion, setViewedQuestion] = useState(null)
 
 	const [minDifficulty, setMinDifficulty] = useState(1)
@@ -94,6 +93,15 @@ export default function () {
 			type: 'questionSet/updateMeta',
 			payload: {
 				content: content,
+			},
+		})
+	}
+
+	function addQuestion(qId) {
+		dispatch({
+			type: 'questionSet/addQuestion',
+			payload: {
+				content: qId,
 			},
 		})
 	}
@@ -423,7 +431,7 @@ export default function () {
 											onClick={() => {
 												if (!addedQuestionsId.includes(q.id)) {
 													setAddedQuestionsId([...addedQuestionsId, q.id])
-													setAddedQuestions([...addedQuestions, q])
+													addQuestion(q.id)
 												}
 											}}
 										>
@@ -442,12 +450,12 @@ export default function () {
 				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
 					<h2 className='my-2 font-bold'>Questions in Set</h2>
 					<div className='flex justify-start'>
-						{addedQuestions.length > 0 ? (
+						{questionSet.contents.length > 0 ? (
 							<>
-								{addedQuestions.map((q, idx) => (
+								{questionSet.contents.map((qId, idx) => (
 									<div
 										className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'
-										onClick={() => setViewedQuestion(q.id)}
+										onClick={() => setViewedQuestion(qId)}
 									>
 										<span
 											className='absolute text-white font-bold'
