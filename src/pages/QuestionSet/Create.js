@@ -4,8 +4,10 @@ import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Question from '../../components/Question'
 
-import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
+import ChevronDown from '../../icons/ChevronDown'
+import ChevronLeft from '../../icons/ChevronLeft'
+import ChevronRight from '../../icons/ChevronRight'
 import TagInput from '../../components/TagInput'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -24,6 +26,7 @@ export default function () {
 	const [showMeta, setShowMeta] = useState(true)
 	const [showSearch, setShowSearch] = useState(true)
 	const [viewedQuestion, setViewedQuestion] = useState(null)
+	const [questionSetViewerIdx, setQuestionSetViewerIdx] = useState(0)
 
 	const [minDifficulty, setMinDifficulty] = useState(1)
 	const [maxDifficulty, setMaxDifficulty] = useState(5)
@@ -34,7 +37,6 @@ export default function () {
 	const [topicOptions, setTopicOptions] = useState([])
 	const [subtopicOptions, setSubtopicOptions] = useState([])
 	const [searchResult, setSearchResult] = useState([])
-	const [addedQuestions, setAddedQuestions] = useState([])
 	const [addedQuestionsId, setAddedQuestionsId] = useState([])
 
 	const tierOptions = [
@@ -455,7 +457,7 @@ export default function () {
 								{questionSet.contents.map((qId, idx) => (
 									<div
 										className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'
-										onClick={() => setViewedQuestion(qId)}
+										key={`qn_${idx}`}
 									>
 										<span
 											className='absolute text-white font-bold'
@@ -474,6 +476,44 @@ export default function () {
 							''
 						)}
 					</div>
+				</section>
+
+				{/* QuestionSet Viewer */}
+				<section className='py-2'>
+					{questionSet.contents.length > 0 ? (
+						<>
+							<h2 className='my-2 font-bold pb-2 mb-4 broder-b border-black'>
+								QuestionSet Viewer
+							</h2>
+							<div className='p-8 rounded relative clearfix border border-black'>
+								<div className='float-right'>
+									<span className='p-2 mr-2 cursor-pointer bg-gray-100'>
+										<ChevronLeft
+											className='inline-block'
+											onClick={() => {
+												if (questionSetViewerIdx > 0) {
+													setQuestionSetViewerIdx(questionSetViewerIdx - 1)
+												}
+											}}
+										/>
+									</span>
+									<span className='p-2 rounded cursor-pointer bg-gray-100'>
+										<ChevronRight
+											className='inline-block'
+											onClick={() => {
+												if (questionSetViewerIdx < addedQuestionsId.length) {
+													setQuestionSetViewerIdx(questionSetViewerIdx + 1)
+												}
+											}}
+										/>
+									</span>
+								</div>
+								<Question id={questionSet.contents[questionSetViewerIdx]} />
+							</div>
+						</>
+					) : (
+						''
+					)}
 				</section>
 
 				{/* Question viewer */}

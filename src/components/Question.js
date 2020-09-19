@@ -12,7 +12,6 @@ export default function ({ id, role }) {
 
 	useEffect(() => {
 		// Fetch dashboard data
-		console.log('fetching')
 		fetch(`${process.env.REACT_APP_API_URL}/question/${id}`, {
 			method: 'GET',
 			headers: new Headers({
@@ -34,7 +33,7 @@ export default function ({ id, role }) {
 				// Show error details
 				console.error(err)
 			})
-	}, [])
+	}, [id])
 
 	return (
 		<>
