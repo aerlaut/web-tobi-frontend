@@ -53,9 +53,13 @@ export default function () {
 					<div className='mb-4'>Search</div>
 					<div className='flex flex-wrap'>
 						{questions.map((q, idx) => (
-							<Link to={`/question/${q.id}`} className='w-2/12'>
-								<QuestionCard question={q} key={`q_${q.id}`} />
-							</Link>
+							<QuestionCard
+								question={q}
+								key={`q_${q.id}`}
+								onClick={() => {
+									history.push(`/question/${q.id}`)
+								}}
+							/>
 						))}
 					</div>
 				</div>

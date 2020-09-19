@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
+import Question from '../../components/Question'
 
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronUp from '../../icons/ChevronUp'
@@ -17,10 +18,14 @@ export default function () {
 
 	// Redux states
 	const questionSet = useSelector((state) => state.questionSet)
+	const role = useSelector((state) => state.auth.role)
 
 	// Local states & variables
 	const [showMeta, setShowMeta] = useState(true)
 	const [showSearch, setShowSearch] = useState(true)
+	const [showQuestionViewer, setQuestionViewer] = useState(false)
+	const [viewedQuestion, setViewedQuestion] = useState(null)
+
 	const [minDifficulty, setMinDifficulty] = useState(1)
 	const [maxDifficulty, setMaxDifficulty] = useState(5)
 	const [questionDescription, setQuestionDescription] = useState('')
@@ -30,6 +35,8 @@ export default function () {
 	const [topicOptions, setTopicOptions] = useState([])
 	const [subtopicOptions, setSubtopicOptions] = useState([])
 	const [searchResult, setSearchResult] = useState([])
+	const [addedQuestions, setAddedQuestions] = useState([])
+	const [addedQuestionsId, setAddedQuestionsId] = useState([])
 
 	const tierOptions = [
 		{
@@ -146,8 +153,6 @@ export default function () {
 			topics: topics,
 			subtopics: subtopics,
 		}
-
-		console.log(postData)
 
 		fetch(`${process.env.REACT_APP_API_URL}/question/search`, {
 			method: 'POST',
@@ -303,38 +308,6 @@ export default function () {
 					</button>
 				</section>
 
-				{/* Question Numbers */}
-				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
-					<h2 className='my-2 font-bold'>Questions</h2>
-					<div className='flex justify-start'>
-						<div className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'>
-							<span
-								className='absolute text-white font-bold'
-								style={{
-									top: '50%',
-									left: '50%',
-									transform: 'translate(-50%, -50%)',
-								}}
-							>
-								100
-							</span>
-						</div>
-
-						<div className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'>
-							<span
-								className='absolute text-white font-bold'
-								style={{
-									top: '50%',
-									left: '50%',
-									transform: 'translate(-50%, -50%)',
-								}}
-							>
-								1
-							</span>
-						</div>
-					</div>
-				</section>
-
 				{/* Search Questions */}
 				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
 					<h2 className='my-2 font-bold'>Search Questions</h2>
@@ -438,13 +411,25 @@ export default function () {
 							<h2 className='my-2 font-bold block'>Search Result</h2>
 							<div className='flex flex-wrap'>
 								{searchResult.map((q) => (
-									<Link
-										target='_blank'
-										to={`/question/${q.id}`}
-										className='w-2/12'
-									>
-										<QuestionCard question={q} key={`q_${q.id}`} />
-									</Link>
+									<div className='w-2/12 relative' key={`q_${q.id}`}>
+										<QuestionCard
+											question={q}
+											onClick={() => {
+												setViewedQuestion(q.id)
+											}}
+										/>
+										<span
+											className='rounded-full px-2 text-white bg-green-600 font-bold absolute top-0 right-0 -mt-2 mr-2 cursor-pointer'
+											onClick={() => {
+												if (!addedQuestionsId.includes(q.id)) {
+													setAddedQuestionsId([...addedQuestionsId, q.id])
+													setAddedQuestions([...addedQuestions, q])
+												}
+											}}
+										>
+											+
+										</span>
+									</div>
 								))}
 							</div>
 						</>
@@ -452,6 +437,58 @@ export default function () {
 						''
 					)}
 				</section>
+
+				{/* Question Numbers */}
+				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+					<h2 className='my-2 font-bold'>Questions in Set</h2>
+					<div className='flex justify-start'>
+						{addedQuestions.length > 0 ? (
+							<>
+								{addedQuestions.map((q, idx) => (
+									<div
+										className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'
+										onClick={() => setViewedQuestion(q.id)}
+									>
+										<span
+											className='absolute text-white font-bold'
+											style={{
+												top: '50%',
+												left: '50%',
+												transform: 'translate(-50%, -50%)',
+											}}
+										>
+											{idx + 1}
+										</span>
+									</div>
+								))}
+							</>
+						) : (
+							''
+						)}
+					</div>
+				</section>
+
+				{/* Question viewer */}
+				{viewedQuestion !== null && (
+					<div className='fixed bg-black w-screen h-screen top-0 left-0 p-8 bg-opacity-75 overflow-y-scroll'>
+						<div className='mb-4'>
+							<h2 className='text-white font-bold inline-block'>
+								Question viewer
+							</h2>
+							<span
+								className='font-bold float-right text-white cursor-pointer'
+								onClick={() => {
+									setViewedQuestion(null)
+								}}
+							>
+								X
+							</span>
+						</div>
+						<div className='rounded px-8 py-4 bg-white opacity-100'>
+							<Question id={viewedQuestion} />
+						</div>
+					</div>
+				)}
 			</>
 		)
 	)
