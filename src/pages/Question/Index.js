@@ -53,13 +53,15 @@ export default function () {
 					<div className='mb-4'>Search</div>
 					<div className='flex flex-wrap'>
 						{questions.map((q, idx) => (
-							<QuestionCard question={q} key={`q_${q.id}`} />
+							<Link to={`/question/${q.id}`} className='w-2/12'>
+								<QuestionCard question={q} key={`q_${q.id}`} />
+							</Link>
 						))}
 					</div>
 				</div>
 
 				<div>
-					<h1 className='text-xl font-bold mb-4'>New Sets</h1>
+					<h1 className='text-xl font-bold mb-4 pt-8 pb-4'>New Sets</h1>
 					{role === 'admin' || role === 'superadmin' ? (
 						<span className='float-right'>
 							<Link

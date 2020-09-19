@@ -1,14 +1,8 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 
 export default function ({ question }) {
-	const history = useHistory()
-
 	return (
-		<div
-			className='w-2/12 border border-gray-800 bg-gray-100 rounded mr-4 mb-4 p-4 cursor-pointer shadow flex flex-col justify-end'
-			onClick={() => history.push(`/question/${question.id}`)}
-		>
+		<div className='border border-gray-800 bg-gray-100 rounded mr-4 mb-4 p-4 cursor-pointer shadow flex flex-col justify-end min-h-full'>
 			<div className='flex-1'>
 				<h3 className='font-xl font-bold mb-2'>
 					<span>#{question.id}</span>
