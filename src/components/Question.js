@@ -78,7 +78,10 @@ export default function ({ id, role }) {
 							Topics :
 							{question.topics &&
 								question.topics.map((el, idx) => (
-									<span className='px-1 py-1 text-sm rounded bg-yellow-300 ml-2'>
+									<span
+										className='px-1 py-1 text-sm rounded bg-yellow-300 ml-2'
+										key={`t_${idx}`}
+									>
 										{el.name}
 									</span>
 								))}
@@ -87,7 +90,10 @@ export default function ({ id, role }) {
 							Subtopics :
 							{question.subtopics &&
 								question.subtopics.map((el, idx) => (
-									<span className='px-1 py-1 text-sm rounded bg-yellow-300 ml-2'>
+									<span
+										className='px-1 py-1 text-sm rounded bg-yellow-300 ml-2'
+										key={`st_${idx}`}
+									>
 										{el.name}
 									</span>
 								))}

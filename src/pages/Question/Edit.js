@@ -244,6 +244,7 @@ export default function () {
 								min='1'
 								max='5'
 								value={question.difficulty}
+								onChange={(e) => updateMeta({ difficulty: e.target.value })}
 							></input>
 						</label>
 

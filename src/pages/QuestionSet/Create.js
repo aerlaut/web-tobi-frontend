@@ -90,6 +90,11 @@ export default function () {
 				setSubtopicOptions(initSubtopics)
 			}
 		})
+
+		// Reset all redux states
+		dispatch({
+			type: 'questionSet/reset',
+		})
 	}, [])
 
 	function updateMeta(content) {
@@ -101,13 +106,59 @@ export default function () {
 		})
 	}
 
-	function addQuestion(qId) {
+	function addQuestion(question) {
 		dispatch({
 			type: 'questionSet/addQuestion',
 			payload: {
-				content: qId,
+				content: {
+					id: question.id,
+					difficulty: question.difficulty,
+					topic: question.topics[0].name,
+				},
 			},
 		})
+	}
+
+	function removeQuestion(idx) {
+		console.log(idx)
+
+		dispatch({
+			type: 'questionSet/removeQuestion',
+			payload: {
+				idx: idx,
+			},
+		})
+	}
+
+	function searchQuestions() {
+		let postData = {
+			questionDescription: questionDescription,
+			minDifficulty: minDifficulty,
+			maxDifficulty: maxDifficulty,
+			tiers: tiers,
+			topics: topics,
+			subtopics: subtopics,
+		}
+
+		fetch(`${process.env.REACT_APP_API_URL}/question/search`, {
+			method: 'POST',
+			headers: new Headers({
+				'Content-type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}),
+			body: JSON.stringify(postData),
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error('Error creating question')
+				}
+				return res.json()
+			})
+			.then((res) => {
+				// Load questions
+				setSearchResult(res.data)
+			})
+			.catch((err) => console.error(err))
 	}
 
 	function save(e) {
@@ -156,35 +207,44 @@ export default function () {
 			})
 	}
 
-	function fetchQuestions() {
-		let postData = {
-			questionDescription: questionDescription,
-			minDifficulty: minDifficulty,
-			maxDifficulty: maxDifficulty,
-			tiers: tiers,
-			topics: topics,
-			subtopics: subtopics,
+	function diffToBgColor(diff) {
+		return diff < 2
+			? 'bg-green-400'
+			: diff < 3
+			? 'bg-yellow-400'
+			: diff < 4
+			? 'bg-orange-400'
+			: 'bg-red-400'
+	}
+
+	function topicToLetter(topic) {
+		let letter = ''
+
+		switch (topic) {
+			case 'Biselmol':
+				letter = 'B'
+				break
+			case 'Anfiswan':
+				letter = 'H'
+				break
+			case 'Anfistum':
+				letter = 'T'
+				break
+			case 'Genevo':
+				letter = 'G'
+				break
+			case 'Bistik':
+				letter = 'S'
+				break
+			case 'Ekologi':
+				letter = 'E'
+				break
+			case 'Etologi':
+				letter = 'P'
+				break
 		}
 
-		fetch(`${process.env.REACT_APP_API_URL}/question/search`, {
-			method: 'POST',
-			headers: new Headers({
-				'Content-type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			}),
-			body: JSON.stringify(postData),
-		})
-			.then((res) => {
-				if (!res.ok) {
-					throw new Error('Error creating question')
-				}
-				return res.json()
-			})
-			.then((res) => {
-				// Load questions
-				setSearchResult(res.data)
-			})
-			.catch((err) => console.error(err))
+		return letter
 	}
 
 	return (
@@ -390,7 +450,7 @@ export default function () {
 									type='button'
 									className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
 									onClick={() => {
-										fetchQuestions()
+										searchQuestions()
 									}}
 								>
 									Search
@@ -435,7 +495,7 @@ export default function () {
 											onClick={() => {
 												if (!addedQuestionsId.includes(q.id)) {
 													setAddedQuestionsId([...addedQuestionsId, q.id])
-													addQuestion(q.id)
+													addQuestion(q)
 												}
 											}}
 										>
@@ -456,16 +516,19 @@ export default function () {
 					<div className='flex justify-start'>
 						{questionSet.contents.length > 0 ? (
 							<>
-								{questionSet.contents.map((qId, idx) => (
+								{questionSet.contents.map((q, idx) => (
 									<div
 										className={cx(
-											'rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2',
+											`rounded ${diffToBgColor(
+												q.difficulty
+											)} relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2`,
 											{
 												'active-question': questionSetViewerIdx === idx,
 											}
 										)}
 										key={`qn_${idx}`}
 									>
+										{/* Background color : difficulty, content : topic */}
 										<span
 											className={'absolute text-white font-bold'}
 											style={{
@@ -474,7 +537,7 @@ export default function () {
 												transform: 'translate(-50%, -50%)',
 											}}
 										>
-											{idx + 1}
+											{topicToLetter(q.topic)}
 										</span>
 									</div>
 								))}
@@ -492,7 +555,7 @@ export default function () {
 							<h2 className='my-2 font-bold pb-2 mb-4 broder-b border-black'>
 								QuestionSet Viewer
 							</h2>
-							<div className='p-8 rounded relative clearfix border border-black'>
+							<div className='p-8 rounded clearfix border border-black'>
 								<div className='float-right'>
 									<span className='p-2 mr-2 cursor-pointer bg-gray-100'>
 										<ChevronLeft
@@ -508,14 +571,43 @@ export default function () {
 										<ChevronRight
 											className='inline-block'
 											onClick={() => {
-												if (questionSetViewerIdx < addedQuestionsId.length) {
+												if (
+													questionSetViewerIdx <
+													addedQuestionsId.length - 1
+												) {
 													setQuestionSetViewerIdx(questionSetViewerIdx + 1)
 												}
 											}}
 										/>
 									</span>
+									<button
+										className='rounded px-2 py-1 text-white bg-red-600 font-bold cursor-pointer text-sm ml-8'
+										onClick={() => {
+											let newArr = [...addedQuestionsId]
+												.slice(0, questionSetViewerIdx)
+												.concat(
+													[...addedQuestionsId].slice(questionSetViewerIdx + 1)
+												)
+
+											// Delete at the
+											if (questionSetViewerIdx == newArr.length) {
+												setQuestionSetViewerIdx(newArr.length - 1)
+											}
+
+											// No more entries
+											if (newArr.length == 0) {
+												setQuestionSetViewerIdx(null)
+											}
+
+											setAddedQuestionsId(newArr)
+											removeQuestion(questionSetViewerIdx)
+										}}
+									>
+										X
+									</button>
 								</div>
-								<Question id={questionSet.contents[questionSetViewerIdx]} />
+								{questionSetViewerIdx}
+								<Question id={addedQuestionsId[questionSetViewerIdx]} />
 							</div>
 						</>
 					) : (
@@ -523,8 +615,8 @@ export default function () {
 					)}
 				</section>
 				<Style>{`
-              .active-question { background-color: #FFCC5B !important; }
-              .active-question > span { color: red !important; }
+              .active-question { border-color: #444 !important; border-width: 4px;}
+              .active-question > span { color: black !important; }
             `}</Style>
 
 				{/* Question viewer */}

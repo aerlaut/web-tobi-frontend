@@ -3,7 +3,6 @@ import { EditorState, convertToRaw, convertFromRaw } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { useDispatch } from 'react-redux'
-import { stateToHTML } from 'draft-js-export-html'
 import cx from 'classnames'
 
 export default function ({ content = '', idx, mode = 'view' }) {
