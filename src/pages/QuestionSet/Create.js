@@ -3,12 +3,14 @@ import { Link, useHistory } from 'react-router-dom'
 import { useAuth, fetchPageData } from '../../helpers'
 import Error from '../../components/Error'
 import Question from '../../components/Question'
+import { Style } from 'react-style-tag'
 
 import ChevronUp from '../../icons/ChevronUp'
 import ChevronDown from '../../icons/ChevronDown'
 import ChevronLeft from '../../icons/ChevronLeft'
 import ChevronRight from '../../icons/ChevronRight'
 import TagInput from '../../components/TagInput'
+import cx from 'classnames'
 
 import { useSelector, useDispatch } from 'react-redux'
 import QuestionCard from '../../components/Question/Card'
@@ -456,11 +458,16 @@ export default function () {
 							<>
 								{questionSet.contents.map((qId, idx) => (
 									<div
-										className='rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2'
+										className={cx(
+											'rounded bg-green-400 relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2',
+											{
+												'active-question': questionSetViewerIdx === idx,
+											}
+										)}
 										key={`qn_${idx}`}
 									>
 										<span
-											className='absolute text-white font-bold'
+											className={'absolute text-white font-bold'}
 											style={{
 												top: '50%',
 												left: '50%',
@@ -515,6 +522,10 @@ export default function () {
 						''
 					)}
 				</section>
+				<Style>{`
+              .active-question { background-color: #FFCC5B !important; }
+              .active-question > span { color: red !important; }
+            `}</Style>
 
 				{/* Question viewer */}
 				{viewedQuestion !== null && (
