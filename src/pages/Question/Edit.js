@@ -82,7 +82,7 @@ export default function () {
 
 				// Push question to redux
 				dispatch({
-					type: 'question/loadQuestion',
+					type: 'question/load',
 					payload: {
 						question: res.data.question,
 					},
@@ -94,7 +94,7 @@ export default function () {
 	function updateQuestion(e) {
 		e.preventDefault()
 
-		let postdata = {
+		const postData = {
 			_id: objectId,
 			author: question.author,
 			description: question.description,
@@ -109,7 +109,7 @@ export default function () {
 		}
 
 		// Question switched to published
-		if (!published && question.isPublished) postdata.publishedAt = Date.now()
+		if (!published && question.isPublished) postData.publishedAt = Date.now()
 
 		// Submit form
 		fetch(`${process.env.REACT_APP_API_URL}/question/${id}/edit`, {
@@ -118,7 +118,7 @@ export default function () {
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}),
-			body: JSON.stringify(postdata),
+			body: JSON.stringify(postData),
 		})
 			.then((res) => {
 				if (!res.ok) {

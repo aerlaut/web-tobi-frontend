@@ -19,6 +19,7 @@ import cx from 'classnames'
 
 import { useSelector, useDispatch } from 'react-redux'
 import QuestionCard from '../../components/Question/Card'
+import question from '../../store/question'
 
 export default function () {
 	const history = useHistory()
@@ -343,6 +344,7 @@ export default function () {
 									className='rounded border border-black block w-full px-2 py-1'
 									rows={3}
 									onChange={(e) => updateMeta({ description: e.target.value })}
+									value={questionSet.description}
 								></textarea>
 								<div></div>
 							</div>

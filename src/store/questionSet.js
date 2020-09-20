@@ -109,7 +109,7 @@ export default createSlice({
 			}
 		},
 		// Load question object into redux
-		loadQuestion: (state, action) => {
+		load: (state, action) => {
 			const { question } = action.payload
 
 			Object.keys(question).forEach((key, idx) => {

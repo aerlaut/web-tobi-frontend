@@ -47,7 +47,7 @@ export default function () {
 					{role === 'admin' || role === 'superadmin' ? (
 						<span
 							className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer text-base rounded'
-							onClick={() => history.push(`/question/${id}/edit`)}
+							onClick={() => history.push(`/question_set/${id}/edit`)}
 						>
 							Edit
 						</span>
@@ -170,7 +170,6 @@ export default function () {
 										X
 									</button>
 								</div>
-								{questionSetViewerIdx}
 								<Question id={questionsId[questionSetViewerIdx]} />
 							</div>
 						</>

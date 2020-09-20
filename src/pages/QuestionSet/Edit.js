@@ -1,36 +1,59 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useAuth, fetchPageData } from '../../helpers'
+import {
+	useAuth,
+	fetchPageData,
+	diffToBgColor,
+	topicToLetter,
+} from '../../helpers'
 import Error from '../../components/Error'
-import Field from '../../components/Question/Field'
-import FieldOption from '../../components/Question/FieldOption'
+import Question from '../../components/Question'
+import { Style } from 'react-style-tag'
+
+import ChevronUp from '../../icons/ChevronUp'
+import ChevronDown from '../../icons/ChevronDown'
+import ChevronLeft from '../../icons/ChevronLeft'
+import ChevronRight from '../../icons/ChevronRight'
+import TagInput from '../../components/TagInput'
+import cx from 'classnames'
 import moment from 'moment'
 
 import { useSelector, useDispatch } from 'react-redux'
+import QuestionCard from '../../components/Question/Card'
 
 export default function () {
 	const history = useHistory()
+	const [error, setError] = useState('')
 	const dispatch = useDispatch()
 	const { id } = useParams()
 
-	// Local state
-	const [error, setError] = useState('')
+	// Redux states
+	const questionSet = useSelector((state) => state.questionSet)
+	const user_Id = useSelector((state) => state.auth._id)
+	const role = useSelector((state) => state.auth.role)
+
+	// Local states & variables
 	const [objectId, setObjectId] = useState('')
 	const [published, setPublished] = useState('')
 	const [createdAt, setCreatedAt] = useState('')
 	const [updatedAt, setUpdatedAt] = useState('')
+	const [showMeta, setShowMeta] = useState(true)
+	const [showSearch, setShowSearch] = useState(true)
+	const [viewedQuestion, setViewedQuestion] = useState(null)
+	const [questionSetViewerIdx, setQuestionSetViewerIdx] = useState(0)
 
-	// Redux states
-	const author = useSelector((state) => state.question.author)
-	const tier = useSelector((state) => state.question.tier)
-	const maxScore = useSelector((state) => state.question.maxScore)
-	const isOfficial = useSelector((state) => state.question.isOfficial)
-	const isPublished = useSelector((state) => state.question.isPublished)
-	const difficulty = useSelector((state) => state.question.difficulty)
-	const contents = useSelector((state) => state.question.contents)
-	const description = useSelector((state) => state.question.description)
+	const [minDifficulty, setMinDifficulty] = useState(1)
+	const [maxDifficulty, setMaxDifficulty] = useState(5)
+	const [questionDescription, setQuestionDescription] = useState('')
+	const [tiers, setTiers] = useState([])
+	const [topics, setTopics] = useState([])
+	const [subtopics, setSubtopics] = useState([])
+	const [topicOptions, setTopicOptions] = useState([])
+	const [subtopicOptions, setSubtopicOptions] = useState([])
+	const [searchResult, setSearchResult] = useState([])
+	const [addedQuestionsId, setAddedQuestionsId] = useState([])
 
-	const tiers = [
+	const tierOptions = [
 		{
 			value: 'osk',
 			name: 'OSK',
@@ -59,51 +82,161 @@ export default function () {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
+				// Get viewed questions
+				setAddedQuestionsId(res.data.questionSet.contents.map((el) => el.id))
+
 				// Get some status for updating
+				setObjectId(res.data.questionSet._id)
+				setPublished(res.data.questionSet.isPublished)
+				setCreatedAt(res.data.questionSet.createdAt)
+				setUpdatedAt(res.data.questionSet.updatedAt)
 
-				setObjectId(res.data._id)
-				setPublished(res.data.isPublished)
-				setCreatedAt(res.data.createdAt)
-				setUpdatedAt(res.data.updatedAt)
-
-				// Push question to redux
+				// Load question set data
 				dispatch({
-					type: 'question/loadQuestion',
+					type: 'questionSet/load',
 					payload: {
-						question: res.data,
+						question: res.data.questionSet,
 					},
 				})
+
+				// Setting information
+				let initTopics = []
+				let initSubtopics = []
+
+				// Init topics
+				res.data.topics.forEach((t) => {
+					if (t.type == 'topic') {
+						initTopics.push({ id: t._id, name: t.name, type: t.type })
+					} else if (t.type == 'subtopic') {
+						initSubtopics.push({
+							id: t._id,
+							name: t.name,
+							type: t.type,
+						})
+					}
+				})
+
+				setTopicOptions(initTopics)
+				setSubtopicOptions(initSubtopics)
 			}
 		})
 	}, [])
 
-	function updateQuestion(e) {
-		e.preventDefault()
+	function updateMeta(content) {
+		dispatch({
+			type: 'questionSet/updateMeta',
+			payload: {
+				content: content,
+			},
+		})
+	}
 
-		let postdata = {
+	function addQuestion(question) {
+		dispatch({
+			type: 'questionSet/addQuestion',
+			payload: {
+				content: {
+					id: question.id,
+					difficulty: question.difficulty,
+					topic: question.topics[0].name,
+					maxScore: question.maxScore,
+				},
+			},
+		})
+	}
+
+	function removeQuestion(idx) {
+		console.log(idx)
+
+		dispatch({
+			type: 'questionSet/removeQuestion',
+			payload: {
+				idx: idx,
+			},
+		})
+	}
+
+	function searchQuestions() {
+		const postData = {
 			_id: objectId,
-			author: author,
-			description: description,
-			tier: tier,
-			maxScore: maxScore,
-			isOfficial: isOfficial,
-			difficulty: difficulty,
-			contents: contents,
-			isPublished: isPublished,
-			updatedAt: Date.now(),
+			questionDescription: questionDescription,
+			minDifficulty: minDifficulty,
+			maxDifficulty: maxDifficulty,
+			isPublished: questionSet.isPublished,
+			tiers: tiers,
+			topics: topics,
+			subtopics: subtopics,
 		}
 
 		// Question switched to published
-		if (!published && isPublished) postdata.publishedAt = Date.now()
+		if (!published && questionSet.isPublished) postData.publishedAt = Date.now()
 
-		// Submit form
-		fetch(`${process.env.REACT_APP_API_URL}/question/${id}/edit`, {
+		fetch(`${process.env.REACT_APP_API_URL}/question/search`, {
 			method: 'POST',
 			headers: new Headers({
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}),
-			body: JSON.stringify(postdata),
+			body: JSON.stringify(postData),
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error('Error creating question')
+				}
+				return res.json()
+			})
+			.then((res) => {
+				// Load questions
+				setSearchResult(res.data)
+			})
+			.catch((err) => console.error(err))
+	}
+
+	function save(e) {
+		e.preventDefault()
+
+		// If author not set
+		if (questionSet.author === '') {
+			alert('Author harus diisi')
+			return
+		}
+
+		// If description not set
+		if (questionSet.description === '') {
+			alert('Description harus diisi')
+			return
+		}
+
+		// If description not set
+		if (questionSet.contents.length === 0) {
+			alert('Tidak ada soal')
+			return
+		}
+
+		let postData = {
+			_id: objectId,
+			createdBy: user_Id,
+			author: questionSet.author,
+			description: questionSet.description,
+			maxScore: questionSet.maxScore,
+			isOfficial: questionSet.isOfficial,
+			canRandomize: questionSet.canRandomize,
+			difficulty: questionSet.difficulty,
+			contents: questionSet.contents,
+			isPublished: questionSet.isPublished,
+		}
+
+		// If QuestionSet is switched to published
+		if (questionSet.isPublished) postData.publishedAt = Date.now()
+
+		// Submit form
+		fetch(`${process.env.REACT_APP_API_URL}/question_set/${id}/edit`, {
+			method: 'POST',
+			headers: new Headers({
+				'Content-type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			}),
+			body: JSON.stringify(postData),
 		})
 			.then((res) => {
 				if (!res.ok) {
@@ -115,8 +248,8 @@ export default function () {
 				if (res.status !== 'ok') {
 					// Error creating question
 				} else {
-					// Forward to login page
-					history.push(`/question/${id}`)
+					// Forward to login pageg
+					history.push('/question')
 				}
 			})
 			.catch((err) => {
@@ -130,178 +263,405 @@ export default function () {
 			<>
 				{error && <Error type={error.type} message={error.message} />}
 				<h1 className='text-xl font-bold mb-4'>
+					Buat Set Soal Baru
 					<span
-						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded text-base'
-						onClick={(e) => updateQuestion(e)}
+						className='bg-green-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
+						onClick={(e) => save(e)}
 					>
-						Update
+						Save
 					</span>
 				</h1>
 
-				<div className='flex'>
-					<div className='w-1/2 flex flex-col'>
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Author</span>
-							<input
-								type='text'
-								className='w-6/12 p-1 border border-black shadow-inside rounded'
-								value={author}
-								onChange={(e) => {
-									dispatch({
-										type: 'question/setAuthor',
-										payload: { content: e.target.value },
-									})
-								}}
-							></input>
-						</label>
+				<section className='bg-gray-100 rounded px-4 py-2 shadow'>
+					<h2 className='my-2 font-bold'>Question Set Details</h2>
+					{showMeta ? (
+						<>
+							<div className='flex'>
+								<div className='w-1/2 flex flex-col'>
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Author</span>
+										<input
+											type='text'
+											className='w-6/12 p-1 border border-black shadow-inside rounded'
+											value={questionSet.author}
+											onChange={(e) => updateMeta({ author: e.target.value })}
+										></input>
+									</label>
 
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Tier</span>
-							<select
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setTier',
-										payload: { content: e.target.value },
-									})
-								}
-								value={tier}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								{tiers.map((t) => (
-									<option key={`tier_${t.value}`} value={t.value}>
-										{t.name}
-									</option>
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Official?</span>
+										<select
+											value={questionSet.isOfficial}
+											onChange={(e) =>
+												updateMeta({ isOfficial: e.target.value })
+											}
+											className='border rounded p-1 border-black w-2/12'
+										>
+											<option value={true}>Yes</option>
+											<option value={false}>No</option>
+										</select>
+									</label>
+
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Can random?</span>
+										<select
+											value={questionSet.canRandomize}
+											onChange={(e) =>
+												updateMeta({ canRandomize: e.target.value })
+											}
+											className='border rounded p-1 border-black w-2/12'
+										>
+											<option value={true}>Yes</option>
+											<option value={false}>No</option>
+										</select>
+									</label>
+
+									<label className='my-2'>
+										<span className='w-2/12 inline-block'>Published?</span>
+										<select
+											value={questionSet.isPublished}
+											onChange={(e) =>
+												updateMeta({ isPublished: e.target.value })
+											}
+											className='border rounded p-1 border-black w-2/12'
+										>
+											<option value={true}>Yes</option>
+											<option value={false}>No</option>
+										</select>
+									</label>
+								</div>
+								<div className='w-1/2 flex flex-col'>
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Difficulty</span>
+										<input
+											type='text'
+											className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
+											value={questionSet.difficulty}
+											readOnly={true}
+										></input>
+									</label>
+
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Maximum Score</span>
+										<input
+											type='text'
+											className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
+											value={questionSet.maxScore}
+											readOnly={true}
+										></input>
+									</label>
+
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Created</span>
+										<span>
+											{moment
+												.utc(createdAt)
+												.utcOffset('+07:00')
+												.format('YYYY-MM-DD HH:mm:ss [WIB]')}
+										</span>
+									</label>
+
+									<label className='my-2'>
+										<span className='w-3/12 inline-block'>Last Update</span>
+										<span>
+											{moment
+												.utc(updatedAt)
+												.utcOffset('+07:00')
+												.format('YYYY-MM-DD HH:mm:ss [WIB]')}
+										</span>
+									</label>
+								</div>
+							</div>
+							<div className='my-2'>
+								<strong>Description</strong>
+								<textarea
+									className='rounded border border-black block w-full px-2 py-1'
+									rows={3}
+									onChange={(e) => updateMeta({ description: e.target.value })}
+									value={questionSet.description}
+								></textarea>
+								<div></div>
+							</div>
+						</>
+					) : (
+						<hr className='border-black my-2' />
+					)}
+					<button
+						className='mx-auto block px-2 py-1 border rounded bg-white border-black'
+						onClick={(e) => setShowMeta(!showMeta)}
+					>
+						{showMeta ? (
+							<>
+								Hide <ChevronUp className='inline-block align-bottom' />
+							</>
+						) : (
+							<>
+								Show <ChevronDown className='inline-block align-bottom' />
+							</>
+						)}
+					</button>
+				</section>
+
+				{/* Search Questions */}
+				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+					<h2 className='my-2 font-bold'>Search Questions</h2>
+					{showSearch ? (
+						<>
+							<div className='py-2'>
+								<span className='w-1/12 inline-block'>Description</span>
+								<input
+									type='text'
+									className='w-11/12 p-1 border border-black shadow-inside rounded cursor-default'
+									value={questionDescription}
+									onChange={(e) => setQuestionDescription(e.target.value)}
+								></input>
+							</div>
+
+							<div className='py-2'>
+								<span className='w-1/12 inline-block'>Topics</span>
+								<TagInput
+									tags={topics}
+									setTags={setTopics}
+									suggestions={topicOptions}
+									minInputLength={1}
+									width={'w-11/12'}
+								/>
+							</div>
+
+							<div className='py-2'>
+								<span className='w-1/12 inline-block'>Subtopics</span>
+								<TagInput
+									tags={subtopics}
+									setTags={setSubtopics}
+									suggestions={subtopicOptions}
+									minInputLength={1}
+									width={'w-11/12'}
+								/>
+							</div>
+
+							<div className='py-2'>
+								<span className='w-1/12 inline-block'>Difficulty (1-5)</span>
+								<input
+									type='text'
+									className='w-10 p-1 border border-black shadow-inside rounded cursor-default mr-2'
+									value={minDifficulty}
+									onChange={(e) => setMinDifficulty(e.target.value)}
+								/>
+								-
+								<input
+									type='text'
+									className='w-10 p-1 border border-black shadow-inside rounded cursor-default ml-2'
+									value={maxDifficulty}
+									onChange={(e) => setMaxDifficulty(e.target.value)}
+								/>
+							</div>
+
+							<div className='py-2'>
+								<span className='w-1/12 inline-block'>Tiers</span>
+								<TagInput
+									tags={tiers}
+									setTags={setTiers}
+									suggestions={tierOptions}
+									minInputLength={1}
+									width={'w-11/12'}
+								/>
+							</div>
+
+							<div className='clearfix'>
+								<button
+									type='button'
+									className='bg-blue-600 px-2 py-1 text-white font-bold float-right cursor-pointer rounded'
+									onClick={() => {
+										searchQuestions()
+									}}
+								>
+									Search
+								</button>
+							</div>
+						</>
+					) : (
+						<hr className='border-black my-2' />
+					)}
+					<button
+						className='mx-auto block px-2 py-1 border rounded bg-white border-black'
+						onClick={(e) => setShowSearch(!showSearch)}
+					>
+						{showSearch ? (
+							<>
+								Hide <ChevronUp className='inline-block align-bottom' />
+							</>
+						) : (
+							<>
+								Show <ChevronDown className='inline-block align-bottom' />
+							</>
+						)}
+					</button>
+				</section>
+
+				{/* Search result */}
+				<section className='py-4'>
+					{searchResult.length > 0 ? (
+						<>
+							<h2 className='my-2 font-bold block'>Search Result</h2>
+							<div className='flex flex-wrap'>
+								{searchResult.map((q) => (
+									<div className='w-2/12 relative' key={`q_${q.id}`}>
+										<QuestionCard
+											question={q}
+											onClick={() => {
+												setViewedQuestion(q.id)
+											}}
+										/>
+										<span
+											className='rounded-full px-2 text-white bg-green-600 font-bold absolute top-0 right-0 -mt-2 mr-2 cursor-pointer'
+											onClick={() => {
+												if (!addedQuestionsId.includes(q.id)) {
+													setAddedQuestionsId([...addedQuestionsId, q.id])
+													console.log(q)
+													addQuestion(q)
+												}
+											}}
+										>
+											+
+										</span>
+									</div>
 								))}
-							</select>
-						</label>
+							</div>
+						</>
+					) : (
+						''
+					)}
+				</section>
 
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Official?</span>
-							<select
-								value={isOfficial}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setOfficial',
-										payload: { content: e.target.value },
-									})
-								}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								<option value={true}>Yes</option>
-								<option value={false}>No</option>
-							</select>
-						</label>
-
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Published?</span>
-							<select
-								value={isPublished}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setPublished',
-										payload: { content: e.target.value },
-									})
-								}
-								className='border rounded p-1 border-black w-2/12'
-							>
-								<option value={true}>Yes</option>
-								<option value={false}>No</option>
-							</select>
-						</label>
+				{/* Question Numbers */}
+				<section className='bg-gray-100 rounded px-4 py-2 mt-4 shadow'>
+					<h2 className='my-2 font-bold'>Questions in Set</h2>
+					<div className='flex justify-start'>
+						{questionSet.contents.length > 0 ? (
+							<>
+								{questionSet.contents.map((q, idx) => (
+									<div
+										className={cx(
+											`rounded ${diffToBgColor(
+												q.difficulty
+											)} relative inline-block w-8 h-8 cursor-pointer cursor-pointer mr-2 mb-2`,
+											{
+												'active-question': questionSetViewerIdx === idx,
+											}
+										)}
+										key={`qn_${idx}`}
+									>
+										{/* Background color : difficulty, content : topic */}
+										<span
+											className={'absolute text-white font-bold'}
+											style={{
+												top: '50%',
+												left: '50%',
+												transform: 'translate(-50%, -50%)',
+											}}
+										>
+											{topicToLetter(q.topic)}
+										</span>
+									</div>
+								))}
+							</>
+						) : (
+							''
+						)}
 					</div>
-					<div className='w-1/2 flex flex-col'>
-						<label className='my-2'>
-							<span className='w-2/12 inline-block'>Difficulty</span>
-							<input
-								type='range'
-								className='w-2/12 p-1 border border-black shadow-inside rounded'
-								min='1'
-								max='5'
-								value={difficulty}
-								onChange={(e) =>
-									dispatch({
-										type: 'question/setDifficulty',
-										payload: { content: e.target.value },
-									})
-								}
-							></input>
-						</label>
+				</section>
 
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Maximum Score</span>
-							<input
-								type='text'
-								className='w-1/12 p-1 border border-black shadow-inside rounded cursor-default'
-								value={maxScore}
-								readOnly={true}
-							></input>
-						</label>
+				{/* QuestionSet Viewer */}
+				<section className='py-2'>
+					{questionSet.contents.length > 0 ? (
+						<>
+							<h2 className='my-2 font-bold pb-2 mb-4 broder-b border-black'>
+								QuestionSet Viewer
+							</h2>
+							<div className='p-8 rounded clearfix border border-black'>
+								<div className='float-right'>
+									<span className='p-2 mr-2 cursor-pointer bg-gray-100'>
+										<ChevronLeft
+											className='inline-block'
+											onClick={() => {
+												if (questionSetViewerIdx > 0) {
+													setQuestionSetViewerIdx(questionSetViewerIdx - 1)
+												}
+											}}
+										/>
+									</span>
+									<span className='p-2 rounded cursor-pointer bg-gray-100'>
+										<ChevronRight
+											className='inline-block'
+											onClick={() => {
+												if (
+													questionSetViewerIdx <
+													addedQuestionsId.length - 1
+												) {
+													setQuestionSetViewerIdx(questionSetViewerIdx + 1)
+												}
+											}}
+										/>
+									</span>
+									<button
+										className='rounded px-2 py-1 text-white bg-red-600 font-bold cursor-pointer text-sm ml-8'
+										onClick={() => {
+											let newArr = [...addedQuestionsId]
+												.slice(0, questionSetViewerIdx)
+												.concat(
+													[...addedQuestionsId].slice(questionSetViewerIdx + 1)
+												)
 
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Created</span>
-							<span>
-								{moment
-									.utc(createdAt)
-									.utcOffset('+07:00')
-									.format('YYYY-MM-DD HH:mm:ss [WIB]')}
+											// Delete at the
+											if (questionSetViewerIdx == newArr.length) {
+												setQuestionSetViewerIdx(newArr.length - 1)
+											}
+
+											// No more entries
+											if (newArr.length == 0) {
+												setQuestionSetViewerIdx(null)
+											}
+
+											setAddedQuestionsId(newArr)
+											removeQuestion(questionSetViewerIdx)
+										}}
+									>
+										X
+									</button>
+								</div>
+								<Question id={addedQuestionsId[questionSetViewerIdx]} />
+							</div>
+						</>
+					) : (
+						''
+					)}
+				</section>
+				<Style>{`
+              .active-question { border-color: #444 !important; border-width: 4px;}
+              .active-question > span { color: black !important; }
+            `}</Style>
+
+				{/* Question viewer */}
+				{viewedQuestion !== null && (
+					<div className='fixed bg-black w-screen h-screen top-0 left-0 p-8 bg-opacity-75 overflow-y-scroll'>
+						<div className='mb-4'>
+							<h2 className='text-white font-bold inline-block'>
+								Question viewer
+							</h2>
+							<span
+								className='font-bold float-right text-white cursor-pointer'
+								onClick={() => {
+									setViewedQuestion(null)
+								}}
+							>
+								X
 							</span>
-						</label>
-
-						<label className='my-2'>
-							<span className='w-3/12 inline-block'>Last Update</span>
-							<span>
-								{moment
-									.utc(updatedAt)
-									.utcOffset('+07:00')
-									.format('YYYY-MM-DD HH:mm:ss [WIB]')}
-							</span>
-						</label>
+						</div>
+						<div className='rounded px-8 py-4 bg-white opacity-100'>
+							<Question id={viewedQuestion} />
+						</div>
 					</div>
-				</div>
-				<div className='my-2'>
-					<strong>Description</strong>
-					<textarea
-						className='rounded border border-black block w-full px-2 py-1'
-						rows={3}
-						value={description}
-						onChange={(e) => {
-							dispatch({
-								type: 'question/setDescription',
-								payload: { content: e.target.value },
-							})
-						}}
-					></textarea>
-					<div></div>
-				</div>
-				<div className='my-2'>
-					<strong>Topics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
-				</div>
-				<div className='my-2'>
-					<strong>Subtopics</strong>
-					<div
-						className='rounded border border-black'
-						style={{ minHeight: 2 + 'em' }}
-					></div>
-				</div>
-
-				{/* Question body */}
-				<strong>Pertanyaan</strong>
-				{contents.map((field, idx) => (
-					<>
-						<Field
-							type={field.type}
-							key={`q_${idx}`}
-							content={field.content}
-							idx={idx}
-							mode='edit'
-						/>
-						<FieldOption key={`opt_${idx}`} idx={idx} />
-					</>
-				))}
+				)}
 			</>
 		)
 	)
