@@ -33,6 +33,7 @@ function useAuth(protectedPage = true, permissions = {}) {
 				username: localStorage.getItem('username'),
 				role: tokenRole,
 				id: localStorage.getItem('uid'),
+				_id: localStorage.getItem('_uid'),
 			},
 		})
 

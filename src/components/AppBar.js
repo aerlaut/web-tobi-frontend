@@ -67,6 +67,7 @@ export default function AppBar() {
 					localStorage.setItem('username', res.data.username)
 					localStorage.setItem('role', res.data.role)
 					localStorage.setItem('uid', res.data.id)
+					localStorage.setItem('_uid', res.data._id)
 
 					// Push data to redux
 					dispatch({
@@ -75,6 +76,7 @@ export default function AppBar() {
 							username: res.data.username,
 							role: res.data.role,
 							id: res.data.id,
+							_id: res.data._id,
 						},
 					})
 

@@ -22,6 +22,7 @@ export default function () {
 
 	// Redux states
 	const questionSet = useSelector((state) => state.questionSet)
+	const user_Id = useSelector((state) => state.auth._id)
 	const role = useSelector((state) => state.auth.role)
 
 	// Local states & variables
@@ -114,6 +115,7 @@ export default function () {
 					id: question.id,
 					difficulty: question.difficulty,
 					topic: question.topics[0].name,
+					maxScore: question.maxScore,
 				},
 			},
 		})
@@ -164,28 +166,47 @@ export default function () {
 	function save(e) {
 		e.preventDefault()
 
-		let postdata = {
+		// If author not set
+		if (questionSet.author === '') {
+			alert('Author harus diisi')
+			return
+		}
+
+		// If description not set
+		if (questionSet.description === '') {
+			alert('Description harus diisi')
+			return
+		}
+
+		// If description not set
+		if (questionSet.contents.length === 0) {
+			alert('Tidak ada soal')
+			return
+		}
+
+		let postData = {
+			createdBy: user_Id,
 			author: questionSet.author,
 			description: questionSet.description,
 			maxScore: questionSet.maxScore,
 			isOfficial: questionSet.isOfficial,
-			canRandomOrder: questionSet.canRandomOrder,
+			canRandomize: questionSet.canRandomize,
 			difficulty: questionSet.difficulty,
 			contents: questionSet.contents,
 			isPublished: questionSet.isPublished,
 		}
 
-		// Question switched to published
-		if (questionSet.isPublished) postdata.publishedAt = Date.now()
+		// If QuestionSet is switched to published
+		if (questionSet.isPublished) postData.publishedAt = Date.now()
 
 		// Submit form
-		fetch(`${process.env.REACT_APP_API_URL}/question/create`, {
+		fetch(`${process.env.REACT_APP_API_URL}/question_set/create`, {
 			method: 'POST',
 			headers: new Headers({
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			}),
-			body: JSON.stringify(postdata),
+			body: JSON.stringify(postData),
 		})
 			.then((res) => {
 				if (!res.ok) {
@@ -294,9 +315,9 @@ export default function () {
 									<label className='my-2'>
 										<span className='w-2/12 inline-block'>Can random?</span>
 										<select
-											value={questionSet.canRandomOrder}
+											value={questionSet.canRandomize}
 											onChange={(e) =>
-												updateMeta({ canRandomOrder: e.target.value })
+												updateMeta({ canRandomize: e.target.value })
 											}
 											className='border rounded p-1 border-black w-2/12'
 										>
@@ -495,6 +516,7 @@ export default function () {
 											onClick={() => {
 												if (!addedQuestionsId.includes(q.id)) {
 													setAddedQuestionsId([...addedQuestionsId, q.id])
+													console.log(q)
 													addQuestion(q)
 												}
 											}}

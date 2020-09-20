@@ -1,5 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+// Helper functions
+
+function calculateMaxScore(scores) {
+	return scores.reduce((sum, score) => sum + Number.parseInt(score))
+}
+
+function calculateDifficulty(difficulties) {
+	let diff =
+		difficulties.reduce((sum, diff) => sum + Number.parseFloat(diff)) /
+		Number.parseInt(difficulties.length)
+
+	return Math.round(diff * 10) / 10
+}
+
 export default createSlice({
 	name: 'questionSet',
 	initialState: {
@@ -10,7 +24,7 @@ export default createSlice({
 		difficulty: '',
 		isPublished: false,
 		description: '',
-		canRandomOrder: false,
+		canRandomize: false,
 		contents: [],
 	},
 	reducers: {
@@ -24,7 +38,7 @@ export default createSlice({
 				difficulty: '',
 				isPublished: false,
 				description: '',
-				canRandomOrder: false,
+				canRandomize: false,
 				contents: [],
 			}
 
@@ -44,6 +58,12 @@ export default createSlice({
 
 			// Add new question object
 			state.contents.push(content)
+
+			let scores = state.contents.map((el) => el.maxScore)
+			state.maxScore = calculateMaxScore(scores)
+
+			let difficulties = state.contents.map((el) => el.difficulty)
+			state.difficulty = calculateDifficulty(difficulties)
 		},
 		// Remove field
 		removeQuestion: (state, action) => {

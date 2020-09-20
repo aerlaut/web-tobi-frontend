@@ -18,8 +18,6 @@ export default function () {
 			if (res.status !== 'ok') {
 				setError({ type: 'error', message: res.message })
 			} else {
-				console.log(res.data)
-
 				// Setting information
 				setQuestions(res.data)
 			}
@@ -65,9 +63,11 @@ export default function () {
 				</div>
 
 				<div>
-					<h1 className='text-xl font-bold mb-4 pt-8 pb-4'>New Sets</h1>
+					<h1 className='text-xl font-bold mb-4 pt-8 pb-4 inline-block'>
+						New Sets
+					</h1>
 					{role === 'admin' || role === 'superadmin' ? (
-						<span className='float-right'>
+						<span className='float-right inline-block'>
 							<Link
 								to='/question_set/create'
 								className='mr-4 px-4 py-2 bg-blue-600 rounded inline-block text-white text-sm'
