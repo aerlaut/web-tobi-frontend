@@ -53,7 +53,7 @@ export default function () {
 						''
 					)}
 					<div className='mb-4'>Search</div>
-					<div className='flex flex-wrap'>
+					<div className='flex overflow-x-scroll border rounded inner-shadow'>
 						{questions.map((q, idx) => (
 							// <>{q.id}, </>
 							<QuestionCard
@@ -67,8 +67,10 @@ export default function () {
 					</div>
 				</div>
 
-				<div>
-					<h1 className='text-xl font-bold mb-4 pt-8 inline-block'>New Sets</h1>
+				<div class='mt-8'>
+					<h1 className='text-xl font-bold mb-4 inline-block'>
+						New Question Sets
+					</h1>
 					{role === 'admin' || role === 'superadmin' ? (
 						<span className='float-right inline-block'>
 							<Link
@@ -88,7 +90,7 @@ export default function () {
 					)}
 
 					<div className='mb-4'>Search</div>
-					<div className='flex flex-wrap'>
+					<div className='flex overflow-x-scroll border rounded inner-shadow'>
 						{questionSets.map((qs, idx) => (
 							<QuestionCard
 								question={qs}

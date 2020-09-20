@@ -3,8 +3,9 @@ import React from 'react'
 export default function ({ question, onClick }) {
 	return (
 		<div
-			className='border border-gray-800 bg-gray-100 rounded mr-4 mb-4 p-4 cursor-pointer shadow flex flex-col justify-end min-h-full'
+			className='border border-gray-800 bg-gray-100 rounded m-2 p-4 cursor-pointer shadow flex flex-col justify-end min-h-full'
 			onClick={onClick}
+			style={{ 'min-width': '200px' }}
 		>
 			<div className='flex-1'>
 				<h3 className='font-xl font-bold mb-2'>
