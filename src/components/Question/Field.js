@@ -6,11 +6,12 @@ import ShortTextAnswer from './ShortTextAnswer'
 import TextAnswer from './TextAnswer'
 import SingleChoiceAnswer from './SingleChoiceAnswer'
 import MultipleChoiceAnswer from './MultipleChoiceAnswer'
+import MultipleTrueFalseAnswer from './MultipleTrueFalseAnswer'
 import ChevronUp from '../../icons/ChevronUp'
 import ChevronDown from '../../icons/ChevronDown'
 
 export default function ({
-	type = 'text',
+	type = 'text_label',
 	content = null,
 	idx,
 	mode = 'view', // view, exam, edit
@@ -21,10 +22,13 @@ export default function ({
 
 	const labels = [
 		'text_label',
+		'-------------------',
 		'long_text_answer',
 		'short_text_answer',
 		'single_choice_answer',
 		'multiple_choice_answer',
+		'multiple_true_false_answer',
+		'file_upload_answer',
 	]
 
 	// Default field content
@@ -33,14 +37,15 @@ export default function ({
 		switch (type) {
 			case 'single_choice_answer':
 			case 'multiple_choice_answer':
+			case 'multiple_true_false_answer':
 				defaultFieldContent = {
 					label: 'Soal no.',
 					question: 'Text pertanyaan disini',
 					options: [
-						{ text: 'Option A', idx: 1, is_correct: false },
-						{ text: 'Option B', idx: 2, is_correct: false },
-						{ text: 'Option C', idx: 3, is_correct: false },
-						{ text: 'Option D', idx: 4, is_correct: false },
+						{ text: 'Option A', idx: 1, is_correct: null },
+						{ text: 'Option B', idx: 2, is_correct: null },
+						{ text: 'Option C', idx: 3, is_correct: null },
+						{ text: 'Option D', idx: 4, is_correct: null },
 					],
 					score: 0,
 				}
@@ -118,6 +123,16 @@ export default function ({
 				/>
 			)
 			break
+
+		case 'multiple_true_false_answer':
+			field = (
+				<MultipleTrueFalseAnswer
+					content={content !== null ? content : defaultFieldContent(type)}
+					idx={idx}
+					mode={mode}
+				/>
+			)
+			break
 	}
 
 	return (
@@ -155,6 +170,7 @@ export default function ({
 						<select
 							className='float-right px-2 py-1 mr-2 rounded border-gray-800 border capitalize'
 							ref={fieldRef}
+							value={type}
 						>
 							{labels.map((field, idx) => (
 								<option value={field} key={`option_${idx}`}>
