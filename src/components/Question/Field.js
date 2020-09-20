@@ -1,8 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import TextLabel from './TextLabel'
 import ShortTextAnswer from './ShortTextAnswer'
+import FileUploadAnswer from './FileUploadAnswer'
 import TextAnswer from './TextAnswer'
 import SingleChoiceAnswer from './SingleChoiceAnswer'
 import MultipleChoiceAnswer from './MultipleChoiceAnswer'
@@ -19,6 +20,8 @@ export default function ({
 	const dispatch = useDispatch()
 	const fieldRef = useRef()
 	const role = useSelector((state) => state.auth.role)
+
+	const [fieldType, setFieldType] = useState(type)
 
 	const labels = [
 		'text_label',
@@ -71,15 +74,13 @@ export default function ({
 
 	// Hook for changing field types
 	function switchField() {
-		let chosen = fieldRef.current.value
-
 		// Update redux state. Updated state will update the component
 		dispatch({
 			type: 'question/switchField',
 			payload: {
 				idx: idx,
-				type: chosen,
-				content: defaultFieldContent(chosen),
+				type: fieldType,
+				content: defaultFieldContent(fieldType),
 			},
 		})
 	}
@@ -102,6 +103,10 @@ export default function ({
 
 		case 'short_text_answer':
 			field = <ShortTextAnswer content={content} idx={idx} mode={mode} />
+			break
+
+		case 'file_upload_answer':
+			field = <FileUploadAnswer content={content} idx={idx} mode={mode} />
 			break
 
 		case 'single_choice_answer':
@@ -163,14 +168,14 @@ export default function ({
 						</span>
 						<span
 							className='float-right px-2 py-1 mr-2 rounded bg-blue-600 text-white px-2 py-1 font-bold cursor-pointer'
-							onClick={(e) => switchField()}
+							onClick={switchField}
 						>
 							Switch
 						</span>
 						<select
 							className='float-right px-2 py-1 mr-2 rounded border-gray-800 border capitalize'
-							ref={fieldRef}
-							value={type}
+							value={fieldType}
+							onChange={(e) => setFieldType(e.target.value)}
 						>
 							{labels.map((field, idx) => (
 								<option value={field} key={`option_${idx}`}>
