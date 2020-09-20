@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { useAuth, fetchPageData } from '../../helpers'
+import { useHistory } from 'react-router-dom'
+import {
+	useAuth,
+	fetchPageData,
+	diffToBgColor,
+	topicToLetter,
+} from '../../helpers'
 import Error from '../../components/Error'
 import Question from '../../components/Question'
 import { Style } from 'react-style-tag'
@@ -226,46 +231,6 @@ export default function () {
 				// Show error details
 				console.error(err)
 			})
-	}
-
-	function diffToBgColor(diff) {
-		return diff < 2
-			? 'bg-green-400'
-			: diff < 3
-			? 'bg-yellow-400'
-			: diff < 4
-			? 'bg-orange-400'
-			: 'bg-red-400'
-	}
-
-	function topicToLetter(topic) {
-		let letter = ''
-
-		switch (topic) {
-			case 'Biselmol':
-				letter = 'B'
-				break
-			case 'Anfiswan':
-				letter = 'H'
-				break
-			case 'Anfistum':
-				letter = 'T'
-				break
-			case 'Genevo':
-				letter = 'G'
-				break
-			case 'Bistik':
-				letter = 'S'
-				break
-			case 'Ekologi':
-				letter = 'E'
-				break
-			case 'Etologi':
-				letter = 'P'
-				break
-		}
-
-		return letter
 	}
 
 	return (

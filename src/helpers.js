@@ -99,4 +99,46 @@ function fetchPageData(options, handler) {
 		.catch((err) => console.error(err))
 }
 
-export { useAuth, fetchPageData }
+// Change diff to BG color
+function diffToBgColor(diff) {
+	return diff < 2
+		? 'bg-green-400'
+		: diff < 3
+		? 'bg-yellow-400'
+		: diff < 4
+		? 'bg-orange-400'
+		: 'bg-red-400'
+}
+
+// Change topic to letter
+function topicToLetter(topic) {
+	let letter = ''
+
+	switch (topic) {
+		case 'Biselmol':
+			letter = 'B'
+			break
+		case 'Anfiswan':
+			letter = 'H'
+			break
+		case 'Anfistum':
+			letter = 'T'
+			break
+		case 'Genevo':
+			letter = 'G'
+			break
+		case 'Bistik':
+			letter = 'S'
+			break
+		case 'Ekologi':
+			letter = 'E'
+			break
+		case 'Etologi':
+			letter = 'P'
+			break
+	}
+
+	return letter
+}
+
+export { useAuth, fetchPageData, diffToBgColor, topicToLetter }
