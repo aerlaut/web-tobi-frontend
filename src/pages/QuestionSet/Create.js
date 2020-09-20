@@ -140,7 +140,7 @@ export default function () {
 
 	function searchQuestions() {
 		let postData = {
-			questionDescription: questionDescription,
+			desription: questionDescription,
 			minDifficulty: minDifficulty,
 			maxDifficulty: maxDifficulty,
 			tiers: tiers,
